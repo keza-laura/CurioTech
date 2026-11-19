@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioTech: Mission 01 — Enter the Web</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <!-- Shared stylesheet across the CurioTech platform -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- Site Header & Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <a href="dashboard.html" class="brand" aria-label="CurioTech Dashboard">
+        <img src="assets/images/logo.png" alt="CurioTech logo" class="brand-logo">
+        <span class="brand-name">Curio<span>Tech</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Mission navigation">
+        <a href="adventure.html" class="nav-link">&larr; Adventure Map</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="index.html" class="nav-logout-btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Mission Workspace -->
+  <main class="dashboard-main">
+    <div class="container">
+
+      <!-- Mission Title & 6-Stage Stepper -->
+      <section class="mission-header-bar" aria-label="Mission Header">
+        <div class="mission-title-box">
+          <span class="mission-dest-badge">📍 DESTINATION: HTML ISLAND</span>
+          <h1 class="mission-main-title">Mission 01: Enter the Web</h1>
+        </div>
+
+        <!-- 6-Stage Interactive Stepper -->
+        <nav class="mission-stepper" aria-label="Mission Progress Steps">
+          <button class="step-pill active" data-stage="0" aria-current="step">
+            <span class="step-num">1</span> Discover
+          </button>
+          <button class="step-pill" data-stage="1" disabled>
+            <span class="step-num">2</span> Explore
+          </button>
+          <button class="step-pill" data-stage="2" disabled>
+            <span class="step-num">3</span> Experiment
+          </button>
+          <button class="step-pill" data-stage="3" disabled>
+            <span class="step-num">4</span> Challenge
+          </button>
+          <button class="step-pill" data-stage="4" disabled>
+            <span class="step-num">5</span> Create
+          </button>
+          <button class="step-pill" data-stage="5" disabled>
+            <span class="step-num">6</span> Celebrate
+          </button>
+        </nav>
+      </section>
+
+      <!-- Main Mission Card -->
+      <article class="mission-card" role="region" aria-label="Mission Content Area">
+
+        <!-- Pixel Robot Companion Banner in Mission -->
+        <aside class="mission-pixel-banner" aria-label="Pixel Mascot Companion">
+          <div class="pixel-avatar-col" style="width: auto;">
+            <div id="mission-pixel-avatar" class="pixel-svg-avatar" data-expression="thinking" style="width: 70px; height: 70px;" aria-label="Pixel Mascot (Expression: Thinking)">
+              <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                <rect x="47" y="6" width="6" height="15" rx="3" fill="#A855F7" />
+                <rect x="7" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="85" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="14" y="20" width="72" height="68" rx="20" fill="#25202F" stroke="#A855F7" stroke-width="3" />
+                <path d="M 22 28 Q 50 24 78 28" stroke="rgba(216, 180, 254, 0.3)" stroke-width="2" stroke-linecap="round" fill="none" />
+                <rect x="22" y="32" width="56" height="44" rx="12" fill="#0B0B0F" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.5" />
+                <circle cx="50" cy="8" r="6" fill="#38BDF8" />
+                <circle cx="48" cy="6" r="2" fill="#FFFFFF" />
+
+                <!-- Expression 1: Happy -->
+                <g class="expr-happy">
+                  <circle cx="37" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="35" cy="46" r="1.5" fill="#FFFFFF" />
+                  <circle cx="63" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 40 62 Q 50 70 60 62" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" fill="none" />
+                  <circle cx="30" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                  <circle cx="70" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                </g>
+
+                <!-- Expression 2: Thinking -->
+                <g class="expr-thinking">
+                  <circle cx="37" cy="45" r="5.5" fill="#D8B4FE" />
+                  <circle cx="35" cy="43" r="1.5" fill="#FFFFFF" />
+                  <line x1="57" y1="50" x2="69" y2="50" stroke="#D8B4FE" stroke-width="3.5" stroke-linecap="round" />
+                  <ellipse cx="50" cy="63" rx="4.5" ry="3" fill="#D8B4FE" />
+                  <circle cx="64" cy="14" r="3" fill="#D8B4FE" />
+                  <circle cx="72" cy="7" r="4.5" fill="#D8B4FE" />
+                </g>
+
+                <!-- Expression 3: Encouraging -->
+                <g class="expr-encouraging">
+                  <path d="M 32 50 Q 37 43 42 50" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <circle cx="63" cy="48" r="5.5" fill="#FBBF24" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 42 62 Q 52 69 58 61" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <path d="M 38 6 Q 50 1 62 6" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" fill="none" />
+                </g>
+
+                <!-- Expression 4: Excited -->
+                <g class="expr-excited">
+                  <path d="M 32 51 L 37 44 L 42 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 58 51 L 63 44 L 68 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 39 60 Q 50 73 61 60 Z" fill="#F472B6" stroke="#FFFFFF" stroke-width="1.5" />
+                  <path d="M 35 2 L 42 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M 65 2 L 58 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+              </svg>
+            </div>
+            <span id="mission-pixel-tag" class="pixel-expression-pill expr-pill-thinking">Thinking</span>
+          </div>
+
+          <div id="mission-pixel-speech" class="mission-pixel-speech" aria-live="polite">
+            <!-- Dynamic Pixel speech populated by js/mission.js -->
+          </div>
+        </aside>
+
+        <!-- ================= STAGE 1: DISCOVER ================= -->
+        <section id="stage-discover" class="stage-panel active" aria-labelledby="discover-title">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STAGE 1 OF 6</span>
+            <h2 id="discover-title" class="stage-title">Discover the Secret of Web Pages</h2>
+            <p class="stage-description">
+              Before we write any code, let's explore where websites come from and how computers display them.
+            </p>
+          </div>
+
+          <div class="discover-box">
+            <div class="relatable-scenario">
+              <span class="scenario-icon" aria-hidden="true">🌐</span>
+              <div class="scenario-text">
+                <p>
+                  Think of the last time you opened a web browser—whether on your phone, tablet, or laptop—to search for game tips, listen to music, or watch videos.
+                </p>
+                <p style="margin-top: 0.75rem;">
+                  In less than a second, an entire world appeared on your screen: bold headlines, photos, articles, menus, and clickable buttons.
+                </p>
+              </div>
+            </div>
+
+            <div class="curiosity-question-box">
+              <h4>🤔 A Question to Ponder:</h4>
+              <p style="color: #CBD5E1; font-size: 0.95rem; margin-bottom: 0;">
+                How does the browser know where to place the title, which picture to show, or what should happen when you click a button?
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 2: EXPLORE ================= -->
+        <section id="stage-explore" class="stage-panel" aria-labelledby="explore-title">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STAGE 2 OF 6</span>
+            <h2 id="explore-title" class="stage-title">Explore: The 5 Building Blocks</h2>
+            <p class="stage-description">
+              A webpage is simply a digital document. Web browsers read structured building blocks to paint the page.
+            </p>
+          </div>
+
+          <!-- Mock Browser Window Diagram -->
+          <div class="mock-browser-window">
+            <div class="browser-top-bar">
+              <div class="browser-dots" aria-hidden="true">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">https://curiotech.org/learn/web-basics</div>
+            </div>
+
+            <div class="browser-canvas">
+              <div style="background-color: rgba(37, 32, 47, 0.9); border: 1.5px solid var(--color-purple); border-radius: 10px; padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(168, 85, 247, 0.4); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+                  <strong style="color: var(--color-lavender);">&lt;nav&gt; Navigation Bar</strong>
+                  <span style="font-size: 0.8rem; color: #94A3B8;">Home | Explore | Quests</span>
+                </div>
+                <h3 style="color: #38BDF8; margin-bottom: 0.5rem; font-size: 1.3rem;">&lt;h1&gt; Main Page Heading</h3>
+                <p style="color: #E2E8F0; font-size: 0.9rem; margin-bottom: 1rem;">
+                  &lt;p&gt; This is a body paragraph containing readable explanations, stories, or information.
+                </p>
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                  <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid #38BDF8; border-radius: 8px; padding: 0.5rem 1rem; color: #38BDF8; font-size: 0.85rem;">
+                    &lt;img&gt; Image / Graphic
+                  </div>
+                  <span style="background: var(--color-purple); color: #FFF; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700;">
+                    &lt;button&gt; Action Button
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Element Concept Cards -->
+          <div class="explore-elements-grid">
+            <article class="explore-element-card">
+              <span class="explore-tag-name">&lt;nav&gt; Navigation</span>
+              <h4 style="color: #FFF; font-size: 1rem; margin-bottom: 0.25rem;">Site Menu</h4>
+              <p style="font-size: 0.85rem; color: #CBD5E1;">Helps visitors move between different pages and sections.</p>
+            </article>
+
+            <article class="explore-element-card">
+              <span class="explore-tag-name">&lt;h1&gt; Heading</span>
+              <h4 style="color: #FFF; font-size: 1rem; margin-bottom: 0.25rem;">Main Title</h4>
+              <p style="font-size: 0.85rem; color: #CBD5E1;">Big, bold titles that announce what the content is about.</p>
+            </article>
+
+            <article class="explore-element-card">
+              <span class="explore-tag-name">&lt;p&gt; Paragraph</span>
+              <h4 style="color: #FFF; font-size: 1rem; margin-bottom: 0.25rem;">Body Text</h4>
+              <p style="font-size: 0.85rem; color: #CBD5E1;">Regular readable sentences, stories, and descriptions.</p>
+            </article>
+
+            <article class="explore-element-card">
+              <span class="explore-tag-name">&lt;img&gt; Image</span>
+              <h4 style="color: #FFF; font-size: 1rem; margin-bottom: 0.25rem;">Visuals</h4>
+              <p style="font-size: 0.85rem; color: #CBD5E1;">Photographs, drawings, diagrams, or icons.</p>
+            </article>
+
+            <article class="explore-element-card">
+              <span class="explore-tag-name">&lt;button&gt; Button</span>
+              <h4 style="color: #FFF; font-size: 1rem; margin-bottom: 0.25rem;">Interactive Click</h4>
+              <p style="font-size: 0.85rem; color: #CBD5E1;">Controls that users can click to take an action.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 3: EXPERIMENT ================= -->
+        <section id="stage-experiment" class="stage-panel" aria-labelledby="experiment-title">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STAGE 3 OF 6</span>
+            <h2 id="experiment-title" class="stage-title">Experiment: The Webpage Inspector</h2>
+            <p class="stage-description">
+              Click on different elements in the live webpage mock below to inspect their code tag, role, and function. (Inspect at least 3 elements to unlock the Challenge).
+            </p>
+          </div>
+
+          <div class="inspector-layout">
+            <!-- Left: Interactive Webpage Canvas -->
+            <div class="interactive-mock-page" role="group" aria-label="Interactive Webpage Mock">
+              
+              <!-- 1. Nav Box -->
+              <div class="inspectable-box" data-elem="nav" tabindex="0" role="button" aria-label="Inspect Navigation Bar">
+                <div class="inspect-badge">&lt;nav&gt; Site Menu</div>
+                <div style="font-weight: 700; color: #FFF; font-size: 0.95rem;">CurioTech Adventure &bull; Islands &bull; Quests</div>
+              </div>
+
+              <!-- 2. Heading Box -->
+              <div class="inspectable-box" data-elem="heading" tabindex="0" role="button" aria-label="Inspect Main Heading">
+                <div class="inspect-badge">&lt;h1&gt; Main Heading</div>
+                <div style="font-size: 1.25rem; font-weight: 800; color: #38BDF8;">Discover the Magic of Code</div>
+              </div>
+
+              <!-- 3. Paragraph Box -->
+              <div class="inspectable-box" data-elem="paragraph" tabindex="0" role="button" aria-label="Inspect Paragraph">
+                <div class="inspect-badge">&lt;p&gt; Paragraph</div>
+                <div style="font-size: 0.9rem; color: #E2E8F0;">
+                  Technology empowers young creators to solve real problems and build the future.
+                </div>
+              </div>
+
+              <!-- 4. Image Box -->
+              <div class="inspectable-box" data-elem="image" tabindex="0" role="button" aria-label="Inspect Image">
+                <div class="inspect-badge">&lt;img&gt; Image Element</div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <span style="font-size: 1.75rem;">🖼️</span>
+                  <span style="font-size: 0.9rem; color: var(--color-lavender);">robot-companion-avatar.png</span>
+                </div>
+              </div>
+
+              <!-- 5. Button Box -->
+              <div class="inspectable-box" data-elem="button" tabindex="0" role="button" aria-label="Inspect Action Button">
+                <div class="inspect-badge">&lt;button&gt; Action Button</div>
+                <div style="display: inline-block; background: var(--color-purple); color: #FFF; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700;">
+                  Start Quest &rarr;
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right: Inspector Output Card -->
+            <div class="inspector-output-card" aria-live="polite">
+              <div>
+                <span id="inspector-counter" class="inspector-counter-badge">Inspected: 0 of 5 Elements</span>
+                <h3 id="inspector-title" style="font-size: 1.3rem; color: #FFF; margin-bottom: 0.35rem;">Click any block on the left</h3>
+                <span id="inspector-tag" style="font-family: monospace; font-size: 0.95rem; color: #38BDF8; font-weight: 700; display: block; margin-bottom: 0.75rem;">---</span>
+                <p id="inspector-desc" style="font-size: 0.95rem; color: #CBD5E1; line-height: 1.5; margin-bottom: 1rem;">
+                  Select any block on the illustrated page to discover what it does and why web browsers render it.
+                </p>
+                <div style="background: rgba(11, 11, 15, 0.6); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.2);">
+                  <span style="font-size: 0.75rem; color: var(--color-lavender); font-weight: 700; text-transform: uppercase;">Example:</span>
+                  <div id="inspector-example" style="font-size: 0.85rem; color: #F1F5F9; margin-top: 0.2rem;">---</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem;">
+                <button id="btn-reset-inspector" class="button button-small button-outline" style="width: 100%;">Reset Inspector ↺</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 4: CHALLENGE ================= -->
+        <section id="stage-challenge" class="stage-panel" aria-labelledby="challenge-title">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STAGE 4 OF 6</span>
+            <h2 id="challenge-title" class="stage-title">Challenge: Element Matcher</h2>
+            <p class="stage-description">
+              Test your knowledge! Select the correct answer below to prove your mastery and unlock the Create stage.
+            </p>
+          </div>
+
+          <div class="challenge-box">
+            <div class="challenge-question">
+              Which webpage element would you choose to display the <strong>big main title</strong> at the very top of a new article?
+            </div>
+
+            <div class="challenge-options-grid" role="radiogroup" aria-label="Element Options">
+              <button class="challenge-option-btn" data-correct="false" role="radio" aria-checked="false">
+                <span>📄</span>
+                <div>
+                  <strong>&lt;p&gt; Paragraph</strong>
+                  <div style="font-size: 0.8rem; color: #94A3B8;">For regular body sentences</div>
+                </div>
+              </button>
+
+              <button class="challenge-option-btn" data-correct="true" role="radio" aria-checked="false">
+                <span>🏷️</span>
+                <div>
+                  <strong>&lt;h1&gt; Main Heading</strong>
+                  <div style="font-size: 0.8rem; color: #94A3B8;">For prominent top titles</div>
+                </div>
+              </button>
+
+              <button class="challenge-option-btn" data-correct="false" role="radio" aria-checked="false">
+                <span>🖼️</span>
+                <div>
+                  <strong>&lt;img&gt; Image</strong>
+                  <div style="font-size: 0.8rem; color: #94A3B8;">For pictures and graphics</div>
+                </div>
+              </button>
+
+              <button class="challenge-option-btn" data-correct="false" role="radio" aria-checked="false">
+                <span>🧭</span>
+                <div>
+                  <strong>&lt;nav&gt; Navigation</strong>
+                  <div style="font-size: 0.8rem; color: #94A3B8;">For site menus and links</div>
+                </div>
+              </button>
+            </div>
+
+            <!-- Immediate Feedback -->
+            <div id="challenge-feedback" class="challenge-feedback-box" role="status" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 5: CREATE ================= -->
+        <section id="stage-create" class="stage-panel" aria-labelledby="create-title">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STAGE 5 OF 6</span>
+            <h2 id="create-title" class="stage-title">Create: Webpage Blueprint Studio</h2>
+            <p class="stage-description">
+              Assemble your first custom webpage layout! Choose your heading, story, graphic, and button to see your live preview update in real time.
+            </p>
+          </div>
+
+          <div class="studio-layout">
+            <!-- Left: Design Selection Controls -->
+            <div class="studio-controls-card">
+              
+              <!-- 1. Heading Choice -->
+              <div>
+                <div class="studio-group-title">1. Choose Page Title (&lt;h1&gt;)</div>
+                <div class="studio-pills">
+                  <button class="studio-pill active" data-type="title" data-value="The Robot Sanctuary">The Robot Sanctuary</button>
+                  <button class="studio-pill" data-type="title" data-value="Pixel's Cyber Space Academy">Pixel's Space Academy</button>
+                  <button class="studio-pill" data-type="title" data-value="Girls Who Build The Web">Girls Who Build The Web</button>
+                </div>
+              </div>
+
+              <!-- 2. Story Paragraph -->
+              <div>
+                <div class="studio-group-title">2. Choose Story Description (&lt;p&gt;)</div>
+                <div class="studio-pills">
+                  <button class="studio-pill active" data-type="tagline" data-value="A safe haven where friendly companion robots learn digital skills.">Friendly Robots</button>
+                  <button class="studio-pill" data-type="tagline" data-value="Blast off into cyberspace with clean code and interactive logic!">Cyberspace Adventure</button>
+                  <button class="studio-pill" data-type="tagline" data-value="Empowering the next generation of creative women in engineering.">Empowerment</button>
+                </div>
+              </div>
+
+              <!-- 3. Featured Graphic -->
+              <div>
+                <div class="studio-group-title">3. Choose Hero Graphic (&lt;img&gt;)</div>
+                <div class="studio-pills">
+                  <button class="studio-pill active" data-type="graphic" data-value="🤖 Robot Workshop">🤖 Robot Workshop</button>
+                  <button class="studio-pill" data-type="graphic" data-value="🚀 Cosmic Rocket">🚀 Cosmic Rocket</button>
+                  <button class="studio-pill" data-type="graphic" data-value="💻 Code Terminal">💻 Code Terminal</button>
+                </div>
+              </div>
+
+              <!-- 4. Action Button -->
+              <div>
+                <div class="studio-group-title">4. Choose Action Button (&lt;button&gt;)</div>
+                <div class="studio-pills">
+                  <button class="studio-pill active" data-type="button" data-value="Enter Sanctuary →">Enter Sanctuary</button>
+                  <button class="studio-pill" data-type="button" data-value="Launch Mission →">Launch Mission</button>
+                  <button class="studio-pill" data-type="button" data-value="Explore Future →">Explore Future</button>
+                </div>
+              </div>
+
+              <div style="margin-top: 1rem;">
+                <button id="btn-save-blueprint" class="button button-small" style="width: 100%;">Save Blueprint &amp; Complete Quest 🎨</button>
+              </div>
+
+            </div>
+
+            <!-- Right: Live Rendered Preview -->
+            <div class="studio-preview-card">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                  <span style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; letter-spacing: 0.5px;">LIVE PREVIEW BROWSER</span>
+                  <span style="font-size: 0.75rem; color: #94A3B8;">my-blueprint.html</span>
+                </div>
+
+                <div class="preview-rendered-page">
+                  <div style="font-size: 0.75rem; color: var(--color-lavender); border-bottom: 1px solid rgba(168, 85, 247, 0.2); padding-bottom: 0.4rem;">
+                    &lt;nav&gt; Home &bull; Missions &bull; Portfolio
+                  </div>
+                  <h3 id="preview-heading" style="color: #FFFFFF; font-size: 1.35rem; margin-top: 0.5rem;">The Robot Sanctuary</h3>
+                  <div id="preview-graphic" style="font-size: 2.25rem; margin: 0.4rem 0;">🤖 Robot Workshop</div>
+                  <p id="preview-tagline" style="font-size: 0.9rem; color: #CBD5E1; line-height: 1.45;">
+                    A safe haven where friendly companion robots learn digital skills.
+                  </p>
+                  <div>
+                    <button id="preview-button" class="button button-small" type="button" style="pointer-events: none; margin-top: 0.5rem;">
+                      Enter Sanctuary →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= STAGE 6: CELEBRATE ================= -->
+        <section id="stage-celebrate" class="stage-panel" aria-labelledby="celebrate-title">
+          <div class="celebrate-layout">
+            <span class="celebrate-trophy" aria-hidden="true">🏆</span>
+            <h2 id="celebrate-title" class="celebrate-title">Mission 01 Accomplished!</h2>
+            <p style="font-size: 1.15rem; color: var(--color-lavender); max-width: 650px; margin: 0 auto;">
+              You have successfully completed <strong>Enter the Web</strong> on HTML Island!
+            </p>
+
+            <ul class="celebrate-summary-list">
+              <li><span class="celebrate-check">✔</span> Discovered what a webpage is and how browsers render documents</li>
+              <li><span class="celebrate-check">✔</span> Explored the 5 core building blocks: <code>&lt;nav&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;button&gt;</code></li>
+              <li><span class="celebrate-check">✔</span> Inspected real element code in the interactive Inspector</li>
+              <li><span class="celebrate-check">✔</span> Mastered the Element Matcher Challenge on first principles</li>
+              <li><span class="celebrate-check">✔</span> Designed and previewed your own Webpage Blueprint</li>
+            </ul>
+
+            <div style="margin-top: 2rem;">
+              <a href="adventure.html" class="button">Return to Adventure Map 🧭</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Mission Action Controls (Back & Continue) -->
+        <div class="mission-actions-bar">
+          <button id="btn-stage-prev" class="button button-small button-outline" disabled>&larr; Back</button>
+          <button id="btn-stage-next" class="button button-small">Continue to Explore &rarr;</button>
+        </div>
+
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="brand-name">Curio<span>Tech</span></span>
+        <p class="footer-copy">CurioTech: The Digital Adventure &mdash; Empowering young minds in digital skills.</p>
+      </div>
+      <div class="footer-links">
+        <a href="adventure.html">Adventure Map</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Base Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/mission.js"></script>
+</body>
+
+</html>

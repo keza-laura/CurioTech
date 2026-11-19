@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioTech: The Digital Adventure — World Map</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <!-- Shared stylesheet across the CurioTech platform -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- Adventure Header & Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <a href="dashboard.html" class="brand" aria-label="CurioTech Dashboard">
+        <img src="assets/images/logo.png" alt="CurioTech logo" class="brand-logo">
+        <span class="brand-name">Curio<span>Tech</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Adventure navigation">
+        <a href="dashboard.html" class="nav-link">← Back to Dashboard</a>
+        <a href="#adventure-map" class="nav-link">Adventure Map</a>
+        <a href="#missions-summary" class="nav-link">Missions Log</a>
+        <a href="index.html" class="nav-logout-btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Adventure Content -->
+  <main class="dashboard-main">
+    <div class="container">
+
+      <!-- 1. Adventure Hero & Pixel Companion Banner -->
+      <section class="adventure-hero-section" aria-labelledby="adventure-heading" style="margin-top: 1.5rem;">
+        <span class="badge-journey">PHASE 4: THE DIGITAL ADVENTURE</span>
+        <h1 id="adventure-heading" class="adventure-title">CurioTech: The Digital Adventure</h1>
+        <p class="adventure-tagline">Discover ✦ Explore ✦ Experiment ✦ Challenge ✦ Create ✦ Celebrate</p>
+
+        <!-- Pixel Mascot Interactive Companion & Dialogue Station (Stage 4.2) -->
+        <div id="pixel-dialogue-station" class="pixel-dialogue-card" role="region" aria-label="Pixel Companion Dialogue">
+          
+          <!-- Avatar & Status Column -->
+          <div class="pixel-avatar-col">
+            <div id="pixel-avatar-wrapper" class="pixel-svg-avatar" data-expression="happy" aria-label="Pixel Robot Companion (Expression: Happy)">
+              <svg width="84" height="84" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                <!-- Antenna Stem -->
+                <rect x="47" y="6" width="6" height="15" rx="3" fill="#A855F7" />
+                
+                <!-- Ear Modules -->
+                <rect x="7" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="85" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                
+                <!-- Head Frame -->
+                <rect x="14" y="20" width="72" height="68" rx="20" fill="#25202F" stroke="#A855F7" stroke-width="3" />
+                <path d="M 22 28 Q 50 24 78 28" stroke="rgba(216, 180, 254, 0.3)" stroke-width="2" stroke-linecap="round" fill="none" />
+                
+                <!-- Visor Screen -->
+                <rect x="22" y="32" width="56" height="44" rx="12" fill="#0B0B0F" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.5" />
+                
+                <!-- Antenna LED Top Bulb -->
+                <circle cx="50" cy="8" r="6" fill="#38BDF8" />
+                <circle cx="48" cy="6" r="2" fill="#FFFFFF" />
+
+                <!-- ================= 1. HAPPY EXPRESSION ================= -->
+                <g class="expr-happy">
+                  <!-- Bright Cyan Round Eyes -->
+                  <circle cx="37" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="35" cy="46" r="1.5" fill="#FFFFFF" />
+                  <circle cx="63" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <!-- Warm Upward Smile -->
+                  <path d="M 40 62 Q 50 70 60 62" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" fill="none" />
+                  <!-- Rosy Lavender Cheeks -->
+                  <circle cx="30" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                  <circle cx="70" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                </g>
+
+                <!-- ================= 2. THINKING EXPRESSION ================= -->
+                <g class="expr-thinking">
+                  <!-- Quizzical Raised Left Eye & Focused Right Eye -->
+                  <circle cx="37" cy="45" r="5.5" fill="#D8B4FE" />
+                  <circle cx="35" cy="43" r="1.5" fill="#FFFFFF" />
+                  <line x1="57" y1="50" x2="69" y2="50" stroke="#D8B4FE" stroke-width="3.5" stroke-linecap="round" />
+                  <!-- Pondering Small Mouth -->
+                  <ellipse cx="50" cy="63" rx="4.5" ry="3" fill="#D8B4FE" />
+                  <!-- Thought Bubbles Near Antenna -->
+                  <circle cx="64" cy="14" r="3" fill="#D8B4FE" />
+                  <circle cx="72" cy="7" r="4.5" fill="#D8B4FE" />
+                </g>
+
+                <!-- ================= 3. ENCOURAGING EXPRESSION ================= -->
+                <g class="expr-encouraging">
+                  <!-- Confident Wink Left & Star-Circle Right -->
+                  <path d="M 32 50 Q 37 43 42 50" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <circle cx="63" cy="48" r="5.5" fill="#FBBF24" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <!-- Encouraging Confident Smile -->
+                  <path d="M 42 62 Q 52 69 58 61" stroke="#FBBF24" stroke-width="3" stroke-linecap="round" fill="none" />
+                  <!-- Warm Beacon Arc Above Antenna -->
+                  <path d="M 38 6 Q 50 1 62 6" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" fill="none" />
+                </g>
+
+                <!-- ================= 4. EXCITED EXPRESSION ================= -->
+                <g class="expr-excited">
+                  <!-- Joyful Sparkle Squint Eyes -->
+                  <path d="M 32 51 L 37 44 L 42 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 58 51 L 63 44 L 68 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <!-- Open Happy Grin -->
+                  <path d="M 39 60 Q 50 73 61 60 Z" fill="#F472B6" stroke="#FFFFFF" stroke-width="1.5" />
+                  <!-- Dual Electric Energy Sparks -->
+                  <path d="M 35 2 L 42 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M 65 2 L 58 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+              </svg>
+            </div>
+            
+            <div class="pixel-status-badge">
+              <span class="pixel-online-dot"></span>
+              <span class="pixel-name">Pixel</span>
+            </div>
+            <span id="pixel-expression-tag" class="pixel-expression-pill expr-pill-happy">Happy</span>
+          </div>
+
+          <!-- Dialogue Area -->
+          <div class="pixel-dialogue-body">
+            <div class="pixel-dialogue-header">
+              <div class="pixel-topic-badge" id="pixel-topic-badge">👋 WELCOME TO THE ADVENTURE</div>
+              <button id="pixel-dismiss-btn" class="pixel-icon-btn" aria-label="Dismiss Pixel's dialogue" title="Dismiss dialogue">✕</button>
+            </div>
+
+            <!-- Dynamic Message Container -->
+            <div class="pixel-speech-text" id="pixel-message-text" aria-live="polite">
+              <!-- Content rendered dynamically by js/pixel.js -->
+            </div>
+
+            <!-- Quick Topic Selectors -->
+            <div class="pixel-topic-chips" id="pixel-topics-container" aria-label="Dialogue Topics">
+              <button class="pixel-topic-chip active" data-topic-index="0">👋 Welcome</button>
+              <button class="pixel-topic-chip" data-topic-index="1">🗺️ Destinations</button>
+              <button class="pixel-topic-chip" data-topic-index="2">💡 Missions Guide</button>
+              <button class="pixel-topic-chip" data-topic-index="3">✨ Encouragement</button>
+              <button class="pixel-topic-chip" data-topic-index="4">🔑 Navigation Hint</button>
+              <button class="pixel-topic-chip" data-topic-index="5">🚀 Let's Build!</button>
+            </div>
+
+            <!-- Dialogue Navigation Controls -->
+            <div class="pixel-dialogue-footer">
+              <div class="pixel-counter" id="pixel-counter">Message 1 of 6</div>
+              <div class="pixel-nav-buttons">
+                <button id="pixel-prev-btn" class="button button-small button-outline" aria-label="Previous message" disabled>&larr; Previous</button>
+                <button id="pixel-next-btn" class="button button-small" aria-label="Next message">Next Tip &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Standby / Reopen Banner when Dialogue is Dismissed -->
+        <div id="pixel-reopen-banner" class="pixel-reopen-banner" style="display: none;" role="region" aria-label="Pixel Companion Standby">
+          <div class="reopen-inner">
+            <span class="reopen-robot-mini" aria-hidden="true">🤖</span>
+            <span>Pixel is standing by to assist you.</span>
+          </div>
+          <button id="pixel-reopen-btn" class="button button-small">Talk to Pixel 💬</button>
+        </div>
+      </section>
+
+      <!-- 2. 2D Interactive Adventure Map -->
+      <section id="adventure-map" class="map-section" aria-labelledby="map-heading">
+        <div class="map-section-header">
+          <h2 id="map-heading" class="section-title" style="text-align: left; margin-bottom: 0.25rem;">Interactive World Map</h2>
+          <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Explore our 4 destinations in sequence. Click any island or biome for details.</p>
+        </div>
+
+        <div class="adventure-map-card">
+          <div class="map-compass" aria-hidden="true">
+            <span>🧭</span>
+            <span>DIGITAL MAP REALM</span>
+          </div>
+
+          <div class="destinations-grid">
+
+            <!-- Destination 01: HTML Island (Unlocked) -->
+            <article class="dest-card dest-html" data-dest-id="html-island" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 01: HTML Island. Status: Active Quest. Click to inspect briefing.">
+              <span class="dest-order-badge">DESTINATION 01</span>
+              <div class="dest-icon-container" aria-hidden="true">🏝️</div>
+              <h3 class="dest-name">HTML Island</h3>
+              <div class="dest-mission-label">Missions 01 &amp; 02</div>
+              <p class="dest-brief">
+                The ancient foundational biome! Discover how browsers request pages and construct the structural skeleton of the web.
+              </p>
+              <div>
+                <span class="dest-status-pill dest-status-active">✦ Active Quest</span>
+              </div>
+            </article>
+
+            <!-- Destination 02: CSS City (Locked) -->
+            <article class="dest-card dest-css locked" data-dest-id="css-city" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 02: CSS City. Status: Locked. Click to inspect briefing.">
+              <span class="dest-order-badge">DESTINATION 02</span>
+              <div class="dest-icon-container" aria-hidden="true">🏙️</div>
+              <h3 class="dest-name">CSS City</h3>
+              <div class="dest-mission-label">Mission 03</div>
+              <p class="dest-brief">
+                A radiant neon metropolis! Style plain HTML structures with eye-catching colors, typography, spacing, and responsive design.
+              </p>
+              <div>
+                <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+              </div>
+            </article>
+
+            <!-- Destination 03: JavaScript Jungle (Locked) -->
+            <article class="dest-card dest-js locked" data-dest-id="js-jungle" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 03: JavaScript Jungle. Status: Locked. Click to inspect briefing.">
+              <span class="dest-order-badge">DESTINATION 03</span>
+              <div class="dest-icon-container" aria-hidden="true">🌴</div>
+              <h3 class="dest-name">JavaScript Jungle</h3>
+              <div class="dest-mission-label">Mission 04</div>
+              <p class="dest-brief">
+                An electrifying jungle pulsing with interactive energy! Add brains to your pages with variables, functions, and click events.
+              </p>
+              <div>
+                <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+              </div>
+            </article>
+
+            <!-- Destination 04: Creator's Lab (Locked) -->
+            <article class="dest-card dest-creator locked" data-dest-id="creator-lab" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 04: Creator's Lab. Status: Locked. Click to inspect briefing.">
+              <span class="dest-order-badge">DESTINATION 04</span>
+              <div class="dest-icon-container" aria-hidden="true">🧪</div>
+              <h3 class="dest-name">Creator's Lab</h3>
+              <div class="dest-mission-label">Mission 05</div>
+              <p class="dest-brief">
+                The summit workshop of digital creators! Combine HTML, CSS, and JS into your own independent, playable web artifact.
+              </p>
+              <div>
+                <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Connecting Trail Legend -->
+          <div class="map-path-legend" aria-label="Adventure Progression Order">
+            <span class="path-step">🏝️ HTML Island</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step">🏙️ CSS City</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step">🌴 JavaScript Jungle</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step">🧪 Creator's Lab</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. Missions Log Summary Section -->
+      <section id="missions-summary" class="missions-log-section" aria-labelledby="missions-heading">
+        <h2 id="missions-heading" class="section-title" style="text-align: left; margin-bottom: 0.25rem;">Adventure Mission Log</h2>
+        <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">The complete 5-mission campaign for Young Web Adventurers:</p>
+
+        <div class="missions-log-grid">
+
+          <article class="mission-log-card">
+            <div>
+              <span class="mission-log-number">Mission 01</span>
+              <h3 class="mission-log-title">Enter the Web</h3>
+              <p class="mission-log-dest">📍 Destination: HTML Island</p>
+              <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
+                Demystify the Internet, browsers, and the visible building blocks of webpages.
+              </p>
+            </div>
+            <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <span class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
+              <a href="mission.html" class="button button-small">Start Mission 01 &rarr;</a>
+            </div>
+          </article>
+
+          <article class="mission-log-card">
+            <div>
+              <span class="mission-log-number">Mission 02</span>
+              <h3 class="mission-log-title">Build the Structure</h3>
+              <p class="mission-log-dest">📍 Destination: HTML Island</p>
+              <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
+                Master semantic tags, elements, headings, paragraphs, and boilerplate skeletons.
+              </p>
+            </div>
+            <div style="margin-top: 1rem;">
+              <span class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
+            </div>
+          </article>
+
+          <article class="mission-log-card">
+            <div>
+              <span class="mission-log-number">Mission 03</span>
+              <h3 class="mission-log-title">Make It Beautiful</h3>
+              <p class="mission-log-dest">📍 Destination: CSS City</p>
+              <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
+                Apply vibrant CSS styling, selectors, custom colors, box model spacing, and mobile design.
+              </p>
+            </div>
+            <div style="margin-top: 1rem;">
+              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            </div>
+          </article>
+
+          <article class="mission-log-card">
+            <div>
+              <span class="mission-log-number">Mission 04</span>
+              <h3 class="mission-log-title">Bring It to Life</h3>
+              <p class="mission-log-dest">📍 Destination: JavaScript Jungle</p>
+              <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
+                Ignite web pages with interactive JavaScript variables, functions, and click events.
+              </p>
+            </div>
+            <div style="margin-top: 1rem;">
+              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            </div>
+          </article>
+
+          <article class="mission-log-card">
+            <div>
+              <span class="mission-log-number">Mission 05</span>
+              <h3 class="mission-log-title">The Creator Mission</h3>
+              <p class="mission-log-dest">📍 Destination: Creator's Lab</p>
+              <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
+                Build an independent project inside the Creator's Playground and celebrate your creation.
+              </p>
+            </div>
+            <div style="margin-top: 1rem;">
+              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Destination Briefing Modal Dialog -->
+  <div id="destination-modal" class="dest-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="dest-modal-card">
+      <button id="modal-close-btn" class="modal-close-btn" aria-label="Close dialog">✕</button>
+
+      <div class="modal-header">
+        <div id="modal-icon" class="modal-icon" aria-hidden="true">🏝️</div>
+        <div class="modal-title-box">
+          <h3 id="modal-title">HTML Island</h3>
+          <span id="modal-badge" class="dest-status-pill dest-status-active">✦ Active Quest</span>
+        </div>
+      </div>
+
+      <p id="modal-desc" style="color: #CBD5E1; margin-bottom: 1rem; line-height: 1.5;"></p>
+
+      <h4 style="font-size: 0.95rem; color: var(--color-lavender); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Included Quests:</h4>
+      <ul id="modal-missions" class="modal-missions-list"></ul>
+
+      <p id="modal-stage-note" class="modal-stage-note"></p>
+
+      <div class="modal-actions">
+        <button id="modal-action-btn" class="button">Explore Destination</button>
+        <button type="button" class="button button-outline" onclick="document.getElementById('modal-close-btn').click()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="brand-name">Curio<span>Tech</span></span>
+        <p class="footer-copy">CurioTech: The Digital Adventure — Empowering young minds in digital skills.</p>
+      </div>
+      <div class="footer-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="adventure.html">Adventure Map</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/pixel.js"></script>
+  <script src="js/adventure.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,2474 @@
+/* ==========================================================================
+   CurioTech - Shared Stylesheet (Phase 1 & Phase 2)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties (Theme Colors)
+   -------------------------------------------------------------------------- */
+:root {
+  --color-background: #0B0B0F;
+  /* Midnight black: main page background */
+  --color-purple: #A855F7;
+  /* Neon purple: primary buttons and highlights */
+  --color-lavender: #D8B4FE;
+  /* Light lavender: secondary highlights and subtitles */
+  --color-white: #FFFFFF;
+  /* White: main text */
+  --color-plum: #25202F;
+  /* Dark plum: cards and container panels */
+}
+
+/* --------------------------------------------------------------------------
+   2. Basic Reset and Box-Sizing Rules
+   -------------------------------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   3. Body Styles
+   -------------------------------------------------------------------------- */
+body {
+  color: var(--color-white);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   4. Shared Page Width and Spacing
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  /* Increased from 1100px for a fuller, better-balanced desktop layout */
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+main {
+  flex: 1;
+  /* Pushes the footer to the bottom on short pages */
+  background-color: var(--color-background);
+}
+
+/* --------------------------------------------------------------------------
+   5. Header and Navigation Styles
+   -------------------------------------------------------------------------- */
+.site-header {
+  background-color: var(--color-plum);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--color-white);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.brand-name {
+  color: var(--color-white);
+}
+
+.brand-name span {
+  color: var(--color-lavender);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.nav-link {
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-lavender);
+}
+
+/* Keyboard focus state for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Hero Section Styles
+   -------------------------------------------------------------------------- */
+.hero {
+  padding: 5rem 0 4rem 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.35rem;
+  color: var(--color-white);
+}
+
+.hero-copy {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 2.25rem auto;
+  color: #E2E8F0;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.25rem;
+}
+
+.hero-tagline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+}
+
+/* --------------------------------------------------------------------------
+   7. Button Styles
+   -------------------------------------------------------------------------- */
+.button {
+  display: inline-block;
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 10px;
+  border: 2px solid var(--color-purple);
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.button:hover {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: var(--color-lavender);
+  border: 2px solid var(--color-purple);
+}
+
+.button-secondary:hover {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: var(--color-white);
+  border-color: var(--color-lavender);
+}
+
+.button-small {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+.button-full {
+  width: 100%;
+}
+
+/* Distinct Logout button for dashboard navigation */
+.nav-logout-btn {
+  margin-left: 0.85rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-white);
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1.5px solid var(--color-purple);
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  display: inline-block;
+}
+
+.nav-logout-btn:hover {
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  border-color: var(--color-lavender);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
+}
+
+.nav-logout-btn:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   8. Introduction and Section Titles
+   -------------------------------------------------------------------------- */
+.section-header {
+  text-align: center;
+  margin-bottom: 2.75rem;
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--color-lavender);
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  max-width: 720px;
+  margin: 0 auto;
+  color: #CBD5E1;
+  line-height: 1.6;
+}
+
+.intro {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.intro-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--color-lavender);
+}
+
+.intro-text {
+  font-size: 1.15rem;
+  max-width: 860px;
+  margin: 0 auto;
+  color: #CBD5E1;
+  line-height: 1.7;
+}
+
+/* --------------------------------------------------------------------------
+   9. Learning Journey Section (5 Steps)
+   -------------------------------------------------------------------------- */
+.journey {
+  padding: 3.5rem 0 5rem 0;
+}
+
+.journey-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.journey-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.journey-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+}
+
+.step-number {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: rgba(168, 85, 247, 0.2);
+  color: var(--color-lavender);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.journey-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-white);
+}
+
+.journey-card-text {
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   10. Benefits Section
+   -------------------------------------------------------------------------- */
+.benefits {
+  padding: 4.5rem 0 5rem 0;
+  background-color: rgba(37, 32, 47, 0.4);
+}
+
+.benefits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.75rem;
+  list-style: none;
+}
+
+.benefit-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  padding: 2.25rem 1.75rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.benefit-icon {
+  font-size: 2rem;
+  margin-bottom: 0.85rem;
+  display: inline-block;
+}
+
+.benefit-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-lavender);
+}
+
+.benefit-text {
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   11. Call to Action (CTA) Section
+   -------------------------------------------------------------------------- */
+.cta-section {
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.cta-box {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 18px;
+  padding: 3.5rem 2.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+}
+
+.cta-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  color: var(--color-white);
+}
+
+.cta-copy {
+  font-size: 1.15rem;
+  color: #E2E8F0;
+  max-width: 650px;
+  margin: 0 auto 2rem auto;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   12. Login Page Styles (Centered Horizontally & Vertically)
+   -------------------------------------------------------------------------- */
+.login-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-section {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 18px;
+  padding: 2.75rem 2.25rem;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.login-header {
+  margin-bottom: 1.75rem;
+}
+
+.login-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-lavender);
+}
+
+.login-form {
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--color-white);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border-radius: 8px;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  background-color: var(--color-background);
+  color: var(--color-white);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #64748B;
+}
+
+/* Feedback message box after form submit */
+.login-feedback {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  border-radius: 8px;
+  text-align: center;
+  display: none;
+  /* Hidden until JavaScript updates it */
+}
+
+.login-feedback.visible {
+  display: block;
+  padding: 0.85rem 1rem;
+}
+
+.login-feedback.error {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #FCA5A5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.login-feedback.success {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #86EFAC;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.demo-note {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #94A3B8;
+  background-color: rgba(11, 11, 15, 0.5);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--color-lavender);
+  text-align: left;
+  line-height: 1.4;
+}
+
+.login-nav-back {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.link-back {
+  color: var(--color-lavender);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link-back:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   13. Footer Styles
+   -------------------------------------------------------------------------- */
+.site-footer {
+  background-color: var(--color-plum);
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  padding: 2rem 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-text {
+  font-size: 0.95rem;
+  color: var(--color-lavender);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   14. Responsive Styles (Mobile & Tablet)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .site-header .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+  }
+
+  .hero {
+    padding: 3rem 0 2rem 0;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-copy {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .button {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .intro-title,
+  .section-title,
+  .cta-title {
+    font-size: 1.6rem;
+  }
+
+  .journey-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .benefits-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .cta-box {
+    padding: 2rem 1.25rem;
+  }
+
+  .login-card {
+    padding: 2rem 1.25rem;
+  }
+
+  .nav-logout-btn {
+    margin-left: 0;
+  }
+
+  .overview-grid,
+  .courses-grid,
+  .achievements-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .progress-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   15. Dashboard Styles (Phase 3)
+   -------------------------------------------------------------------------- */
+.dashboard-main {
+  padding: 2.5rem 0 4rem 0;
+}
+
+.dashboard-section {
+  margin-bottom: 3.5rem;
+}
+
+/* Welcome Header */
+.dashboard-welcome {
+  margin-bottom: 2.5rem;
+}
+
+.badge-journey {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 0.85rem;
+}
+
+.welcome-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-white);
+  line-height: 1.25;
+  margin-bottom: 0.65rem;
+}
+
+.welcome-subtitle {
+  font-size: 1.05rem;
+  color: #CBD5E1;
+  max-width: 680px;
+}
+
+/* Learning Overview (4 Cards) */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.overview-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 14px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(168, 85, 247, 0.45);
+}
+
+.overview-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.overview-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-lavender);
+}
+
+.overview-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 0.25rem 0;
+}
+
+.overview-note {
+  font-size: 0.8rem;
+  color: #94A3B8;
+}
+
+/* My Learning Section & Course Cards */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.course-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.course-top-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tag-level {
+  background-color: rgba(168, 85, 247, 0.2);
+  color: var(--color-lavender);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+}
+
+.tag-status-available {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #86EFAC;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+}
+
+.tag-status-soon {
+  background-color: rgba(148, 163, 184, 0.15);
+  color: #94A3B8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+}
+
+.course-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.course-description {
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.course-progress-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #CBD5E1;
+  margin-bottom: 0.4rem;
+}
+
+.progress-bar-track {
+  background-color: var(--color-background);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.progress-bar-fill {
+  background-color: var(--color-purple);
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.course-action {
+  margin-top: auto;
+}
+
+.button-disabled {
+  background-color: rgba(148, 163, 184, 0.15);
+  color: #94A3B8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Notice box shown when Start Learning is clicked */
+.course-notice {
+  display: none;
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1px solid var(--color-purple);
+  color: var(--color-lavender);
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.course-notice.visible {
+  display: block;
+}
+
+/* Continue Learning (Empty State) */
+.empty-state-card {
+  background-color: var(--color-plum);
+  border: 1px dashed rgba(168, 85, 247, 0.35);
+  border-radius: 14px;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.empty-state-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-text {
+  font-size: 1.05rem;
+  color: #CBD5E1;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Achievements Section */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.achievement-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  opacity: 0.85;
+}
+
+.achievement-icon {
+  font-size: 1.75rem;
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.achievement-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.achievement-status {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  background-color: rgba(11, 11, 15, 0.5);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.achievement-desc {
+  font-size: 0.9rem;
+  color: #94A3B8;
+  line-height: 1.4;
+}
+
+/* Progress Section */
+.progress-panel {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+  margin-top: 1.25rem;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(168, 85, 247, 0.15);
+}
+
+.stat-item-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.stat-item-label {
+  font-size: 0.85rem;
+  color: var(--color-lavender);
+  margin-top: 0.25rem;
+}
+
+.demo-note-inline {
+  font-size: 0.85rem;
+  color: #94A3B8;
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+/* Portfolio Section */
+.portfolio-panel {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 14px;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.portfolio-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-text {
+  font-size: 1rem;
+  color: #CBD5E1;
+  max-width: 550px;
+  margin: 0 auto 1rem auto;
+  line-height: 1.5;
+}
+
+.portfolio-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: rgba(168, 85, 247, 0.15);
+  color: var(--color-lavender);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   16. CurioTech: The Digital Adventure (Phase 4 - Stage 4.1)
+   -------------------------------------------------------------------------- */
+
+/* Adventure Hero Card */
+.adventure-hero-card {
+  background: linear-gradient(135deg, rgba(37, 32, 47, 0.95) 0%, rgba(20, 16, 30, 0.95) 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px;
+  padding: 2.5rem 2.25rem;
+  margin-bottom: 2.25rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(168, 85, 247, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.adventure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.adventure-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  color: var(--color-white);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.adventure-title span {
+  background: linear-gradient(90deg, #A855F7 0%, #D8B4FE 50%, #38BDF8 100%);
+  /* -webkit-background-clip: text; */
+  -webkit-text-fill-color: transparent;
+}
+
+.adventure-tagline {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-lavender);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.adventure-desc {
+  font-size: 1.1rem;
+  color: #E2E8F0;
+  max-width: 820px;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+/* ==========================================================================
+   Pixel Mascot Companion & Dialogue Station (Stage 4.2)
+   ========================================================================== */
+.pixel-dialogue-card {
+  display: flex;
+  gap: 1.75rem;
+  background-color: rgba(37, 32, 47, 0.7);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(168, 85, 247, 0.45);
+  border-radius: 18px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 25px rgba(168, 85, 247, 0.15);
+  transition: transform 0.25s ease, opacity 0.25s ease, border-color 0.25s ease;
+  position: relative;
+}
+
+.pixel-dialogue-card:focus-within {
+  border-color: var(--color-purple);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4), 0 0 30px rgba(168, 85, 247, 0.25);
+}
+
+.pixel-dialogue-card.dismissed {
+  display: none !important;
+}
+
+/* Avatar Column */
+.pixel-avatar-col {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100px;
+}
+
+/* 2D SVG Mascot Container */
+.pixel-svg-avatar {
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.4));
+  transition: transform 0.25s ease;
+}
+
+.pixel-svg-avatar:hover {
+  transform: scale(1.05);
+}
+
+/* SVG Expression Switcher Rules */
+.pixel-svg-avatar .expr-happy,
+.pixel-svg-avatar .expr-thinking,
+.pixel-svg-avatar .expr-encouraging,
+.pixel-svg-avatar .expr-excited {
+  display: none;
+}
+
+.pixel-svg-avatar[data-expression="happy"] .expr-happy {
+  display: inline;
+}
+
+.pixel-svg-avatar[data-expression="thinking"] .expr-thinking {
+  display: inline;
+}
+
+.pixel-svg-avatar[data-expression="encouraging"] .expr-encouraging {
+  display: inline;
+}
+
+.pixel-svg-avatar[data-expression="excited"] .expr-excited {
+  display: inline;
+}
+
+/* Pixel Status Pill & Online Dot */
+.pixel-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+.pixel-online-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10B981;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #10B981;
+}
+
+/* Expression Pill */
+.pixel-expression-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+}
+
+.expr-pill-happy {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.expr-pill-thinking {
+  background-color: rgba(216, 180, 254, 0.15);
+  color: var(--color-lavender);
+  border-color: rgba(216, 180, 254, 0.4);
+}
+
+.expr-pill-encouraging {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #FBBF24;
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.expr-pill-excited {
+  background-color: rgba(236, 72, 153, 0.15);
+  color: #F472B6;
+  border-color: rgba(236, 72, 153, 0.4);
+}
+
+/* Dialogue Body */
+.pixel-dialogue-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pixel-dialogue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.pixel-topic-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--color-lavender);
+  text-transform: uppercase;
+}
+
+.pixel-icon-btn {
+  background: none;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: var(--color-lavender);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.55rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.pixel-icon-btn:hover,
+.pixel-icon-btn:focus-visible {
+  color: var(--color-white);
+  background-color: rgba(168, 85, 247, 0.25);
+  border-color: var(--color-purple);
+  outline: none;
+}
+
+/* Speech Text */
+.pixel-speech-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #F1F5F9;
+  margin-bottom: 1.25rem;
+  min-height: 75px;
+}
+
+.pixel-speech-text strong {
+  color: var(--color-white);
+}
+
+.pixel-speech-text em {
+  color: var(--color-lavender);
+  font-style: normal;
+}
+
+/* Topic Chips */
+.pixel-topic-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.pixel-topic-chip {
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 20px;
+  color: #CBD5E1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pixel-topic-chip:hover {
+  background-color: rgba(168, 85, 247, 0.2);
+  color: var(--color-white);
+  border-color: var(--color-purple);
+}
+
+.pixel-topic-chip.active {
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  border-color: var(--color-purple);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.pixel-topic-chip:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+}
+
+/* Dialogue Footer & Navigation Buttons */
+.pixel-dialogue-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  padding-top: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pixel-counter {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.pixel-nav-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Reopen Banner when dialogue dismissed */
+.pixel-reopen-banner {
+  background-color: rgba(37, 32, 47, 0.6);
+  border: 1.5px dashed rgba(168, 85, 247, 0.4);
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.reopen-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-lavender);
+  font-weight: 600;
+}
+
+.reopen-robot-mini {
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   2D Illustrated Adventure Map
+   ========================================================================== */
+.map-section {
+  margin-bottom: 3.5rem;
+}
+
+.map-section-header {
+  margin-bottom: 1.5rem;
+}
+
+.adventure-map-card {
+  background: radial-gradient(ellipse at 50% 30%, #1c152a 0%, #110e1a 60%, #07060c 100%);
+  border: 2px solid rgba(168, 85, 247, 0.4);
+  border-radius: 22px;
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Map Grid Overlay for 2D feel */
+.adventure-map-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+  pointer-events: none;
+}
+
+/* Compass Rose in Corner */
+.map-compass {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.75rem;
+  font-size: 1.5rem;
+  opacity: 0.7;
+  color: var(--color-lavender);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* 2D Destinations Trail Grid */
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+  margin-top: 1rem;
+}
+
+/* Individual Destination Card / Pin */
+.dest-card {
+  background-color: var(--color-plum);
+  border: 2px solid rgba(168, 85, 247, 0.3);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  min-height: 320px;
+}
+
+.dest-card:focus-visible {
+  outline: 3px solid var(--color-lavender);
+  outline-offset: 4px;
+}
+
+.dest-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-purple);
+  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.25);
+}
+
+/* Destination Badge (e.g. 01, 02) */
+.dest-order-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background-color: rgba(11, 11, 15, 0.7);
+  color: var(--color-lavender);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+/* Thematic Destination Icon & Glow */
+.dest-icon-container {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 1.5rem 0 1rem 0;
+  transition: transform 0.2s ease;
+}
+
+.dest-card:hover .dest-icon-container {
+  transform: scale(1.08);
+}
+
+/* Thematic Colors for the 4 Destinations */
+.dest-html .dest-icon-container {
+  background: rgba(56, 189, 248, 0.15);
+  border: 2px solid #38BDF8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+}
+
+.dest-css .dest-icon-container {
+  background: rgba(168, 85, 247, 0.15);
+  border: 2px solid var(--color-purple);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+}
+
+.dest-js .dest-icon-container {
+  background: rgba(251, 191, 36, 0.15);
+  border: 2px solid #FBBF24;
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+}
+
+.dest-creator .dest-icon-container {
+  background: rgba(236, 72, 153, 0.15);
+  border: 2px solid #EC4899;
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.35);
+}
+
+.dest-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.dest-mission-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-lavender);
+  margin-bottom: 0.75rem;
+}
+
+.dest-brief {
+  font-size: 0.9rem;
+  color: #CBD5E1;
+  line-height: 1.45;
+  margin-bottom: 1.5rem;
+}
+
+/* Status Chips */
+.dest-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dest-status-active {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.dest-status-locked {
+  background-color: rgba(148, 163, 184, 0.12);
+  color: #94A3B8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.dest-card.locked {
+  opacity: 0.75;
+}
+
+.dest-card.locked:hover {
+  transform: translateY(-2px);
+  border-color: rgba(148, 163, 184, 0.4);
+  box-shadow: none;
+}
+
+/* The Connecting Trail Pathway Banner */
+.map-path-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(168, 85, 247, 0.25);
+  color: var(--color-lavender);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.path-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.path-arrow {
+  color: var(--color-purple);
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   Destination Briefing Modal (Interactive Drawer)
+   ========================================================================== */
+.dest-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 11, 15, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.dest-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dest-modal-card {
+  background-color: var(--color-plum);
+  border: 2px solid var(--color-purple);
+  border-radius: 20px;
+  max-width: 580px;
+  width: 100%;
+  padding: 2.5rem 2.25rem;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(168, 85, 247, 0.3);
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+}
+
+.dest-modal-overlay.active .dest-modal-card {
+  transform: translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-lavender);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  color: var(--color-white);
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-icon {
+  font-size: 3rem;
+}
+
+.modal-title-box h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 0.3rem;
+}
+
+.modal-missions-list {
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  list-style: none;
+}
+
+.modal-missions-list li {
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-stage-note {
+  font-size: 0.85rem;
+  color: #CBD5E1;
+  background-color: rgba(168, 85, 247, 0.12);
+  border-left: 3px solid var(--color-purple);
+  padding: 0.75rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Missions Log Summary Table */
+.missions-log-section {
+  margin-bottom: 3.5rem;
+}
+
+.missions-log-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.mission-log-card {
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mission-log-number {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  margin-bottom: 0.5rem;
+}
+
+.mission-log-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.4rem;
+}
+
+.mission-log-dest {
+  font-size: 0.85rem;
+  color: #94A3B8;
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments for Adventure Map */
+@media (max-width: 1024px) {
+  .destinations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .adventure-title {
+    font-size: 2rem;
+  }
+
+  .pixel-dialogue-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .pixel-avatar-col {
+    width: auto;
+  }
+
+  .pixel-dialogue-header {
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+
+  .pixel-icon-btn {
+    position: absolute;
+    right: 0;
+    top: -0.25rem;
+  }
+
+  .pixel-topic-chips {
+    justify-content: center;
+  }
+
+  .pixel-dialogue-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .destinations-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .dest-card {
+    min-height: auto;
+    padding: 1.75rem 1.25rem;
+  }
+
+  .dest-modal-card {
+    padding: 2rem 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   17. CurioTech Mission Learning Interface (Stage 4.3)
+   ========================================================================== */
+
+/* Mission Header Banner & Breadcrumbs */
+.mission-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin: 1.5rem 0 1.25rem 0;
+  flex-wrap: wrap;
+}
+
+.mission-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mission-dest-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #38BDF8;
+}
+
+.mission-main-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+
+/* 6-Stage Stepper / Progress Bar */
+.mission-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(37, 32, 47, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 30px;
+  padding: 0.35rem 0.6rem;
+  flex-wrap: wrap;
+}
+
+.step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94A3B8;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.step-pill:hover:not(:disabled) {
+  color: var(--color-white);
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.step-pill.active {
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+  border-color: var(--color-purple);
+}
+
+.step-pill.completed:not(.active) {
+  color: #10B981;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.step-pill:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.step-num {
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.1rem 0.35rem;
+  border-radius: 10px;
+}
+
+/* Mission Layout Card */
+.mission-card {
+  background-color: var(--color-plum);
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  border-radius: 20px;
+  padding: 2.25rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(168, 85, 247, 0.15);
+  position: relative;
+}
+
+/* Compact Pixel Companion within Mission */
+.mission-pixel-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background-color: rgba(11, 11, 15, 0.65);
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.mission-pixel-speech {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #F1F5F9;
+}
+
+.mission-pixel-speech strong {
+  color: var(--color-lavender);
+}
+
+/* Stage View Switcher */
+.stage-panel {
+  display: none;
+  animation: stageFadeIn 0.3s ease;
+}
+
+.stage-panel.active {
+  display: block;
+}
+
+@keyframes stageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stage-header {
+  margin-bottom: 1.5rem;
+}
+
+.stage-badge-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.stage-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.stage-description {
+  font-size: 1.05rem;
+  color: #CBD5E1;
+  line-height: 1.6;
+}
+
+/* Stage 1: Discover Card Elements */
+.discover-box {
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 14px;
+  padding: 1.75rem;
+  margin: 1.5rem 0;
+}
+
+.relatable-scenario {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.scenario-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.scenario-text {
+  font-size: 1.05rem;
+  color: #E2E8F0;
+  line-height: 1.6;
+}
+
+.curiosity-question-box {
+  background-color: rgba(168, 85, 247, 0.12);
+  border-left: 4px solid var(--color-purple);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 10px 10px 0;
+}
+
+.curiosity-question-box h4 {
+  font-size: 1.05rem;
+  color: var(--color-lavender);
+  margin-bottom: 0.5rem;
+}
+
+/* Stage 2: Explore Mock Browser & Elements Guide */
+.mock-browser-window {
+  background-color: #121019;
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.browser-top-bar {
+  background-color: #1C1728;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.browser-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background-color: #EF4444;
+}
+
+.dot-yellow {
+  background-color: #F59E0B;
+}
+
+.dot-green {
+  background-color: #10B981;
+}
+
+.browser-url-bar {
+  flex: 1;
+  background-color: #0B0B0F;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 6px;
+  padding: 0.2rem 0.8rem;
+  font-size: 0.8rem;
+  color: #94A3B8;
+  font-family: monospace;
+}
+
+.browser-canvas {
+  padding: 1.75rem;
+  background-color: #0E0C14;
+}
+
+.explore-elements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.explore-element-card {
+  background-color: rgba(37, 32, 47, 0.6);
+  border: 1.5px solid rgba(168, 85, 247, 0.25);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.explore-element-card:hover {
+  border-color: var(--color-purple);
+  transform: translateY(-2px);
+}
+
+.explore-tag-name {
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38BDF8;
+  background-color: rgba(56, 189, 248, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Stage 3: Experiment Inspector */
+.inspector-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.interactive-mock-page {
+  background-color: #14111E;
+  border: 2px dashed rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inspectable-box {
+  border: 2px solid rgba(168, 85, 247, 0.25);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background-color: rgba(11, 11, 15, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.inspectable-box:hover,
+.inspectable-box:focus-visible {
+  border-color: #38BDF8;
+  background-color: rgba(56, 189, 248, 0.1);
+  outline: none;
+}
+
+.inspectable-box.inspected {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+}
+
+.inspectable-box.active-selected {
+  border-color: #38BDF8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
+  background-color: rgba(56, 189, 248, 0.15);
+}
+
+.inspect-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  margin-bottom: 0.25rem;
+}
+
+.inspector-output-card {
+  background-color: rgba(11, 11, 15, 0.7);
+  border: 1.5px solid var(--color-purple);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.inspector-counter-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+  background: rgba(168, 85, 247, 0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+/* Stage 4: Challenge Card & Question */
+.challenge-box {
+  background-color: rgba(11, 11, 15, 0.55);
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+}
+
+.challenge-question {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 1.5rem;
+  line-height: 1.45;
+}
+
+.challenge-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.challenge-option-btn {
+  background-color: rgba(37, 32, 47, 0.8);
+  border: 2px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: #E2E8F0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.challenge-option-btn:hover:not(:disabled) {
+  border-color: var(--color-purple);
+  background-color: rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.challenge-option-btn.correct {
+  border-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #FFFFFF;
+}
+
+.challenge-option-btn.wrong {
+  border-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #FFFFFF;
+}
+
+.challenge-feedback-box {
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: none;
+}
+
+.challenge-feedback-box.show {
+  display: block;
+}
+
+.challenge-feedback-box.correct {
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10B981;
+  color: #D1FAE5;
+}
+
+.challenge-feedback-box.wrong {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid #EF4444;
+  color: #FEE2E2;
+}
+
+/* Stage 5: Create Blueprint Studio */
+.studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+  margin: 1.5rem 0;
+}
+
+.studio-controls-card {
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.studio-group-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+  margin-bottom: 0.5rem;
+}
+
+.studio-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.studio-pill {
+  background-color: rgba(37, 32, 47, 0.8);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 18px;
+  color: #CBD5E1;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-pill.active {
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  border-color: var(--color-purple);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.studio-preview-card {
+  background-color: #121019;
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.preview-rendered-page {
+  background-color: #0B0B0F;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 10px;
+  padding: 1.5rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Stage 6: Celebrate Card */
+.celebrate-layout {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.celebrate-trophy {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: trophyFloat 2s ease-in-out infinite;
+}
+
+@keyframes trophyFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.celebrate-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 0.75rem;
+}
+
+.celebrate-summary-list {
+  max-width: 550px;
+  margin: 1.75rem auto;
+  text-align: left;
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 14px;
+  padding: 1.25rem 1.75rem;
+  list-style: none;
+}
+
+.celebrate-summary-list li {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.celebrate-check {
+  color: #10B981;
+  font-weight: 800;
+}
+
+/* Mission Navigation Bar (Back & Continue buttons) */
+.mission-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Responsive adjustments for Mission Interface */
+@media (max-width: 1024px) {
+
+  .inspector-layout,
+  .studio-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mission-header-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mission-stepper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mission-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .mission-pixel-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem 1rem;
+  }
+
+  .challenge-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioTech — Simulated Login</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <!-- Reusing the shared CurioTech stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="brand" aria-label="CurioTech Home">
+        <img src="assets/images/logo.png" alt="CurioTech logo" class="brand-logo">
+        <span class="brand-name">Curio<span>Tech</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Login Area -->
+  <main class="login-main">
+    <section class="login-section">
+      <div class="container login-container">
+        <div class="login-card">
+          
+          <div class="login-header">
+            <h1 class="login-title">Welcome to CurioTech</h1>
+            <p class="login-subtitle">Sign in to continue your learning journey.</p>
+          </div>
+
+          <!-- Simulated Sign-in Form -->
+          <form id="login-form" class="login-form" novalidate>
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="learner@example.com" 
+                required 
+                autocomplete="email"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-input" 
+                placeholder="Enter demo password" 
+                required 
+                autocomplete="current-password"
+              >
+            </div>
+
+            <button type="submit" class="button button-full">Sign In</button>
+          </form>
+
+          <!-- Feedback message displayed by JavaScript -->
+          <div id="login-feedback" class="login-feedback" role="alert" aria-live="polite"></div>
+
+          <!-- Prototype demo notice -->
+          <div class="demo-note">
+            <strong>Prototype Demo Notice:</strong> This is a local simulation. It does not connect to a server or create real accounts. Passwords are never saved, stored, or transmitted anywhere.
+          </div>
+
+          <p class="login-nav-back">
+            <a href="index.html" class="link-back">← Back to Home</a>
+          </p>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-text">CurioTech — learn by doing.</p>
+    </div>
+  </footer>
+
+  <!-- Phase 2 JavaScript logic -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>
