@@ -241,7 +241,7 @@
             <span class="stage-badge-tag">STAGE 3 OF 6</span>
             <h2 id="experiment-title" class="stage-title">Experiment: The Webpage Inspector</h2>
             <p class="stage-description">
-              Click on different elements in the live webpage mock below to inspect their code tag, role, and function. (Inspect at least 3 elements to unlock the Challenge).
+              Click on different elements in the live webpage mock below to inspect their code tag, role, and function. (Inspect at least 3 elements to unlock the Challenge). Then try the optional Tag Tinkerer underneath: edit real HTML and watch the page change!
             </p>
           </div>
 
@@ -308,18 +308,65 @@
               </div>
             </div>
           </div>
+
+          <!-- Phase 4.4: Tag Tinkerer (optional hands-on activity) -->
+          <div class="tinker-card" role="group" aria-labelledby="tinker-title">
+            <div class="tinker-head">
+              <h3 id="tinker-title" class="tinker-title">🔧 Tag Tinkerer</h3>
+              <span class="tinker-optional-badge">Optional &bull; just for fun</span>
+            </div>
+            <p class="tinker-intro">Change the code and watch the page update instantly. You can't break anything!</p>
+
+            <div class="tinker-grid">
+              <div class="tinker-controls">
+                <label class="tinker-label" for="tinker-text">1. Type your own text</label>
+                <input id="tinker-text" class="tinker-input" type="text" maxlength="30" autocomplete="off" value="Hello, Web!">
+
+                <div class="tinker-label" id="tinker-tag-label">2. Pick a tag to wrap your text in</div>
+                <div class="tinker-btn-row" role="group" aria-labelledby="tinker-tag-label">
+                  <button type="button" class="tinker-btn active" data-tinker-tag="h1" aria-pressed="true">&lt;h1&gt; Heading</button>
+                  <button type="button" class="tinker-btn" data-tinker-tag="p" aria-pressed="false">&lt;p&gt; Paragraph</button>
+                </div>
+
+                <div class="tinker-label" id="tinker-img-label">3. Add a picture</div>
+                <div class="tinker-btn-row">
+                  <button type="button" id="tinker-img-btn" class="tinker-btn" aria-pressed="false" aria-labelledby="tinker-img-label tinker-img-btn">Add &lt;img&gt;</button>
+                </div>
+
+                <pre class="tinker-code" aria-label="Your HTML code"><code id="tinker-code"></code></pre>
+              </div>
+
+              <div class="tinker-output">
+                <div class="tinker-output-bar">WHAT THE BROWSER SHOWS</div>
+                <div id="tinker-preview" class="tinker-preview"></div>
+                <div id="tinker-note" class="tinker-note" role="status" aria-live="polite">Try switching between <code>&lt;h1&gt;</code> and <code>&lt;p&gt;</code>. What changes?</div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- ================= STAGE 4: CHALLENGE ================= -->
         <section id="stage-challenge" class="stage-panel" aria-labelledby="challenge-title">
           <div class="stage-header">
             <span class="stage-badge-tag">STAGE 4 OF 6</span>
-            <h2 id="challenge-title" class="stage-title">Challenge: Element Matcher</h2>
+            <h2 id="challenge-title" class="stage-title">Challenge: Three Quick Quests</h2>
             <p class="stage-description">
-              Test your knowledge! Select the correct answer below to prove your mastery and unlock the Create stage.
+              Solve three small puzzles to unlock the Create stage. Mistakes are just clues, so you can try again as many times as you like!
             </p>
           </div>
 
+          <!-- Phase 4.4: challenge progress tracker -->
+          <div class="challenge-tracker" role="group" aria-label="Challenge progress">
+            <button type="button" class="challenge-chip active" data-step="0" aria-current="step"><span class="challenge-chip-mark">1</span> Element Matcher</button>
+            <button type="button" class="challenge-chip" data-step="1" disabled><span class="challenge-chip-mark">2</span> Tag Detective</button>
+            <button type="button" class="challenge-chip" data-step="2" disabled><span class="challenge-chip-mark">3</span> Build the Page</button>
+          </div>
+
+          <!-- Single live region for all quest feedback (filled by js/mission.js) -->
+          <div id="quest-announcer" class="p44-sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+          <!-- Quest 1: Element Matcher -->
+          <div class="challenge-step" data-step="0">
           <div class="challenge-box">
             <div class="challenge-question">
               Which webpage element would you choose to display the <strong>big main title</strong> at the very top of a new article?
@@ -360,7 +407,54 @@
             </div>
 
             <!-- Immediate Feedback -->
-            <div id="challenge-feedback" class="challenge-feedback-box" role="status" aria-live="polite"></div>
+            <div id="challenge-feedback" class="challenge-feedback-box"></div>
+
+            <div class="challenge-step-actions">
+              <button type="button" class="button button-small button-outline challenge-reveal-btn" data-step="0" hidden>Show me the answer 💡</button>
+              <button type="button" class="button button-small challenge-step-next" data-step="0" hidden>Next quest &rarr;</button>
+            </div>
+          </div>
+          </div>
+
+          <!-- Quest 2: Tag Detective -->
+          <div class="challenge-step" data-step="1" hidden>
+            <div class="challenge-box">
+              <div class="challenge-question">
+                🕵️ Pixel's page looks broken! Tap the <strong>line of code</strong> that has a mistake.
+              </div>
+
+              <div class="detective-code" role="group" aria-label="Code lines. Choose the line with the mistake.">
+                <button type="button" class="detective-line" data-line="1" data-correct="false"><span class="detective-num">1</span><code>&lt;h1&gt;My Robot Page&lt;/h1&gt;</code></button>
+                <button type="button" class="detective-line" data-line="2" data-correct="true"><span class="detective-num">2</span><code id="detective-line-2">&lt;p&gt;Robots are fun to build.</code></button>
+                <button type="button" class="detective-line" data-line="3" data-correct="false"><span class="detective-num">3</span><code>&lt;img src="robot.png" alt="A friendly robot"&gt;</code></button>
+                <button type="button" class="detective-line" data-line="4" data-correct="false"><span class="detective-num">4</span><code>&lt;button&gt;Say hello&lt;/button&gt;</code></button>
+              </div>
+
+              <div id="detective-feedback" class="challenge-feedback-box"></div>
+
+              <div class="challenge-step-actions">
+                <button type="button" class="button button-small button-outline challenge-reveal-btn" data-step="1" hidden>Show me the answer 💡</button>
+                <button type="button" class="button button-small challenge-step-next" data-step="1" hidden>Next quest &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quest 3: Build the Page -->
+          <div class="challenge-step" data-step="2" hidden>
+            <div class="challenge-box">
+              <div class="challenge-question">
+                🧱 Build the page! Use the <strong>up and down buttons</strong> to put the blocks in a sensible order, from the top of the page to the bottom.
+              </div>
+
+              <ol id="builder-list" class="builder-list" aria-label="Page blocks, from top to bottom"></ol>
+
+              <div class="challenge-step-actions builder-actions">
+                <button type="button" id="btn-builder-check" class="button button-small">Check my page ✔</button>
+                <button type="button" class="button button-small button-outline challenge-reveal-btn" data-step="2" hidden>Show me the answer 💡</button>
+              </div>
+
+              <div id="builder-feedback" class="challenge-feedback-box"></div>
+            </div>
           </div>
         </section>
 
@@ -386,6 +480,9 @@
                   <button class="studio-pill" data-type="title" data-value="Pixel's Cyber Space Academy">Pixel's Space Academy</button>
                   <button class="studio-pill" data-type="title" data-value="Girls Who Build The Web">Girls Who Build The Web</button>
                 </div>
+                <label class="studio-custom-label" for="studio-title-input">Or type your own title:</label>
+                <input id="studio-title-input" class="tinker-input" type="text" maxlength="30" autocomplete="off" placeholder="Your own page title">
+                <button type="button" id="studio-title-clear" class="studio-custom-clear" hidden>Use a ready-made title again</button>
               </div>
 
               <!-- 2. Story Paragraph -->
@@ -447,6 +544,11 @@
                     </button>
                   </div>
                 </div>
+
+                <details class="blueprint-code-panel" open>
+                  <summary>👀 See the HTML behind my page</summary>
+                  <pre class="tinker-code" aria-label="HTML code for your blueprint"><code id="blueprint-code"></code></pre>
+                </details>
               </div>
             </div>
 
@@ -470,16 +572,27 @@
               <li><span class="celebrate-check">✔</span> Designed and previewed your own Webpage Blueprint</li>
             </ul>
 
+            <!-- Phase 4.4: personalised recap, filled in by js/mission.js -->
+            <div class="p44-recap" aria-labelledby="recap-title">
+              <h3 id="recap-title" class="p44-recap-title">✨ Your Mission Journey</h3>
+              <ul id="celebrate-recap-list" class="p44-recap-list"></ul>
+            </div>
+
             <div style="margin-top: 2rem;">
               <a href="adventure.html" class="button">Return to Adventure Map 🧭</a>
             </div>
           </div>
         </section>
 
+        <!-- Stage 3 helper: tells the learner what is still needed to continue (filled by js/mission.js) -->
+        <div class="inspect-hint-region" role="status" aria-live="polite" aria-atomic="true">
+          <p id="inspect-hint" class="inspect-hint" hidden></p>
+        </div>
+
         <!-- Mission Action Controls (Back & Continue) -->
         <div class="mission-actions-bar">
           <button id="btn-stage-prev" class="button button-small button-outline" disabled>&larr; Back</button>
-          <button id="btn-stage-next" class="button button-small">Continue to Explore &rarr;</button>
+          <button id="btn-stage-next" class="button button-small" aria-describedby="inspect-hint">Continue to Explore &rarr;</button>
         </div>
 
       </article>
