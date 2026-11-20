@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- The preview frame may only be a srcdoc frame: it can never be navigated to any web address. -->
+  <meta http-equiv="Content-Security-Policy" content="frame-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioTech: Creator's Playground</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <!-- Shared stylesheet across the CurioTech platform -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- Site Header & Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <a href="dashboard.html" class="brand" aria-label="CurioTech Dashboard">
+        <img src="assets/images/logo.png" alt="CurioTech logo" class="brand-logo">
+        <span class="brand-name">Curio<span>Tech</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Playground navigation">
+        <a href="adventure.html" class="nav-link">&larr; Adventure Map</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="index.html" class="nav-logout-btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Playground Workspace -->
+  <main class="dashboard-main">
+    <div class="container">
+
+      <!-- Title & level indicator -->
+      <section class="mission-header-bar" aria-label="Playground Header">
+        <div class="mission-title-box">
+          <span class="mission-dest-badge">🛠️ FREE BUILD WORKSHOP</span>
+          <h1 class="mission-main-title">Creator's Playground</h1>
+        </div>
+
+        <!-- Creator journey: guided at first, then free creation (display only for now) -->
+        <ol class="pg-journey" aria-label="Creator levels">
+          <li class="pg-step is-current" aria-current="step"><span class="pg-step-num">1</span> Remix</li>
+          <li class="pg-step is-locked"><span class="pg-step-num">2</span> Style <span class="p44-sr-only">(locked)</span></li>
+          <li class="pg-step is-locked"><span class="pg-step-num">3</span> Bring it to life <span class="p44-sr-only">(locked)</span></li>
+          <li class="pg-step is-locked"><span class="pg-step-num">4</span> Free Canvas <span class="p44-sr-only">(locked)</span></li>
+        </ol>
+      </section>
+
+      <article class="mission-card" role="region" aria-label="Creator's Playground Workshop">
+
+        <!-- Pixel guidance banner -->
+        <aside class="mission-pixel-banner" aria-label="Pixel Mascot Companion">
+          <div class="pixel-avatar-col" style="width: auto;">
+            <div id="pg-pixel-avatar" class="pixel-svg-avatar" data-expression="excited" style="width: 70px; height: 70px;" aria-label="Pixel Mascot (excited)">
+              <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                <rect x="47" y="6" width="6" height="15" rx="3" fill="#A855F7" />
+                <rect x="7" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="85" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="14" y="20" width="72" height="68" rx="20" fill="#25202F" stroke="#A855F7" stroke-width="3" />
+                <path d="M 22 28 Q 50 24 78 28" stroke="rgba(216, 180, 254, 0.3)" stroke-width="2" stroke-linecap="round" fill="none" />
+                <rect x="22" y="32" width="56" height="44" rx="12" fill="#0B0B0F" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.5" />
+                <circle cx="50" cy="8" r="6" fill="#38BDF8" />
+                <circle cx="48" cy="6" r="2" fill="#FFFFFF" />
+
+                <!-- Expression 1: Happy -->
+                <g class="expr-happy">
+                  <circle cx="37" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="35" cy="46" r="1.5" fill="#FFFFFF" />
+                  <circle cx="63" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 40 62 Q 50 70 60 62" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" fill="none" />
+                  <circle cx="30" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                  <circle cx="70" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                </g>
+
+                <!-- Expression 2: Thinking -->
+                <g class="expr-thinking">
+                  <circle cx="37" cy="45" r="5.5" fill="#D8B4FE" />
+                  <circle cx="35" cy="43" r="1.5" fill="#FFFFFF" />
+                  <line x1="57" y1="50" x2="69" y2="50" stroke="#D8B4FE" stroke-width="3.5" stroke-linecap="round" />
+                  <ellipse cx="50" cy="63" rx="4.5" ry="3" fill="#D8B4FE" />
+                  <circle cx="64" cy="14" r="3" fill="#D8B4FE" />
+                  <circle cx="72" cy="7" r="4.5" fill="#D8B4FE" />
+                </g>
+
+                <!-- Expression 3: Encouraging -->
+                <g class="expr-encouraging">
+                  <path d="M 32 50 Q 37 43 42 50" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <circle cx="63" cy="48" r="5.5" fill="#FBBF24" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 42 62 Q 52 69 58 61" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <path d="M 38 6 Q 50 1 62 6" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" fill="none" />
+                </g>
+
+                <!-- Expression 4: Excited -->
+                <g class="expr-excited">
+                  <path d="M 32 51 L 37 44 L 42 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 58 51 L 63 44 L 68 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 39 60 Q 50 73 61 60 Z" fill="#F472B6" stroke="#FFFFFF" stroke-width="1.5" />
+                  <path d="M 35 2 L 42 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M 65 2 L 58 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+              </svg>
+            </div>
+            <span id="pg-pixel-tag" class="pixel-expression-pill expr-pill-excited">Excited</span>
+          </div>
+
+          <div id="pg-pixel-speech" class="mission-pixel-speech" aria-live="polite">
+            <strong>HTML builds the skeleton of a webpage. 🦴</strong><br>
+            Tags like <code>&lt;h1&gt;</code> (a big title) and <code>&lt;p&gt;</code> (a paragraph) tell the browser what each part is. Change the words in the code box, then look at the preview. It updates all by itself!
+          </div>
+        </aside>
+
+        <div class="stage-header">
+          <span class="stage-badge-tag">LEVEL 1 OF 4 &bull; REMIX</span>
+          <h2 class="stage-title">Level 1: Remix</h2>
+          <p class="stage-description">
+            Change a few words in the HTML tab, make it beautiful in the CSS tab, then bring it to life in the JS tab. You can't break anything, and each Reset button brings back fresh starter code for its own file.
+          </p>
+        </div>
+
+        <!-- Code / Preview toggle (shown on phones and small tablets only) -->
+        <div class="pg-view-toggle" role="group" aria-label="Choose what to look at">
+          <button type="button" class="pg-view-btn" data-view="code" aria-pressed="true" aria-controls="pg-code-panel">✏️ Code</button>
+          <button type="button" class="pg-view-btn" data-view="preview" aria-pressed="false" aria-controls="pg-preview-panel">👀 Preview</button>
+        </div>
+
+        <!-- Run bar: JavaScript runs only when Run Code is pressed (see js/playground.js) -->
+        <div class="pg-run-bar" role="group" aria-label="Run your JavaScript">
+          <button type="button" id="pg-run-btn" class="button button-small pg-run-btn">▶ Run Code</button>
+          <button type="button" id="pg-stop-btn" class="button button-small button-outline pg-stop-btn" aria-disabled="true">■ Stop</button>
+          <p id="pg-run-status" class="pg-run-status" role="status" aria-live="polite">JavaScript only runs when you press Run Code.</p>
+        </div>
+
+        <!-- Workshop: editor + preview -->
+        <div id="pg-workshop" class="pg-workshop" data-view="code">
+
+          <!-- Editor panel: HTML and CSS tabs (JS stays locked for now) -->
+          <section id="pg-code-panel" class="pg-panel pg-code-panel" aria-labelledby="pg-code-title">
+            <div class="pg-panel-head">
+              <h3 id="pg-code-title" class="pg-panel-title">✏️ Code Workshop</h3>
+              <div class="pg-file-tabs" role="tablist" aria-label="Your code files">
+                <button type="button" role="tab" id="pg-tab-html" class="pg-file-tab is-current" aria-selected="true" aria-controls="pg-html-pane" tabindex="0">HTML</button>
+                <button type="button" role="tab" id="pg-tab-css" class="pg-file-tab" aria-selected="false" aria-controls="pg-css-pane" tabindex="-1">CSS</button>
+                <button type="button" role="tab" id="pg-tab-js" class="pg-file-tab" aria-selected="false" aria-controls="pg-js-pane" tabindex="-1">JS</button>
+              </div>
+            </div>
+
+            <!-- HTML file -->
+            <div id="pg-html-pane" class="pg-pane" role="tabpanel" aria-labelledby="pg-tab-html">
+              <div class="pg-code-well">
+                <textarea id="pg-html-editor" class="pg-editor" maxlength="20000"
+                  spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  aria-label="HTML code editor" aria-describedby="pg-html-hint"></textarea>
+              </div>
+              <div class="pg-editor-foot">
+                <p id="pg-html-hint" class="pg-hint">Tab adds spaces. To move on, press Esc and then Tab.</p>
+                <p id="pg-html-count" class="pg-count">0 / 20,000</p>
+              </div>
+              <div class="pg-editor-actions">
+                <button type="button" id="pg-html-reset" class="button button-small button-outline pg-reset-btn">↺ Reset HTML to Starter</button>
+                <p id="pg-html-note" class="pg-note" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- CSS file (with styling chips) -->
+            <div id="pg-css-pane" class="pg-pane" role="tabpanel" aria-labelledby="pg-tab-css" hidden>
+              <div class="pg-code-well">
+                <textarea id="pg-css-editor" class="pg-editor" maxlength="20000"
+                  spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  aria-label="CSS code editor" aria-describedby="pg-css-hint"></textarea>
+              </div>
+              <div class="pg-editor-foot">
+                <p id="pg-css-hint" class="pg-hint">Tab adds spaces. To move on, press Esc and then Tab.</p>
+                <p id="pg-css-count" class="pg-count">0 / 20,000</p>
+              </div>
+              <div class="pg-editor-actions">
+                <button type="button" id="pg-css-reset" class="button button-small button-outline pg-reset-btn">↺ Reset CSS to Starter</button>
+                <p id="pg-css-note" class="pg-note" role="status" aria-live="polite"></p>
+              </div>
+
+              <section class="pg-chips" aria-labelledby="pg-chips-title">
+                <h4 id="pg-chips-title" class="pg-chips-title">🎨 Styling chips</h4>
+                <p class="pg-chips-intro">Tap a chip and I'll write the CSS for you. Tap it again to take it away. You'll see the new lines appear in your CSS box.</p>
+                <div id="pg-chip-groups" class="pg-chip-groups"></div>
+              </section>
+            </div>
+
+            <!-- JavaScript file -->
+            <div id="pg-js-pane" class="pg-pane" role="tabpanel" aria-labelledby="pg-tab-js" hidden>
+              <div class="pg-code-well">
+                <textarea id="pg-js-editor" class="pg-editor" maxlength="20000"
+                  spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  aria-label="JavaScript code editor" aria-describedby="pg-js-hint"></textarea>
+              </div>
+              <div class="pg-editor-foot">
+                <p id="pg-js-hint" class="pg-hint">JavaScript only runs when you press Run Code. Tab adds spaces. To move on, press Esc and then Tab.</p>
+                <p id="pg-js-count" class="pg-count">0 / 20,000</p>
+              </div>
+              <div class="pg-editor-actions">
+                <button type="button" id="pg-js-reset" class="button button-small button-outline pg-reset-btn">↺ Reset JavaScript to Starter</button>
+                <p id="pg-js-note" class="pg-note" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Preview panel: sandboxed live preview (see js/playground.js) -->
+          <section id="pg-preview-panel" class="pg-panel pg-preview-panel" aria-labelledby="pg-preview-title">
+            <div class="pg-panel-head">
+              <h3 id="pg-preview-title" class="pg-panel-title">👀 Live Preview</h3>
+            </div>
+
+            <div class="pg-browser">
+              <div class="pg-browser-bar" aria-hidden="true">
+                <span class="pg-dot"></span><span class="pg-dot"></span><span class="pg-dot"></span>
+                <span class="pg-address">my-page.html</span>
+              </div>
+              <div id="pg-browser-screen" class="pg-browser-screen">
+                <div id="pg-preview-empty" class="pg-preview-empty" hidden>
+                  <p class="pg-empty-title">🌐 Your page is empty</p>
+                  <p class="pg-empty-text">Type some HTML, like <code>&lt;h1&gt;Hello!&lt;/h1&gt;</code>, or press Reset HTML to bring back the starter code.</p>
+                </div>
+                <!-- The sandboxed preview <iframe> is created here by js/playground.js (sandbox="allow-scripts", never allow-same-origin). -->
+              </div>
+            </div>
+
+            <!-- Console output (below the preview) -->
+            <section class="pg-output" aria-labelledby="pg-output-title">
+              <div class="pg-output-head">
+                <h4 id="pg-output-title" class="pg-output-title">🖥️ Output</h4>
+                <button type="button" id="pg-output-clear" class="button button-small button-outline pg-output-clear">Clear</button>
+              </div>
+              <div id="pg-output-log" class="pg-output-log" role="log" aria-live="off" aria-label="Console output from your JavaScript" tabindex="0">
+                <p class="pg-output-empty">Your <code>console.log()</code> messages and any errors will show up here after you press Run Code.</p>
+              </div>
+            </section>
+          </section>
+
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="brand-name">Curio<span>Tech</span></span>
+        <p class="footer-copy">CurioTech: The Digital Adventure &mdash; Empowering young minds in digital skills.</p>
+      </div>
+      <div class="footer-links">
+        <a href="adventure.html">Adventure Map</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/playground.js"></script>
+</body>
+
+</html>

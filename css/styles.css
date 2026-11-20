@@ -3008,3 +3008,655 @@ input:focus-visible {
   cursor: not-allowed;
   animation: none;
 }
+
+
+/* ==========================================================================
+   PHASE 4.5.1: Creator's Playground shell (playground.html)
+   New classes only (.pg-*). No existing rules above are modified.
+   Reuses: .mission-header-bar, .mission-card, .mission-pixel-banner,
+   .stage-header, .stage-badge-tag, .pixel-svg-avatar, .p44-sr-only.
+   ========================================================================== */
+
+/* --- Level indicator (display only for now) --- */
+.pg-journey {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.pg-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+  background-color: rgba(37, 32, 47, 0.8);
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  border-radius: 22px;
+  color: #CBD5E1;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pg-step.is-current {
+  background-color: rgba(168, 85, 247, 0.25);
+  border-color: var(--color-purple);
+  color: var(--color-white);
+}
+
+.pg-step.is-locked {
+  opacity: 0.6;
+}
+
+.pg-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.pg-step.is-locked .pg-step-num {
+  background-color: rgba(168, 85, 247, 0.35);
+}
+
+/* --- Code / Preview toggle (small screens only) --- */
+.pg-view-toggle {
+  display: none;
+}
+
+.pg-view-btn {
+  min-height: 48px;
+  background-color: rgba(37, 32, 47, 0.8);
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  color: #E2E8F0;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pg-view-btn:first-child {
+  border-radius: 12px 0 0 12px;
+}
+
+.pg-view-btn:last-child {
+  border-radius: 0 12px 12px 0;
+  border-left-width: 0;
+}
+
+.pg-view-btn:hover {
+  border-color: var(--color-purple);
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.pg-view-btn[aria-pressed="true"] {
+  background-color: var(--color-purple);
+  border-color: var(--color-purple);
+  color: var(--color-white);
+}
+
+/* --- Workshop layout: editor + preview side by side --- */
+.pg-workshop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+}
+
+.pg-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.pg-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.pg-panel-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.pg-file-tabs {
+  list-style: none;
+  display: flex;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.pg-file-tab {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.2rem 1rem;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  background-color: rgba(37, 32, 47, 0.8);
+  color: #CBD5E1;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.pg-file-tab.is-current {
+  background-color: var(--color-purple);
+  border-color: var(--color-purple);
+  color: var(--color-white);
+}
+
+.pg-file-tab.is-locked {
+  opacity: 0.6;
+}
+
+/* Editor */
+.pg-code-well {
+  display: flex;
+  min-height: 340px;
+  background-color: #0B0B0F;
+  border: 2px solid rgba(168, 85, 247, 0.4);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+
+
+/* Empty preview: a friendly little browser window */
+.pg-browser {
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+  background-color: #121019;
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.pg-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  background-color: rgba(37, 32, 47, 0.9);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.pg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(216, 180, 254, 0.5);
+}
+
+.pg-address {
+  margin-left: 0.5rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #94A3B8;
+}
+
+.pg-browser-screen {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.5rem;
+  text-align: center;
+  background-color: #0B0B0F;
+}
+
+.pg-empty-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+  margin: 0;
+}
+
+.pg-empty-text {
+  font-size: 0.95rem;
+  color: #CBD5E1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Phones and small tablets: one panel at a time --- */
+@media (max-width: 900px) {
+  .pg-view-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 1.25rem;
+  }
+
+  .pg-workshop {
+    grid-template-columns: 1fr;
+    margin-top: 1rem;
+  }
+
+  .pg-workshop[data-view="code"] .pg-preview-panel,
+  .pg-workshop[data-view="preview"] .pg-code-panel {
+    display: none;
+  }
+
+  .pg-code-well,
+  .pg-browser {
+    min-height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-view-btn {
+    transition: none;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.2: HTML editor + sandboxed live preview
+   -------------------------------------------------------------------------- */
+.pg-code-well:focus-within {
+  border-color: var(--color-lavender);
+  box-shadow: 0 0 0 3px rgba(216, 180, 254, 0.25);
+}
+
+.pg-editor {
+  flex: 1 1 auto;
+  display: block;
+  width: 100%;
+  min-height: 340px;
+  margin: 0;
+  padding: 1rem;
+  background-color: #0B0B0F;
+  border: 0;
+  color: #E2E8F0;
+  caret-color: var(--color-lavender);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  line-height: 1.55;
+  tab-size: 2;
+  resize: vertical;
+}
+
+.pg-editor:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: -4px;
+}
+
+.pg-editor-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.pg-hint,
+.pg-count,
+.pg-note {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #94A3B8;
+}
+
+.pg-count {
+  font-family: monospace;
+}
+
+.pg-count.is-near-limit {
+  color: #FBBF24;
+  font-weight: 700;
+}
+
+.pg-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.pg-reset-btn {
+  min-height: 44px;
+}
+
+.pg-note {
+  flex: 1 1 200px;
+  color: var(--color-lavender);
+}
+
+.pg-note:empty {
+  display: none;
+}
+
+/* Live preview frame fills the little browser window */
+.pg-browser-screen.has-frame {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+  background-color: #FFFFFF;
+}
+
+.pg-preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.pg-preview-empty[hidden],
+.pg-frame[hidden] {
+  display: none;
+}
+
+.pg-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 300px;
+  border: 0;
+  background-color: #FFFFFF;
+}
+
+.pg-preview-empty code,
+.pg-hint code {
+  font-family: monospace;
+  color: #38BDF8;
+}
+
+@media (max-width: 900px) {
+  .pg-editor {
+    min-height: 280px;
+  }
+
+  .pg-frame {
+    min-height: 260px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.3: CSS editor, tabs and styling chips
+   -------------------------------------------------------------------------- */
+.pg-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.pg-pane[hidden] {
+  display: none;
+}
+
+.pg-file-tab:not(.is-current):not(.is-locked):hover {
+  border-color: var(--color-purple);
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.pg-file-tab.is-locked {
+  cursor: not-allowed;
+}
+
+/* --- Styling chips --- */
+.pg-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1.5px dashed rgba(216, 180, 254, 0.45);
+  border-radius: 14px;
+}
+
+.pg-chips-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-chips-intro {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #CBD5E1;
+}
+
+.pg-chip-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pg-chip-cat {
+  background-color: rgba(37, 32, 47, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 0 0.9rem;
+}
+
+.pg-chip-cat > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+
+.pg-chip-cat[open] > summary {
+  margin-bottom: 0.25rem;
+}
+
+.pg-chip-slot {
+  padding: 0.5rem 0 0.9rem;
+  border-top: 1px solid rgba(168, 85, 247, 0.15);
+}
+
+.pg-chip-slot-title {
+  margin: 0 0 0.15rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+.pg-chip-help {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #94A3B8;
+}
+
+.pg-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pg-chip {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  background-color: rgba(37, 32, 47, 0.9);
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  border-radius: 22px;
+  color: #E2E8F0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pg-chip:hover {
+  border-color: var(--color-purple);
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.pg-chip[aria-pressed="true"] {
+  background-color: var(--color-purple);
+  border-color: var(--color-purple);
+  color: var(--color-white);
+}
+
+.pg-chip-swatch {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-chip {
+    transition: none;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.4: Run Code bar, Stop, and the Output area
+   -------------------------------------------------------------------------- */
+.pg-run-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.75rem;
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  border-radius: 14px;
+}
+
+.pg-run-btn,
+.pg-stop-btn,
+.pg-output-clear {
+  min-height: 44px;
+}
+
+.pg-run-btn[aria-disabled="true"],
+.pg-stop-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pg-run-status {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-lavender);
+}
+
+/* --- Output (below the preview) --- */
+.pg-output {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.pg-output-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pg-output-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-output-log {
+  min-height: 120px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  background-color: #0B0B0F;
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.pg-output-log:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+}
+
+.pg-output-empty {
+  margin: 0;
+  color: #94A3B8;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.9rem;
+}
+
+.pg-out-line {
+  padding: 0.15rem 0;
+  color: #E2E8F0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pg-out-line.is-info {
+  color: #38BDF8;
+}
+
+.pg-out-line.is-warn {
+  color: #FBBF24;
+}
+
+.pg-out-line.is-warn::before {
+  content: "\26A0\FE0F  ";
+}
+
+.pg-out-line.is-error {
+  color: #FCA5A5;
+}
+
+.pg-out-line.is-error::before {
+  content: "\2716  ";
+}
+
+.pg-out-line.is-system {
+  color: var(--color-lavender);
+  font-style: italic;
+}
+
+.pg-pixel-original {
+  font-size: 0.9rem;
+  color: #94A3B8;
+}
