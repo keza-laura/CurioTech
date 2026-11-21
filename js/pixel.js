@@ -25,7 +25,7 @@ const PIXEL_MESSAGES = [
     expression: "thinking",
     expressionLabel: "Thinking",
     topicTitle: "🗺️ Destinations",
-    text: "<strong>Let me give you a quick tour of our digital world! 🧭</strong><br><br>Our adventure connects <strong>4 sequential biomes</strong>:<br>• <strong>HTML Island:</strong> Construct the foundational skeleton and bones of web pages.<br>• <strong>CSS City:</strong> Paint your pages with vibrant colors, fonts, and responsive layouts.<br>• <strong>JavaScript Jungle:</strong> Add brains, logic, and click reactions to your creations.<br>• <strong>Creator's Lab:</strong> The ultimate studio to build and publish your own custom project!"
+    text: "<strong>Let me give you a quick tour of our digital world! 🧭</strong><br><br>Our adventure connects <strong>4 sequential biomes</strong>:<br>• <strong>HTML Island:</strong> Construct the foundational skeleton and bones of web pages.<br>• <strong>CSS City:</strong> Paint your pages with vibrant colors, fonts, and responsive layouts.<br>• <strong>JavaScript Jungle:</strong> Add brains, logic, and click reactions to your creations.<br>• <strong>Creator's Lab:</strong> The ultimate studio to build your own custom project! (HTML Island is open now. The Creator's Lab opens after Mission 01, and the Creator's Playground is open for free play any time.)"
   },
   {
     id: "mission-guide",
@@ -57,7 +57,7 @@ const PIXEL_MESSAGES = [
     expression: "excited",
     expressionLabel: "Excited",
     topicTitle: "🚀 Let's Build!",
-    text: "<strong>BEEP-BEEP! You're officially all set! 🎉</strong><br><br>Stepping into technology is an exciting superpower, and you've already taken the first step today. Whenever you're ready, click on <strong>HTML Island</strong> to preview your first mission. If you ever need me, just tap the <em>Talk to Pixel</em> button. Let's make something amazing together!"
+    text: "<strong>BEEP-BEEP! You're officially all set! 🎉</strong><br><br>Stepping into technology is an exciting superpower, and you've already taken the first step today. Whenever you're ready, click on <strong>HTML Island</strong> to start your first mission. Want to experiment first? The <strong>Creator's Playground</strong> is open any time from the menu. If you ever need me, just tap the <em>Talk to Pixel</em> button. Let's make something amazing together!"
   }
 ];
 

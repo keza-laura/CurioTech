@@ -1622,13 +1622,22 @@ input:focus-visible {
   background-color: rgba(11, 11, 15, 0.85);
   backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
+  /* The card centres itself with auto margins (below). Unlike align-items: center, this never pushes the
+     top of a tall card out of reach: when the card is taller than the screen, the overlay scrolls. */
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: 100;
   padding: 1.5rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
+}
+
+/* The page behind a briefing modal does not scroll while it is open (class set by js/adventure.js) */
+body.dest-modal-open {
+  overflow: hidden;
 }
 
 .dest-modal-overlay.active {
@@ -1642,6 +1651,7 @@ input:focus-visible {
   border-radius: 20px;
   max-width: 580px;
   width: 100%;
+  margin: auto;
   padding: 2.5rem 2.25rem;
   position: relative;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(168, 85, 247, 0.3);
@@ -2419,6 +2429,15 @@ input:focus-visible {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+}
+
+/* Phones: the <code> tags line is a row that cannot shrink, so it widened the whole page (488px on a 360px
+   screen). Let the row wrap instead. Wider screens keep the layout above exactly as it was. */
+@media (max-width: 600px) {
+  .celebrate-summary-list li {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+  }
 }
 
 .celebrate-check {
@@ -3891,4 +3910,832 @@ input:focus-visible {
   outline: 2px solid var(--color-lavender);
   outline-offset: 2px;
   border-radius: 10px;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.6: Mission 01 blueprint hand-off banner (Creator's Playground)
+   -------------------------------------------------------------------------- */
+.pg-handoff {
+  margin: 1rem 0 0;
+  padding: 0.9rem 1rem;
+  background-color: rgba(37, 32, 47, 0.85);
+  border: 2px solid var(--color-purple);
+  border-radius: 14px;
+}
+
+.pg-handoff[hidden] {
+  display: none;
+}
+
+.pg-handoff-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-handoff-title:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.pg-handoff-text {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #CBD5E1;
+}
+
+.pg-handoff-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pg-handoff-btn {
+  min-height: 44px;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.6: Adventure Map entry points to the Creator's Playground
+   -------------------------------------------------------------------------- */
+.adv-freebuild {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 2rem 0 2.5rem;
+  padding: 1rem 1.5rem;
+  background-color: rgba(37, 32, 47, 0.6);
+  border: 1.5px dashed rgba(168, 85, 247, 0.4);
+  border-radius: 14px;
+}
+
+.adv-freebuild-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.adv-freebuild-icon {
+  font-size: 1.75rem;
+  flex: 0 0 auto;
+}
+
+.adv-freebuild-title {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.adv-freebuild-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-lavender);
+}
+
+#modal-playground-link[hidden] {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.6: Download my page (Creator's Playground)
+   -------------------------------------------------------------------------- */
+.pg-download-btn {
+  min-height: 44px;
+}
+
+.pg-download-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #94A3B8;
+}
+
+.pg-download-status {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-lavender);
+}
+
+.pg-download-status:empty {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4 CLOSURE: Mission 01 completed state on the Adventure Map
+   -------------------------------------------------------------------------- */
+.dest-status-done {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+/* Status pills and the next-step link are shown or hidden by js/adventure.js */
+.dest-status-pill[hidden],
+#mission-01-next[hidden] {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 5, STAGE 5.2: My Projects panel (save, open and update) in the Creator's Playground
+   -------------------------------------------------------------------------- */
+.pg-projects {
+  margin: 1rem 0 0;
+  background-color: rgba(37, 32, 47, 0.85);
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  border-radius: 14px;
+  padding: 0 1rem;
+}
+
+.pg-projects-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.75rem;
+  min-height: 44px;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.pg-projects-summary::-webkit-details-marker {
+  display: none;
+}
+
+.pg-projects-summary:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.pg-projects-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-projects-hint {
+  font-size: 0.85rem;
+  color: var(--color-lavender);
+  overflow-wrap: anywhere;
+}
+
+.pg-projects-body {
+  padding-bottom: 0.9rem;
+}
+
+.pg-project-current {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #E2E8F0;
+  overflow-wrap: anywhere;
+}
+
+.pg-project-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.6rem;
+}
+
+.pg-project-label {
+  flex: 0 0 100%;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+
+.pg-project-input,
+.pg-project-select {
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: var(--color-white);
+  background-color: #0B0B0F;
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  border-radius: 10px;
+}
+
+.pg-project-input[aria-invalid="true"] {
+  border-color: #FBBF24;
+}
+
+.pg-project-input:focus-visible,
+.pg-project-select:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+}
+
+.pg-project-select:disabled {
+  opacity: 0.6;
+}
+
+.pg-project-btn {
+  min-height: 44px;
+}
+
+.pg-project-btn[hidden] {
+  display: none;
+}
+
+.pg-project-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pg-project-help {
+  margin: 0.4rem 0 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #94A3B8;
+}
+
+.pg-project-confirm {
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background-color: rgba(251, 191, 36, 0.1);
+  border: 1.5px solid #FBBF24;
+  border-radius: 10px;
+}
+
+.pg-project-confirm[hidden] {
+  display: none;
+}
+
+.pg-project-confirm-text {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #FDE68A;
+  overflow-wrap: anywhere;
+}
+
+.pg-project-confirm-text:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.pg-project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pg-project-status {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-lavender);
+  overflow-wrap: anywhere;
+}
+
+.pg-project-status.is-error {
+  color: #FBBF24;
+}
+
+.pg-project-status:empty {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 5, STAGE 5.3: saved projects list (open, rename, download, delete)
+   -------------------------------------------------------------------------- */
+.pg-project-list-title {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-project-list-title:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.pg-project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pg-project-list[hidden],
+.pg-project-list-title[hidden] {
+  display: none;
+}
+
+.pg-proj-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 10px;
+}
+
+.pg-proj-row.is-open {
+  border-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.08);
+}
+
+.pg-proj-info {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.pg-proj-nameline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.pg-proj-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  overflow-wrap: anywhere;
+}
+
+.pg-proj-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.1rem 0.55rem;
+  border-radius: 12px;
+  color: #34D399;
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+.pg-proj-date {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: #94A3B8;
+}
+
+.pg-proj-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pg-proj-rename {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+}
+
+.pg-proj-rename-input {
+  flex: 1 1 auto;
+}
+
+.pg-proj-empty {
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #94A3B8;
+  background-color: rgba(11, 11, 15, 0.4);
+  border: 1px dashed rgba(168, 85, 247, 0.4);
+  border-radius: 10px;
+}
+
+.pg-project-confirm.is-danger {
+  background-color: rgba(248, 113, 113, 0.1);
+  border-color: #F87171;
+}
+
+.pg-project-confirm.is-danger .pg-project-confirm-text {
+  color: #FECACA;
+}
+
+/* Tablets and phones: the shared .button rule makes every button full width. Inside the project list the
+   buttons keep their natural width (so a row stays compact), and on phones they sit in a 2 x 2 grid. */
+@media (max-width: 768px) {
+  .pg-proj-actions .pg-project-btn {
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .pg-proj-actions {
+    flex: 1 1 100%;
+  }
+
+  .pg-proj-actions .pg-project-btn {
+    flex: 1 1 calc(50% - 0.4rem);
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 5, STAGE 5.4: Mission 05, The Creator Mission (mission-05.html)
+   -------------------------------------------------------------------------- */
+.m5-done-banner {
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #D1FAE5;
+  background-color: rgba(16, 185, 129, 0.12);
+  border: 1px solid #10B981;
+  border-radius: 10px;
+}
+
+.m5-done-banner[hidden],
+#m5-next[hidden] {
+  display: none;
+}
+
+#m5-next.is-locked,
+#m5-next.is-locked:hover {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.m5-fieldset {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.m5-legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.m5-optional {
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.m5-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.m5-choice,
+.m5-check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.6rem 0.85rem;
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1.5px solid rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  color: #E2E8F0;
+  cursor: pointer;
+}
+
+.m5-choice:hover,
+.m5-check:hover {
+  border-color: var(--color-purple);
+}
+
+.m5-choice:has(input:checked),
+.m5-check:has(input:checked) {
+  border-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.m5-choice:has(input:focus-visible),
+.m5-check:has(input:focus-visible),
+.m5-check-one:has(input:focus-visible) {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+}
+
+.m5-choice input,
+.m5-check input,
+.m5-check-one input {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-purple);
+}
+
+.m5-choice-text,
+.m5-check-text {
+  font-size: 1rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.m5-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.m5-field {
+  margin: 0 0 1.1rem;
+}
+
+.m5-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-lavender);
+}
+
+.m5-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: var(--color-white);
+  background-color: #0B0B0F;
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  border-radius: 10px;
+}
+
+.m5-input:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+}
+
+.m5-input[aria-invalid="true"] {
+  border-color: #FBBF24;
+}
+
+.m5-input:disabled {
+  opacity: 0.55;
+}
+
+.m5-help {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #94A3B8;
+}
+
+.m5-own-idea {
+  margin-top: 1rem;
+}
+
+.m5-plan-card {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1rem;
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+}
+
+.m5-plan-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.m5-plan-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.75rem;
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.m5-plan-label {
+  flex: 0 0 110px;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+
+.m5-plan-value {
+  flex: 1 1 160px;
+  min-width: 0;
+  color: #E2E8F0;
+  overflow-wrap: anywhere;
+}
+
+.m5-steps,
+.m5-bullets {
+  margin: 0 0 1.25rem;
+  padding-left: 1.4rem;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: #E2E8F0;
+}
+
+.m5-steps li,
+.m5-bullets li {
+  margin-bottom: 0.4rem;
+}
+
+.m5-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.m5-actions-row .button {
+  min-height: 44px;
+}
+
+.m5-center {
+  justify-content: center;
+}
+
+.m5-check-one {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 44px;
+  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1.5px solid rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  color: #E2E8F0;
+}
+
+.m5-check-one label {
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+.m5-status {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--color-lavender);
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.m5-status:empty {
+  display: none;
+}
+
+.m5-status.is-good {
+  color: #D1FAE5;
+  background-color: rgba(16, 185, 129, 0.12);
+  border: 1px solid #10B981;
+}
+
+.m5-status.is-warn {
+  color: #FDE68A;
+  background-color: rgba(251, 191, 36, 0.1);
+  border: 1px solid #FBBF24;
+}
+
+.m5-celebrate-lead {
+  max-width: 650px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--color-lavender);
+}
+
+.m5-summary {
+  max-width: 550px;
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  background-color: rgba(11, 11, 15, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 14px;
+}
+
+.m5-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.75rem;
+  margin: 0.35rem 0;
+  color: #E2E8F0;
+  overflow-wrap: anywhere;
+}
+
+.m5-summary-label {
+  flex: 0 0 110px;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+
+@media (max-width: 600px) {
+  .m5-choices,
+  .m5-checks {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The "Back to Mission 05" bar in the Creator's Playground (shown only while a Mission 05 attempt is in progress) */
+.pg-m5-return {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1.5px solid var(--color-purple);
+  border-radius: 14px;
+  color: var(--color-white);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.pg-m5-return[hidden] {
+  display: none;
+}
+
+.pg-m5-return-text {
+  flex: 1 1 220px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pg-m5-return-btn {
+  min-height: 44px;
+}
+
+#m5-prev,
+#m5-next {
+  min-height: 44px;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 5, STAGE 5.5: Adventure Map and dashboard integration
+   -------------------------------------------------------------------------- */
+#modal-mission-link[hidden] {
+  display: none;
+}
+
+/* Arriving from the dashboard's "Try Mission 05" link: keep the card clear of the sticky header */
+#mission-05 {
+  scroll-margin-top: 12rem;   /* taller than the sticky header, even when its menu wraps on a phone */
+}
+
+/* The dashboard's Playground card has two actions side by side (stacked on small screens by the shared .button rule) */
+.course-action-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   PHASE 5, STAGE 5.6: comfortable touch targets for the dashboard and Mission Log links (at least 44px tall)
+   -------------------------------------------------------------------------- */
+.course-action .button-small,
+.mission-log-card a.button-small {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mission 01's Back / Continue buttons match Mission 05's 44px touch targets */
+#btn-stage-prev,
+#btn-stage-next {
+  min-height: 44px;
+}
+
+/* The Adventure Map's "Open the Creator's Playground" button is 44px tall too */
+.adv-freebuild .button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

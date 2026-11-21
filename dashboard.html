@@ -22,6 +22,7 @@
       <nav class="site-nav" aria-label="Dashboard navigation">
         <a href="dashboard.html" class="nav-link">Dashboard</a>
         <a href="#my-learning" class="nav-link">My Learning</a>
+        <a href="playground.html" class="nav-link">Playground</a>
         <a href="#my-progress" class="nav-link">My Progress</a>
         <a href="#portfolio" class="nav-link">Portfolio</a>
         <a href="index.html" class="nav-logout-btn">Logout</a>
@@ -51,7 +52,7 @@
             <span class="overview-icon" aria-hidden="true">✨</span>
             <span class="overview-label">Total XP</span>
             <span class="overview-value">0 XP</span>
-            <span class="overview-note">Initial demo score</span>
+            <span class="overview-note">XP is coming soon</span>
           </article>
 
           <!-- Card 2: Current Level -->
@@ -98,7 +99,7 @@
             </div>
             <h3 class="course-title">Web Development: The Digital Adventure</h3>
             <p class="course-description">
-              Embark on an interactive adventure across 4 destinations with Pixel the Robot coding companion!
+              Embark on an interactive adventure across 4 destinations with Pixel the Robot coding companion! Finish Mission 01 to unlock the Creator's Lab.
             </p>
             <div class="course-progress-wrapper">
               <div class="progress-header">
@@ -111,6 +112,24 @@
             </div>
             <div class="course-action">
               <a href="adventure.html" id="btn-start-course" class="button button-small">Enter Adventure &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Creator's Playground: free-play workshop (Phase 4.5.6). No progress bar: independent of the progress logic in js/dashboard.js -->
+          <article class="course-card">
+            <div>
+              <div class="course-top-meta">
+                <span class="tag-level">Free Play</span>
+                <span class="tag-status-available">Available</span>
+              </div>
+              <h3 class="course-title">Creator's Playground</h3>
+              <p class="course-description">
+                Write HTML, CSS and JavaScript, watch your page update as you type, save your projects, and build anything you like. Want a guided project? Try Mission 05 on the Adventure Map.
+              </p>
+            </div>
+            <div class="course-action course-action-pair">
+              <a href="playground.html" id="btn-open-playground-card" class="button button-small">Open Playground &rarr;</a>
+              <a href="adventure.html#mission-05" id="btn-mission-05-card" class="button button-small button-outline">Try Mission 05 &rarr;</a>
             </div>
           </article>
 
@@ -150,7 +169,7 @@
         <div class="empty-state-card">
           <div class="empty-state-icon" aria-hidden="true">🚀</div>
           <p class="empty-state-text">
-            Your learning journey is just beginning. Choose a course above to get started.
+            Ready to start? Begin the Digital Adventure above, or jump into the Creator's Playground any time.
           </p>
         </div>
       </section>
@@ -235,7 +254,7 @@
           </div>
 
           <p class="demo-note-inline">
-            <em>Initial prototype demo values: live progress tracking will be added in a future phase.</em>
+            <em>These numbers are still being built, so they don't update yet. Your Mission 01 progress shows on the Adventure Map, and your Playground levels show in the Playground.</em>
           </p>
         </div>
       </section>
@@ -250,9 +269,9 @@
         <div class="portfolio-panel">
           <div class="portfolio-icon" aria-hidden="true">🎨</div>
           <p class="portfolio-text">
-            Your project portfolio will showcase your creations here. Complete your first project in an upcoming phase to see it featured!
+            Your finished projects will show up here soon. For now, build a page in the Creator's Playground and download it to keep.
           </p>
-          <span class="portfolio-badge">Coming in a future phase</span>
+          <span class="portfolio-badge">Coming soon</span>
         </div>
       </section>
 

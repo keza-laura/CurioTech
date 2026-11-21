@@ -23,6 +23,7 @@
         <a href="dashboard.html" class="nav-link">← Back to Dashboard</a>
         <a href="#adventure-map" class="nav-link">Adventure Map</a>
         <a href="#missions-summary" class="nav-link">Missions Log</a>
+        <a href="playground.html" class="nav-link">Creator's Playground</a>
         <a href="index.html" class="nav-logout-btn">Logout</a>
       </nav>
     </div>
@@ -34,7 +35,7 @@
 
       <!-- 1. Adventure Hero & Pixel Companion Banner -->
       <section class="adventure-hero-section" aria-labelledby="adventure-heading" style="margin-top: 1.5rem;">
-        <span class="badge-journey">PHASE 4: THE DIGITAL ADVENTURE</span>
+        <span class="badge-journey">YOUR DIGITAL ADVENTURE</span>
         <h1 id="adventure-heading" class="adventure-title">CurioTech: The Digital Adventure</h1>
         <p class="adventure-tagline">Discover ✦ Explore ✦ Experiment ✦ Challenge ✦ Create ✦ Celebrate</p>
 
@@ -170,7 +171,7 @@
       <section id="adventure-map" class="map-section" aria-labelledby="map-heading">
         <div class="map-section-header">
           <h2 id="map-heading" class="section-title" style="text-align: left; margin-bottom: 0.25rem;">Interactive World Map</h2>
-          <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Explore our 4 destinations in sequence. Click any island or biome for details.</p>
+          <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Four destinations, one after another. Select a destination to see what's inside.</p>
         </div>
 
         <div class="adventure-map-card">
@@ -186,12 +187,14 @@
               <span class="dest-order-badge">DESTINATION 01</span>
               <div class="dest-icon-container" aria-hidden="true">🏝️</div>
               <h3 class="dest-name">HTML Island</h3>
-              <div class="dest-mission-label">Missions 01 &amp; 02</div>
+              <div class="dest-mission-label">Mission 01 &bull; Mission 02 coming soon</div>
               <p class="dest-brief">
-                The ancient foundational biome! Discover how browsers request pages and construct the structural skeleton of the web.
+                Start here! Find out how web pages work and what they are made of.
               </p>
               <div>
                 <span class="dest-status-pill dest-status-active">✦ Active Quest</span>
+                <!-- Shown by js/adventure.js once Mission 01 is completed -->
+                <span id="html-island-done" class="dest-status-pill dest-status-done" hidden>✔ Mission 01 complete</span>
               </div>
             </article>
 
@@ -228,9 +231,9 @@
               <span class="dest-order-badge">DESTINATION 04</span>
               <div class="dest-icon-container" aria-hidden="true">🧪</div>
               <h3 class="dest-name">Creator's Lab</h3>
-              <div class="dest-mission-label">Mission 05</div>
+              <div class="dest-mission-label">Free experimenting</div>
               <p class="dest-brief">
-                The summit workshop of digital creators! Combine HTML, CSS, and JS into your own independent, playable web artifact.
+                Your free workshop! Experiment with HTML, CSS, and JavaScript in the Creator's Playground, and keep your projects.
               </p>
               <div>
                 <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
@@ -253,10 +256,22 @@
         </div>
       </section>
 
+      <!-- Phase 4.5.6: free-play entry to the Creator's Playground (Creator's Lab itself stays locked) -->
+      <section id="free-build" class="adv-freebuild" aria-labelledby="free-build-title">
+        <div class="adv-freebuild-info">
+          <span class="adv-freebuild-icon" aria-hidden="true">🛠️</span>
+          <div>
+            <h2 id="free-build-title" class="adv-freebuild-title">Free Build Workshop — open any time</h2>
+            <p id="free-build-desc" class="adv-freebuild-desc">Write HTML, CSS and JavaScript and watch your page come alive. No mission needed.</p>
+          </div>
+        </div>
+        <a href="playground.html" class="button button-small">Open the Creator's Playground &rarr;</a>
+      </section>
+
       <!-- 3. Missions Log Summary Section -->
       <section id="missions-summary" class="missions-log-section" aria-labelledby="missions-heading">
         <h2 id="missions-heading" class="section-title" style="text-align: left; margin-bottom: 0.25rem;">Adventure Mission Log</h2>
-        <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">The complete 5-mission campaign for Young Web Adventurers:</p>
+        <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Your 5-mission adventure. Mission 01 and Mission 05 are open now, and the others are on their way.</p>
 
         <div class="missions-log-grid">
 
@@ -270,8 +285,10 @@
               </p>
             </div>
             <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-              <span class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
-              <a href="mission.html" class="button button-small">Start Mission 01 &rarr;</a>
+              <span id="mission-01-status" class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
+              <a id="mission-01-link" href="mission.html" class="button button-small">Start Mission 01 &rarr;</a>
+              <!-- Shown by js/adventure.js once Mission 01 is completed -->
+              <a id="mission-01-next" href="playground.html" class="button button-small" hidden>Next: Creator's Playground &rarr;</a>
             </div>
           </article>
 
@@ -285,7 +302,7 @@
               </p>
             </div>
             <div style="margin-top: 1rem;">
-              <span class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
+              <span class="dest-status-pill dest-status-locked">Coming soon</span>
             </div>
           </article>
 
@@ -317,17 +334,18 @@
             </div>
           </article>
 
-          <article class="mission-log-card">
+          <article id="mission-05" class="mission-log-card">
             <div>
               <span class="mission-log-number">Mission 05</span>
               <h3 class="mission-log-title">The Creator Mission</h3>
-              <p class="mission-log-dest">📍 Destination: Creator's Lab</p>
+              <p class="mission-log-dest">📍 Place: Creator's Playground</p>
               <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
-                Build an independent project inside the Creator's Playground and celebrate your creation.
+                Plan, build and save your own small webpage in the Creator's Playground, with Pixel to guide you.
               </p>
             </div>
-            <div style="margin-top: 1rem;">
-              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <span id="mission-05-status" class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
+              <a id="mission-05-link" href="mission-05.html" class="button button-small">Start Mission 05 &rarr;</a>
             </div>
           </article>
 
@@ -359,6 +377,8 @@
 
       <div class="modal-actions">
         <button id="modal-action-btn" class="button">Explore Destination</button>
+        <a id="modal-playground-link" href="playground.html" class="button button-outline" hidden>Try the Playground now</a>
+        <a id="modal-mission-link" href="mission-05.html" class="button button-outline" hidden>Start Mission 05</a>
         <button type="button" class="button button-outline" onclick="document.getElementById('modal-close-btn').click()">Close</button>
       </div>
     </div>

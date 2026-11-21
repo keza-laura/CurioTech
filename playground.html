@@ -123,6 +123,22 @@
           </p>
         </div>
 
+        <!-- Phase 5, Stage 5.4: a way back to Mission 05 while that mission is in progress in this tab (see js/playground.js) -->
+        <aside id="pg-m5-return" class="pg-m5-return" aria-label="Mission 05" hidden>
+          <span class="pg-m5-return-text"><strong>🎯 Mission 05 is waiting for you.</strong> <span id="pg-m5-return-step"></span></span>
+          <a href="mission-05.html" class="button button-small pg-m5-return-btn">← Back to Mission 05</a>
+        </aside>
+
+        <!-- Phase 4.5.6: shown only when a Mission 01 blueprint arrives and the learner already has their own HTML (see js/playground.js) -->
+        <section id="pg-handoff" class="pg-handoff" aria-labelledby="pg-handoff-title" hidden>
+          <h3 id="pg-handoff-title" class="pg-handoff-title" tabindex="-1">🎨 Your Mission 01 blueprint is ready</h3>
+          <p class="pg-handoff-text">You already have your own HTML in the workshop. Should I replace it with your blueprint? If you say no, your work stays exactly as it is.</p>
+          <div class="pg-handoff-actions">
+            <button type="button" id="pg-handoff-use" class="button button-small pg-handoff-btn">Use my blueprint (replaces my HTML)</button>
+            <button type="button" id="pg-handoff-keep" class="button button-small button-outline pg-handoff-btn">Keep my work</button>
+          </div>
+        </section>
+
         <!-- Code / Preview toggle (shown on phones and small tablets only) -->
         <div class="pg-view-toggle" role="group" aria-label="Choose what to look at">
           <button type="button" class="pg-view-btn" data-view="code" aria-pressed="true" aria-controls="pg-code-panel">✏️ Code</button>
@@ -134,7 +150,45 @@
           <button type="button" id="pg-run-btn" class="button button-small pg-run-btn">▶ Run Code</button>
           <button type="button" id="pg-stop-btn" class="button button-small button-outline pg-stop-btn" aria-disabled="true">■ Stop</button>
           <p id="pg-run-status" class="pg-run-status" role="status" aria-live="polite">JavaScript only runs when you press Run Code.</p>
+          <button type="button" id="pg-download-btn" class="button button-small button-outline pg-download-btn">⬇ Download my page</button>
         </div>
+        <!-- Phase 4.5.6: what the download is (see js/playground.js, section 9d) -->
+        <p id="pg-download-note" class="pg-download-note">Downloading saves your HTML, CSS and JavaScript as one file, <code>my-curiotech-page.html</code>. Your JavaScript runs normally when you open that file outside the Playground, because the Playground's safety box only protects you in here.</p>
+        <p id="pg-download-status" class="pg-download-status" role="status" aria-live="polite"></p>
+
+        <!-- Phase 5, Stage 5.2: save a named project, open it again later, update it (see js/playground.js, section 9e) -->
+        <details id="pg-projects" class="pg-projects" open>
+          <summary class="pg-projects-summary">
+            <span class="pg-projects-title">💾 My Projects</span>
+            <span id="pg-projects-hint" class="pg-projects-hint">Save your work, then open it again any time</span>
+          </summary>
+          <div class="pg-projects-body">
+            <p id="pg-project-current" class="pg-project-current">This work isn't saved as a project yet.</p>
+
+            <div class="pg-project-row">
+              <label for="pg-project-name" class="pg-project-label">Project name</label>
+              <input id="pg-project-name" class="pg-project-input" type="text" maxlength="40" autocomplete="off" placeholder="My first page" aria-describedby="pg-project-help">
+              <button type="button" id="pg-project-save" class="button button-small pg-project-btn">💾 Save Project</button>
+              <button type="button" id="pg-project-update" class="button button-small pg-project-btn" hidden>↻ Update Project</button>
+            </div>
+            <p id="pg-project-help" class="pg-project-help">Saves your HTML, CSS and JavaScript together. You can keep up to 10 projects.</p>
+
+            <!-- Stage 5.3: the saved projects, newest first, each with Open / Rename / Download / Delete -->
+            <h4 id="pg-project-list-title" class="pg-project-list-title" tabindex="-1">Your saved projects</h4>
+            <ul id="pg-project-list" class="pg-project-list" aria-labelledby="pg-project-list-title"></ul>
+            <p id="pg-project-count" class="pg-project-help"></p>
+
+            <div id="pg-project-confirm" class="pg-project-confirm" role="group" aria-labelledby="pg-project-confirm-text" hidden>
+              <p id="pg-project-confirm-text" class="pg-project-confirm-text" tabindex="-1"></p>
+              <div class="pg-project-actions">
+                <button type="button" id="pg-project-confirm-yes" class="button button-small pg-project-btn"></button>
+                <button type="button" id="pg-project-confirm-no" class="button button-small button-outline pg-project-btn">Keep my work</button>
+              </div>
+            </div>
+
+            <p id="pg-project-status" class="pg-project-status" role="status" aria-live="polite"></p>
+          </div>
+        </details>
 
         <!-- Workshop: editor + preview -->
         <div id="pg-workshop" class="pg-workshop" data-view="code">
@@ -283,6 +337,7 @@
     </div>
   </footer>
 
+  <script src="js/projects.js"></script>
   <script src="js/playground.js"></script>
 </body>
 

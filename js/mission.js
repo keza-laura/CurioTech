@@ -236,6 +236,41 @@ function initMission() {
   }
 
   /**
+   * Mission 01 completion (localStorage, so it survives refreshes, new tabs and new sessions).
+   * It is saved ONLY when the learner is on the celebration stage AND the mission's own requirements
+   * are all met: 3 different elements inspected (Stage 3), all 3 quests solved (Stage 4) and the
+   * blueprint saved (Stage 5). Opening the mission, or a stage, never counts.
+   * Nothing in this project ever removes or overwrites it: clearProgress() above only touches this
+   * mission's per-tab keys, and an existing record is left exactly as it was.
+   * js/adventure.js reads { v: 1, done: true, completedAt } to show the finished state.
+   * Returns true when the completion is saved, false when it is not (not earned yet, or storage unavailable).
+   */
+  const MISSION_01_DONE_KEY = "curiotech_mission_01_completed";
+
+  function recordMission01Complete() {
+    if (currentStageIndex !== 5 || inspectedElements.size < INSPECT_REQUIRED || !allChallengesSolved() || !isBlueprintCreated) {
+      return false;
+    }
+    let existing = null;
+    try { existing = JSON.parse(localStorage.getItem(MISSION_01_DONE_KEY)); } catch (e) { existing = null; }
+    if (existing && existing.v === 1 && existing.done === true) return true;   // already saved: never overwritten
+    try {
+      localStorage.setItem(MISSION_01_DONE_KEY, JSON.stringify({ v: 1, done: true, completedAt: new Date().toISOString() }));
+      return true;
+    } catch (e) {
+      return false;   // storage blocked or full: the learner is told on the celebration screen
+    }
+  }
+
+  function showSavedNote(saved) {
+    const note = document.getElementById("mission-saved-note");
+    if (!note) return;
+    note.textContent = saved
+      ? "✅ Saved! Your Adventure Map now shows Mission 01 as complete."
+      : "You finished Mission 01! This browser wouldn't let me save it, so the Adventure Map may not show it as complete.";
+  }
+
+  /**
    * Renders the current stage view, updates Pixel, and configures buttons
    */
   function renderStage() {
@@ -319,7 +354,10 @@ function initMission() {
     updateInspectHint(false);
 
     // Stage 6 shows a personalised recap of what the learner did
-    if (currentStageIndex === 5) renderRecap();
+    if (currentStageIndex === 5) {
+      renderRecap();
+      showSavedNote(recordMission01Complete());
+    }
 
     // Save temporary session progress
     try {
@@ -1073,6 +1111,33 @@ function initMission() {
 
   // Leaving through the celebrate link also starts the next visit fresh
   document.querySelector(".celebrate-layout a.button")?.addEventListener("click", clearProgress);
+
+  // Phase 4.5.6: hand the saved blueprint to the Creator's Playground.
+  // The record has its own key, so clearProgress() (which only removes this mission's two keys) never touches it.
+  // js/playground.js reads exactly { v, title, tagline, graphic, button } and only when the URL says ?from=mission-01.
+  const BLUEPRINT_HANDOFF_KEY = "curiotech_blueprint_handoff";
+  const btnOpenPlayground = document.getElementById("btn-open-playground");
+  if (btnOpenPlayground) {
+    btnOpenPlayground.addEventListener("click", () => {
+      if (!isBlueprintCreated) {
+        setPixel("encouraging", "<strong>Almost there! 🎨</strong> Save your blueprint in the Create stage first, then I can send it to the Playground.");
+        return;
+      }
+      let saved = true;
+      try {
+        sessionStorage.setItem(BLUEPRINT_HANDOFF_KEY, JSON.stringify({
+          v: 1,
+          title: blueprintState.title,
+          tagline: blueprintState.tagline,
+          graphic: blueprintState.graphic,
+          button: blueprintState.button
+        }));
+      } catch (e) {
+        saved = false;   // storage unavailable: still open the Playground, just without the blueprint
+      }
+      window.location.href = saved ? "playground.html?from=mission-01" : "playground.html";
+    });
+  }
 
   // ------------------------------------------------------------------------
   // 8. Restore temporary progress (if any) and paint every activity

@@ -342,42 +342,9 @@
     const source = String(rawHtml).slice(0, MAX_CHARS);
     if (source.trim() === "" && !run) return { empty: true };
 
-    // DOMParser output is inert: scripts do not run and resources are not fetched.
-    const doc = new DOMParser().parseFromString(source, "text/html");
-
-    doc.querySelectorAll(REMOVED_TAGS.join(",")).forEach(el => el.remove());
-
-    doc.querySelectorAll("*").forEach(el => {
-      Array.from(el.attributes).forEach(attr => {
-        const name = attr.name.toLowerCase();
-        if (name.startsWith("on") || REMOVED_ATTRS.includes(name)) {
-          el.removeAttribute(attr.name);
-        }
-      });
-      // Links stay clickable-looking but never leave the preview.
-      if (LINK_TAGS.includes(el.localName)) {
-        ["href", "xlink:href"].forEach(h => {
-          if (el.hasAttribute(h)) {
-            const value = (el.getAttribute(h) || "").trim();
-            if (!value.startsWith("#")) el.setAttribute(h, "#");
-          }
-        });
-      }
-    });
-
-    const bodyHtml = doc.body ? doc.body.innerHTML : "";
-    const hasContent = doc.body && (doc.body.children.length > 0 || doc.body.textContent.trim() !== "");
+    const cleaned = cleanLearnerHtml(source);
+    const { bodyHtml, hasContent, headStyles, bodyAttrs } = cleaned;
     if (!hasContent && !run) return { empty: true };
-
-    // <style> elements the learner wrote inside their HTML, plus body class/style.
-    const headStyles = Array.from(doc.head ? doc.head.querySelectorAll("style") : [])
-      .map(el => el.outerHTML).join("");
-    let bodyAttrs = "";
-    ["class", "style"].forEach(a => {
-      if (doc.body && doc.body.hasAttribute(a)) {
-        bodyAttrs += ` ${a}="${doc.body.getAttribute(a).replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`;
-      }
-    });
 
     // The CSS tab comes last so it can override the page's own <style> elements.
     const cssText = String(rawCss || "");
@@ -405,6 +372,52 @@
     }
 
     return { empty: false, html: topFor(previewCsp(scriptSrc)) + scriptTags + "</body></html>" };
+  }
+
+  /**
+   * The ONE place learner HTML is cleaned (used by the live preview, Run mode and the download, so they
+   * always agree). Cleans inside an inert document: scripts, frames, objects, base/link/meta and
+   * similar tags are removed, on* handlers and risky attributes are dropped, and links never leave the page.
+   * Returns the cleaned body markup plus the learner's own <style> elements and body class/style.
+   */
+  function cleanLearnerHtml(source) {
+    // DOMParser output is inert: scripts do not run and resources are not fetched.
+    const doc = new DOMParser().parseFromString(source, "text/html");
+
+    doc.querySelectorAll(REMOVED_TAGS.join(",")).forEach(el => el.remove());
+
+    doc.querySelectorAll("*").forEach(el => {
+      Array.from(el.attributes).forEach(attr => {
+        const name = attr.name.toLowerCase();
+        if (name.startsWith("on") || REMOVED_ATTRS.includes(name)) {
+          el.removeAttribute(attr.name);
+        }
+      });
+      // Links stay clickable-looking but never leave the preview.
+      if (LINK_TAGS.includes(el.localName)) {
+        ["href", "xlink:href"].forEach(h => {
+          if (el.hasAttribute(h)) {
+            const value = (el.getAttribute(h) || "").trim();
+            if (!value.startsWith("#")) el.setAttribute(h, "#");
+          }
+        });
+      }
+    });
+
+    const bodyHtml = doc.body ? doc.body.innerHTML : "";
+    const hasContent = doc.body && (doc.body.children.length > 0 || doc.body.textContent.trim() !== "");
+
+    // <style> elements the learner wrote inside their HTML, plus body class/style.
+    const headStyles = Array.from(doc.head ? doc.head.querySelectorAll("style") : [])
+      .map(el => el.outerHTML).join("");
+    let bodyAttrs = "";
+    ["class", "style"].forEach(a => {
+      if (doc.body && doc.body.hasAttribute(a)) {
+        bodyAttrs += ` ${a}="${doc.body.getAttribute(a).replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`;
+      }
+    });
+
+    return { bodyHtml, hasContent, headStyles, bodyAttrs };
   }
 
   // ------------------------------------------------------------------------
@@ -687,7 +700,10 @@
     starter: STARTER_HTML,
     onChange: (immediate) => scheduleUpdate(immediate, true),
     onFirstEdit: () => setPixel("excited", "<strong>You just changed a real webpage! 🎉</strong><br>Try deleting a line, or add your own <code>&lt;p&gt;</code> with a sentence inside."),
-    onReset: () => setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter HTML is back. Change a few words and see what happens!")
+    onReset: () => {
+      resetHtmlBaseline();   // goals are measured against the starter again
+      setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter HTML is back. Change a few words and see what happens!");
+    }
   });
 
   cssEd = createEditor({
@@ -699,6 +715,7 @@
     onReset: () => {
       chipState = {};
       syncChipUI();
+      resetCssBaseline();   // goals are measured against the starter CSS again
       setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter CSS is back. Your HTML wasn't touched.");
     }
   });
@@ -1424,14 +1441,17 @@
     return { h1: h1 ? squash(h1.textContent) : "", p: p ? squash(p.textContent) : "", tags };
   }
   const STARTER_FACTS = analyseHtml(STARTER_HTML);
+  // What a goal is measured against: the starter, or (after a Mission 01 blueprint import) the imported page,
+  // so an import by itself never earns a Remix goal. See section 9c.
+  let htmlBaseline = STARTER_FACTS;
 
-  /** Which HTML goals does this code meet? (the title/paragraph must differ from the starter and not be empty) */
+  /** Which HTML goals does this code meet? (the title/paragraph must differ from the baseline and not be empty) */
   function htmlGoalsMet(html) {
     const f = analyseHtml(html);
-    const added = Object.keys(f.tags).some(n => f.tags[n] > (STARTER_FACTS.tags[n] || 0));
+    const added = Object.keys(f.tags).some(n => f.tags[n] > (htmlBaseline.tags[n] || 0));
     return {
-      "remix-title": f.h1 !== "" && f.h1 !== STARTER_FACTS.h1,
-      "remix-paragraph": f.p !== "" && f.p !== STARTER_FACTS.p,
+      "remix-title": f.h1 !== "" && f.h1 !== htmlBaseline.h1,
+      "remix-paragraph": f.p !== "" && f.p !== htmlBaseline.p,
       "remix-add": added
     };
   }
@@ -1459,10 +1479,13 @@
     return set;
   }
   const STARTER_CSS_DECLS = ownCssDeclarations(STARTER_CSS);
+  // What the "write your own CSS" goal is measured against: the starter, or (after a saved project is opened)
+  // that project's own rules, so opening a project by itself never earns the goal. See section 9e.
+  let cssBaselineDecls = STARTER_CSS_DECLS;
 
   function ownCssMet(css) {
     for (const d of ownCssDeclarations(css)) {
-      if (!STARTER_CSS_DECLS.has(d)) return true;
+      if (!cssBaselineDecls.has(d)) return true;
     }
     return false;
   }
@@ -1712,6 +1735,855 @@
   }
 
   // ------------------------------------------------------------------------
+  // 9c. Mission 01 blueprint hand-off (Phase 4.5.6)
+  //     Mission 01 leaves ONE record in sessionStorage and opens playground.html?from=mission-01:
+  //       key  "curiotech_blueprint_handoff"
+  //       data { v: 1, title, tagline, graphic, button }   (all plain strings)
+  //     - Nothing is imported unless the URL says ?from=mission-01 AND a valid record exists.
+  //     - The learner's own HTML is never replaced without asking.
+  //     - An import is not a learner action: it never earns a goal. Goals are measured against the
+  //       imported page (htmlBaseline), which is remembered for this tab so a refresh keeps working.
+  //     - Only the HTML file is touched. The sandbox, CSP and HTML cleaning are not involved at all.
+  // ------------------------------------------------------------------------
+  const HANDOFF_KEY = "curiotech_blueprint_handoff";
+  const BASELINE_KEY = "curiotech_playground_html_baseline";
+  const handoffEl = document.getElementById("pg-handoff");
+  const handoffTitle = document.getElementById("pg-handoff-title");
+  const handoffUse = document.getElementById("pg-handoff-use");
+  const handoffKeep = document.getElementById("pg-handoff-keep");
+  let pendingBlueprintHtml = null;
+
+  /** The record, checked and trimmed. Returns null when it is missing or not usable. */
+  function readBlueprint() {
+    const d = readDraft(HANDOFF_KEY);
+    if (!d || d.v !== 1) return null;
+    const clean = (v, max) => (typeof v === "string"
+      ? v.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim().slice(0, max)
+      : "");
+    const bp = { title: clean(d.title, 30), tagline: clean(d.tagline, 200), graphic: clean(d.graphic, 60), button: clean(d.button, 40) };
+    return bp.title && bp.tagline && bp.graphic && bp.button ? bp : null;
+  }
+
+  /** The blueprint as real HTML. Every learner-chosen word is escaped. The first <p> is the story line. */
+  function blueprintToHtml(bp) {
+    return [
+      "<!-- This is the page you planned in Mission 01, now written as real HTML! -->",
+      "<nav>Home • Missions • Portfolio</nav>",
+      "",
+      "<h1>" + escapeHtml(bp.title) + "</h1>",
+      "",
+      "<!-- In Mission 01 this was an <img>. Pictures from the internet can't load in this workshop, so I used an emoji! -->",
+      "<div>" + escapeHtml(bp.graphic) + "</div>",
+      "",
+      "<p>" + escapeHtml(bp.tagline) + "</p>",
+      "",
+      "<button>" + escapeHtml(bp.button) + "</button>",
+      ""
+    ].join("\n");
+  }
+
+  // ---- goal baseline (sessionStorage, always guarded) ----
+  function setHtmlBaseline(facts) {
+    htmlBaseline = facts;
+    writeDraft(BASELINE_KEY, { v: 1, h1: facts.h1, p: facts.p, tags: facts.tags });
+  }
+
+  function resetHtmlBaseline() {
+    htmlBaseline = STARTER_FACTS;
+    removeKey(BASELINE_KEY);
+  }
+
+  function loadHtmlBaseline() {
+    const d = readDraft(BASELINE_KEY);
+    if (!d || d.v !== 1 || typeof d.h1 !== "string" || typeof d.p !== "string" || !d.tags || typeof d.tags !== "object") return;
+    const tags = {};
+    Object.keys(d.tags).forEach(n => {
+      const c = d.tags[n];
+      if (Number.isInteger(c) && c >= 0 && c <= 1000) tags[n] = c;
+    });
+    htmlBaseline = { h1: d.h1.slice(0, 500), p: d.p.slice(0, 2000), tags };
+  }
+
+  // ---- the hand-off itself ----
+  function finishHandoff() {
+    removeKey(HANDOFF_KEY);   // so a refresh never imports again
+    try { window.history.replaceState(null, "", window.location.pathname + window.location.hash); } catch (e) { /* not essential */ }
+  }
+
+  function hideHandoffBanner() {
+    pendingBlueprintHtml = null;
+    if (handoffEl) handoffEl.hidden = true;
+  }
+
+  /** Puts the blueprint into the HTML editor. Not a learner edit: no goal check runs. */
+  function applyBlueprint(html) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+    htmlEd.ta.value = html.slice(0, MAX_CHARS);
+    htmlEd.edited = false;   // the first real edit still gets its friendly message
+    htmlEd.dirty = true;
+    htmlEd.updateCount();
+    setHtmlBaseline(analyseHtml(htmlEd.ta.value));   // BEFORE anything can check goals
+    selectTab("html", false);
+    pendingRender = false;
+    renderPreview();
+    saveDirty();
+    hideHandoffBanner();
+    finishHandoff();
+    htmlEd.showNote("Your Mission 01 blueprint was loaded.", 6000);
+    setPixel("excited", "<strong>Your Mission 01 blueprint is here! 🎨</strong><br>This is the page you planned, now written as real HTML. Change the title, change the story words, or add something new to remix it!");
+  }
+
+  function keepOwnWork() {
+    hideHandoffBanner();
+    finishHandoff();
+    htmlEd.showNote("Kept your own HTML. Nothing was replaced.", 6000);
+    setPixel("happy", "<strong>No problem! 🛡️</strong><br>Your own HTML is exactly as you left it. You can still build your blueprint page in Mission 01 again any time.");
+  }
+
+  function initHandoff() {
+    let from = null;
+    try { from = new URLSearchParams(window.location.search).get("from"); } catch (e) { from = null; }
+    if (from !== "mission-01") return;   // no request, no import
+
+    const bp = readBlueprint();
+    if (!bp) {
+      finishHandoff();
+      setPixel("encouraging", "<strong>I couldn't find your blueprint. 🔍</strong><br>It may have been saved in a different tab. You can finish Mission 01 first, or just start playing here. Everything in the workshop still works!");
+      return;
+    }
+
+    const html = blueprintToHtml(bp);
+    const current = htmlEd.ta.value;
+    if (current === html) {   // already exactly this page
+      finishHandoff();
+      setPixel("happy", "<strong>Your blueprint is already here! 🎨</strong><br>Change the title, change the story words, or add something new.");
+      return;
+    }
+
+    const hasOwnHtml = current.trim() !== "" && current !== STARTER_HTML;
+    if (!hasOwnHtml) {
+      applyBlueprint(html);
+      return;
+    }
+
+    // The learner already has their own HTML: ask first, change nothing yet.
+    if (!handoffEl || !handoffUse || !handoffKeep) { finishHandoff(); return; }   // no banner available: keep their work
+    pendingBlueprintHtml = html;
+    handoffEl.hidden = false;
+    setPixel("thinking", "<strong>Your Mission 01 blueprint is waiting! 🎨</strong><br>You already have your own HTML here, so I won't replace it unless you say so. Choose in the box above the editor.");
+    if (handoffTitle) handoffTitle.focus();
+  }
+
+  if (handoffUse) {
+    handoffUse.addEventListener("click", () => {
+      if (pendingBlueprintHtml === null) return;
+      applyBlueprint(pendingBlueprintHtml);
+      htmlEd.ta.focus();
+    });
+  }
+  if (handoffKeep) {
+    handoffKeep.addEventListener("click", () => {
+      if (pendingBlueprintHtml === null) return;
+      keepOwnWork();
+      htmlEd.ta.focus();
+    });
+  }
+
+  // ------------------------------------------------------------------------
+  // 9d. Download my page (Phase 4.5.6)
+  //     One self-contained file built entirely in this page (Blob + temporary link, no network).
+  //     - The HTML goes through cleanLearnerHtml(), the same cleaner the preview uses, so the file shows
+  //       the same cleaned page the learner sees.
+  //     - The CSS goes in one <style>, the JavaScript in one <script> (prepareScriptText() escapes
+  //       </script, <!-- and <script exactly as Run mode does). The sandbox wrapper, the CSP and the
+  //       output capture are NOT part of the file: it is a normal web page.
+  //     - The text is read from the three editors at click time, so unsaved edits are included.
+  //     Nothing here touches the preview, the sandbox, Run/Stop, the hand-off or the goal baseline.
+  // ------------------------------------------------------------------------
+  const DOWNLOAD_FILENAME = "my-curiotech-page.html";
+  const downloadBtn = document.getElementById("pg-download-btn");
+  const downloadStatus = document.getElementById("pg-download-status");
+
+  /** The finished document as text, or null when there is nothing at all to save. pageTitle is optional (escaped). */
+  function buildDownloadHtml(rawHtml, rawCss, rawJs, pageTitle) {
+    const cleaned = cleanLearnerHtml(String(rawHtml).slice(0, MAX_CHARS));
+    const cssText = String(rawCss || "");
+    const jsText = prepareScriptText(rawJs || "");
+    if (!cleaned.hasContent && cssText.trim() === "" && jsText.trim() === "") return null;
+
+    const parts = [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "<head>",
+      "<meta charset=\"utf-8\">",
+      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "<title>" + (pageTitle ? escapeHtml(pageTitle) : "My CurioTech Page") + "</title>",
+      `<style>${PREVIEW_BASE_CSS}</style>`
+    ];
+    if (cleaned.headStyles) parts.push(cleaned.headStyles);
+    if (cssText.trim() !== "") parts.push(`<style>\n${escapeStyleText(cssText)}\n</style>`);   // last, so it wins
+    parts.push("</head>", `<body${cleaned.bodyAttrs}>${cleaned.bodyHtml}`);   // exactly the preview's <body>, byte for byte
+    if (jsText.trim() !== "") parts.push(`<script>\n${jsText}\n</script>`);
+    parts.push("</body>", "</html>", "");
+    return parts.join("\n");
+  }
+
+  function setDownloadStatus(text) {
+    if (downloadStatus) downloadStatus.textContent = text;
+  }
+
+  /** Hands a finished document to the browser as a file download (Blob + temporary link, no network). True if it worked. */
+  function deliverHtmlFile(doc, filename) {
+    let url = null;
+    try {
+      url = URL.createObjectURL(new Blob([doc], { type: "text/html;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.rel = "noopener";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      const done = url;
+      setTimeout(() => URL.revokeObjectURL(done), 10000);
+      return true;
+    } catch (e) {
+      if (url) { try { URL.revokeObjectURL(url); } catch (e2) { /* nothing to free */ } }
+      return false;
+    }
+  }
+
+  function downloadMyPage() {
+    const doc = buildDownloadHtml(htmlEd.ta.value, cssEd.ta.value, jsEd.ta.value);   // latest text, saved or not
+    if (doc === null) {
+      setDownloadStatus("There's nothing to download yet. Write some HTML, CSS or JavaScript first!");
+      return;
+    }
+    if (deliverHtmlFile(doc, DOWNLOAD_FILENAME)) {
+      setDownloadStatus(`✅ Your page was sent to your downloads as ${DOWNLOAD_FILENAME}. Open that file to see it on its own!`);
+    } else {
+      setDownloadStatus("Sorry, this browser wouldn't let me make the download. Your code is still safe in the workshop.");
+    }
+  }
+
+  if (downloadBtn) downloadBtn.addEventListener("click", downloadMyPage);
+
+  // ------------------------------------------------------------------------
+  // 9e. Saved projects: save, open, update, rename, download and delete (Phase 5, Stages 5.2 and 5.3)
+  //     A saved project is an explicit, named snapshot kept by js/projects.js (window.CurioProjects).
+  //     - It is SEPARATE from the per-tab drafts: nothing is saved as a project unless the learner presses
+  //       a save button, and drafts keep working exactly as before.
+  //     - Opening a project replaces the three editors, but only after asking when there is work that
+  //       is not saved anywhere. Opening is not a learner edit: no goal check runs, and the goal
+  //       baselines (HTML and CSS) are set to the opened project, as the blueprint hand-off does.
+  //     - "Update Project" overwrites the open project after a confirmation. "Save Project" always makes
+  //       a NEW project, and a name that is already used is refused, so duplicates are never made by accident.
+  //     Only the HTML, CSS and JavaScript text is saved. Nothing here touches the preview, the sandbox,
+  //     Run/Stop, the download, the Mission 01 hand-off or the guided levels.
+  // ------------------------------------------------------------------------
+  const CSS_BASELINE_KEY = "curiotech_playground_css_baseline";
+  const OPEN_PROJECT_KEY = "curiotech_playground_open_project";
+
+  // ---- CSS goal baseline (sessionStorage, always guarded) ----
+  function setCssBaseline(decls) {
+    cssBaselineDecls = decls;
+    writeDraft(CSS_BASELINE_KEY, { v: 1, decls: Array.from(decls).slice(0, 2000) });
+  }
+
+  function resetCssBaseline() {
+    cssBaselineDecls = STARTER_CSS_DECLS;
+    removeKey(CSS_BASELINE_KEY);
+  }
+
+  function loadCssBaseline() {
+    const d = readDraft(CSS_BASELINE_KEY);
+    if (!d || d.v !== 1 || !Array.isArray(d.decls)) return;
+    cssBaselineDecls = new Set(d.decls.filter(x => typeof x === "string").slice(0, 2000).map(x => x.slice(0, 500)));
+  }
+
+  // ---- chips: a project stores only CSS text, so work out which chips that text matches ----
+  /** The chip choices whose generated block is EXACTLY the block in this CSS, or {} (chips off) if none match. */
+  function deriveChipState(css) {
+    const range = chipBlockRange(css);
+    if (!range) return {};
+    const block = css.slice(range.start, range.end);
+    const slotIds = Object.keys(CHIP_SLOTS);
+    const candidates = slotIds.map(slotId => {
+      const slot = CHIP_SLOTS[slotId];
+      if (block.indexOf(slot.selector + " {") === -1) return [];
+      return slot.chips
+        .filter(chip => Object.keys(chip.decls).every(p => block.indexOf("  " + p + ": " + chip.decls[p] + ";") !== -1))
+        .map(chip => chip.id);
+    });
+    let found = null;
+    let leaves = 0;
+    (function walk(i, state) {
+      if (found || leaves > 500) return;
+      if (i === slotIds.length) {
+        leaves++;
+        if (buildChipBlock(state) === block) found = Object.assign({}, state);
+        return;
+      }
+      walk(i + 1, state);   // this slot off (fewest chips first)
+      candidates[i].forEach(id => {
+        state[slotIds[i]] = id;
+        walk(i + 1, state);
+        delete state[slotIds[i]];
+      });
+    })(0, {});
+    return found || {};
+  }
+
+  // ---- the controls ----
+  const projPanel = document.getElementById("pg-projects");
+  const projHint = document.getElementById("pg-projects-hint");
+  const projCurrent = document.getElementById("pg-project-current");
+  const projName = document.getElementById("pg-project-name");
+  const projSave = document.getElementById("pg-project-save");
+  const projUpdate = document.getElementById("pg-project-update");
+  const projListTitle = document.getElementById("pg-project-list-title");
+  const projList = document.getElementById("pg-project-list");
+  const projCount = document.getElementById("pg-project-count");
+  const projConfirm = document.getElementById("pg-project-confirm");
+  const projConfirmText = document.getElementById("pg-project-confirm-text");
+  const projConfirmYes = document.getElementById("pg-project-confirm-yes");
+  const projConfirmNo = document.getElementById("pg-project-confirm-no");
+  const projStatus = document.getElementById("pg-project-status");
+
+  let projectsEnabled = false;
+  let openProject = null;      // { id, name } of the project the editors came from (or were last saved to)
+  let openStamp = "";          // that project's updatedAt when it was opened, to notice changes made in another tab
+  let openSnap = null;         // its saved text { html, css, js }, used only for the quick "unsaved changes" label
+  let pendingConfirm = null;   // { yes, back, cancelText } while a question is showing
+  let listSignature = null;    // what the project list currently shows
+  let renamingId = null;       // the project whose name is being edited in the list (only one at a time)
+
+  const sameText = (a, b) => a.html === b.html && a.css === b.css && a.js === b.js;
+  const editorsNow = () => ({ html: htmlEd.ta.value, css: cssEd.ta.value, js: jsEd.ta.value });
+
+  function projSay(text, isError) {
+    if (!projStatus) return;
+    projStatus.textContent = text;
+    projStatus.classList.toggle("is-error", !!isError);
+  }
+
+  function projRemember(p) {
+    openProject = { id: p.id, name: p.name };
+    openStamp = p.updatedAt;
+    openSnap = { html: p.html, css: p.css, js: p.js };
+    writeDraft(OPEN_PROJECT_KEY, { v: 1, id: p.id });
+  }
+
+  function projForget() {
+    openProject = null;
+    openStamp = "";
+    openSnap = null;
+    removeKey(OPEN_PROJECT_KEY);
+  }
+
+  /** True when the editors hold work that is not saved in any project (a fresh read, used before anything is replaced). */
+  function hasUnsavedWork() {
+    const now = editorsNow();
+    if (openProject) {
+      const saved = window.CurioProjects.get(openProject.id);
+      if (saved) return !sameText(now, saved);
+      projForget();   // it was deleted in another tab: treat the work as unsaved
+    }
+    if (now.html === STARTER_HTML && now.css === STARTER_CSS && now.js === STARTER_JS) return false;
+    return !window.CurioProjects.list().some(p => sameText(now, p));
+  }
+
+  function nameTaken(name, exceptId) {
+    const lower = name.toLowerCase();
+    return window.CurioProjects.list().some(p => p.id !== exceptId && p.name.toLowerCase() === lower);
+  }
+
+  // ---- the project list (Stage 5.3) ----
+  function makeEl(tag, className, text) {
+    const e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function dateText(iso) {
+    try { return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; }
+  }
+
+  /** The button for one action of one project (found again after the list is redrawn). */
+  function rowButton(id, action) {
+    return projList.querySelector(`button[data-id="${id}"][data-action="${action}"]`);
+  }
+
+  function actionButton(p, action, label, outline) {
+    const b = makeEl("button", "button button-small pg-project-btn" + (outline === false ? "" : " button-outline"), label);
+    b.type = "button";
+    b.setAttribute("data-action", action);
+    b.setAttribute("data-id", p.id);
+    return b;
+  }
+
+  /** Draws the rows with textContent only (a project name can never become markup). */
+  function renderProjectList(list) {
+    projList.textContent = "";
+    if (list.length === 0) {
+      projList.appendChild(makeEl("li", "pg-proj-empty", "No saved projects yet. Type a name above and press Save Project to keep your first one."));
+      return;
+    }
+    list.forEach(p => {
+      const isOpen = !!openProject && openProject.id === p.id;
+      const row = makeEl("li", "pg-proj-row" + (isOpen ? " is-open" : ""));
+      row.setAttribute("data-id", p.id);
+
+      if (renamingId === p.id) {
+        const box = makeEl("div", "pg-proj-rename");
+        const input = makeEl("input", "pg-project-input pg-proj-rename-input");
+        input.type = "text";
+        input.id = "pg-rename-input";
+        input.maxLength = window.CurioProjects.MAX_NAME_CHARS;
+        input.value = p.name;
+        input.autocomplete = "off";
+        input.setAttribute("aria-label", `New name for ${p.name}`);
+        input.setAttribute("data-id", p.id);
+        box.appendChild(input);
+        const save = actionButton(p, "rename-save", "✔ Save name", false);
+        save.setAttribute("aria-label", `Save the new name for ${p.name}`);
+        const cancel = actionButton(p, "rename-cancel", "Cancel");
+        cancel.setAttribute("aria-label", `Cancel renaming ${p.name}`);
+        row.appendChild(box);
+        const acts = makeEl("div", "pg-proj-actions");
+        acts.setAttribute("role", "group");
+        acts.setAttribute("aria-label", `Rename ${p.name}`);
+        acts.appendChild(save);
+        acts.appendChild(cancel);
+        row.appendChild(acts);
+        projList.appendChild(row);
+        return;
+      }
+
+      const info = makeEl("div", "pg-proj-info");
+      const nameLine = makeEl("div", "pg-proj-nameline");
+      nameLine.appendChild(makeEl("span", "pg-proj-name", p.name));
+      if (isOpen) nameLine.appendChild(makeEl("span", "pg-proj-badge", "Open now"));
+      info.appendChild(nameLine);
+      const when = makeEl("div", "pg-proj-date");
+      const t = makeEl("time", "", `Updated ${dateText(p.updatedAt)}`.trim());
+      t.setAttribute("datetime", p.updatedAt);
+      when.appendChild(t);
+      info.appendChild(when);
+      row.appendChild(info);
+
+      const acts = makeEl("div", "pg-proj-actions");
+      acts.setAttribute("role", "group");
+      acts.setAttribute("aria-label", `Actions for ${p.name}`);
+      const open = actionButton(p, "open", "📂 Open");
+      open.setAttribute("aria-label", `Open project ${p.name}`);
+      const rename = actionButton(p, "rename", "✏️ Rename");
+      rename.setAttribute("aria-label", `Rename project ${p.name}`);
+      const dl = actionButton(p, "download", "⬇ Download");
+      dl.setAttribute("aria-label", `Download project ${p.name}`);
+      const del = actionButton(p, "delete", "🗑️ Delete");
+      del.setAttribute("aria-label", `Delete project ${p.name}`);
+      [open, rename, dl, del].forEach(b => acts.appendChild(b));
+      row.appendChild(acts);
+      projList.appendChild(row);
+    });
+  }
+
+  // ---- drawing ----
+  function drawProjects() {
+    if (!projectsEnabled) return;
+    const api = window.CurioProjects;
+    const list = api.list();
+
+    // Redraw the rows only when something that shows in them changed (so typing in a rename box is never disturbed).
+    const signature = list.map(p => p.id + "|" + p.name + "|" + p.updatedAt).join("~") +
+      "#" + (openProject ? openProject.id : "") + "#" + (renamingId || "");
+    if (signature !== listSignature) {
+      listSignature = signature;
+      renderProjectList(list);
+    }
+    projCount.textContent = `${list.length} of ${api.MAX_PROJECTS} projects saved.` +
+      (list.length >= api.MAX_PROJECTS ? " That's the limit, so delete one to save another." : "");
+
+    const dirty = openProject && openSnap && !sameText(editorsNow(), openSnap);
+    if (openProject) {
+      projCurrent.textContent = `Open project: “${openProject.name}”` + (dirty ? " — you have changes that aren't saved yet." : " — all changes saved.");
+      projSave.textContent = "💾 Save as New Project";
+      projUpdate.hidden = false;
+      projUpdate.textContent = "↻ Update Project";
+      if (projHint) projHint.textContent = `Open: ${openProject.name}` + (dirty ? " (unsaved changes)" : "");
+    } else {
+      projCurrent.textContent = "This work isn't saved as a project yet.";
+      projSave.textContent = "💾 Save Project";
+      projUpdate.hidden = true;
+      if (projHint) projHint.textContent = "Save your work, then open it again any time";
+    }
+  }
+
+  /** Shows the question box. backTo is a button (or a function that finds one) to focus when it is cancelled. */
+  function askFirst(text, yesLabel, onYes, backTo, options) {
+    const o = options || {};
+    pendingConfirm = { yes: onYes, back: backTo, cancelText: o.cancelText || "" };
+    projConfirmText.textContent = text;
+    projConfirmYes.textContent = yesLabel;
+    projConfirmNo.textContent = o.noLabel || "Keep my work";
+    projConfirm.classList.toggle("is-danger", !!o.danger);
+    projConfirm.hidden = false;
+    projConfirmText.focus();
+  }
+
+  function closeQuestion(focusBack) {
+    const back = pendingConfirm && pendingConfirm.back;
+    pendingConfirm = null;
+    projConfirm.hidden = true;
+    projConfirm.classList.remove("is-danger");
+    if (focusBack && back) {
+      const target = typeof back === "function" ? back() : back;
+      if (target) target.focus();
+    }
+  }
+
+  function nameProblem(message) {
+    projSay(message, true);
+    projName.setAttribute("aria-invalid", "true");
+    projName.focus();
+  }
+
+  // ---- open ----
+  /** Puts a saved project into the three editors. This is NOT a learner edit: no goal check runs. */
+  function loadProjectIntoEditors(p) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+    htmlEd.ta.value = p.html;
+    cssEd.ta.value = p.css;
+    jsEd.ta.value = p.js;
+    [htmlEd, cssEd, jsEd].forEach(ed => {
+      ed.edited = false;   // the first real edit still gets its friendly message
+      ed.dirty = true;     // so the per-tab drafts follow the editors, exactly as always
+      ed.updateCount();
+      ed.ta.scrollTop = 0;
+    });
+    chipState = deriveChipState(p.css);
+    syncChipUI();
+    setHtmlBaseline(analyseHtml(p.html));       // BEFORE anything can check goals
+    setCssBaseline(ownCssDeclarations(p.css));
+    pendingRender = false;
+    renderPreview();
+    saveDirty();
+  }
+
+  function doOpen(p) {
+    loadProjectIntoEditors(p);
+    projRemember(p);
+    projName.value = p.name;
+    projName.removeAttribute("aria-invalid");
+    drawProjects();
+    projSay(`📂 Opened “${p.name}”. Your changes only go into the project when you press Update Project.`, false);
+    setPixel("happy", `<strong>Project opened! 📂</strong><br>“${escapeHtml(p.name)}” is back in your editors. Change anything you like, then press <strong>Update Project</strong> to keep it.`);
+    selectTab("html", false);
+  }
+
+  /** Opens the project with this id (the one place that does it: the list's Open button calls this). */
+  function openProjectById(id) {
+    if (!projectsEnabled) { projSay(window.CurioProjects ? window.CurioProjects.messages.storage : "Saving projects isn't available here.", true); return; }
+    const p = window.CurioProjects.get(id);
+    if (!p) { drawProjects(); projSay(window.CurioProjects.messages.notfound, true); return; }
+    if (openProject && openProject.id === id && !hasUnsavedWork()) { projSay(`“${p.name}” is already open.`, false); return; }
+    if (hasUnsavedWork()) {
+      askFirst(
+        `Opening “${p.name}” will replace what's in your three code boxes, and your current work isn't saved as a project. Replace it?`,
+        "Replace my work",
+        () => { closeQuestion(false); doOpen(window.CurioProjects.get(id) || p); htmlEd.ta.focus(); },
+        () => rowButton(id, "open")
+      );
+      return;
+    }
+    doOpen(p);
+    htmlEd.ta.focus();
+  }
+
+  // ---- rename (in the list) ----
+  function startRename(id) {
+    if (!window.CurioProjects.get(id)) { drawProjects(); projSay(window.CurioProjects.messages.notfound, true); return; }
+    closeQuestion(false);
+    renamingId = id;
+    drawProjects();
+    const input = document.getElementById("pg-rename-input");
+    if (input) { input.focus(); input.select(); }
+    projSay("Type the new name, then press Save name. Press Escape to cancel.", false);
+  }
+
+  function endRename(focusButton) {
+    const id = renamingId;
+    renamingId = null;
+    drawProjects();
+    if (focusButton && id) { const b = rowButton(id, "rename"); if (b) b.focus(); }
+  }
+
+  function commitRename(id) {
+    const api = window.CurioProjects;
+    const input = document.getElementById("pg-rename-input");
+    if (!input) return;
+    const name = api.cleanName(input.value);
+    const saved = api.get(id);
+    if (!saved) { renamingId = null; drawProjects(); projSay(api.messages.notfound, true); return; }
+    const problem = (msg) => { input.setAttribute("aria-invalid", "true"); projSay(msg, true); input.focus(); };
+    if (name === "") { problem(api.messages.name); return; }
+    if (nameTaken(name, id)) { problem(`You already have a project called “${name}”. Choose a different name.`); return; }
+    if (name === saved.name) { endRename(true); projSay("The name stayed the same, so nothing was changed.", false); return; }
+
+    const r = api.rename(id, name);
+    if (!r.ok) {
+      if (r.reason === "notfound") { renamingId = null; drawProjects(); projSay(r.message, true); return; }
+      problem(r.message);   // the box stays open and the project is untouched
+      return;
+    }
+    if (openProject && openProject.id === id) {
+      if (api.cleanName(projName.value).toLowerCase() === openProject.name.toLowerCase()) projName.value = r.project.name;
+      openProject.name = r.project.name;
+      openStamp = r.project.updatedAt;   // our own rename must not look like a change made in another tab
+    }
+    endRename(true);
+    projSay(`✅ Renamed to “${r.project.name}”.`, false);
+  }
+
+  // ---- download one saved project ----
+  /** A safe file name from a project name: letters, numbers and hyphens, ending in .html. */
+  function projectFilename(name) {
+    let s = String(name).normalize ? String(name).normalize("NFKD") : String(name);
+    s = s.replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40).replace(/-+$/, "");
+    if (s === "" || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/.test(s)) s = (s ? s + "-" : "") + "my-curiotech-page";
+    return s + ".html";
+  }
+
+  function downloadProject(id) {
+    const p = window.CurioProjects.get(id);
+    if (!p) { drawProjects(); projSay(window.CurioProjects.messages.notfound, true); return; }
+    // The SAVED text goes through the same cleaner and escaping as the normal download; it is never run here.
+    const doc = buildDownloadHtml(p.html, p.css, p.js, p.name);
+    if (doc === null) { projSay(`“${p.name}” is empty, so there is nothing to download.`, true); return; }
+    const filename = projectFilename(p.name);
+    if (deliverHtmlFile(doc, filename)) {
+      projSay(`✅ “${p.name}” was sent to your downloads as ${filename}.`, false);
+    } else {
+      projSay("Sorry, this browser wouldn't let me make the download. Your project is still saved here.", true);
+    }
+  }
+
+  // ---- delete (always asks first, and only ever by id) ----
+  function askDelete(id) {
+    const p = window.CurioProjects.get(id);
+    if (!p) { drawProjects(); projSay(window.CurioProjects.messages.notfound, true); return; }
+    askFirst(
+      `Delete “${p.name}”? It will be removed from your saved projects and this can't be undone. Your three code boxes will not change.`,
+      "Delete project",
+      () => confirmDelete(id),
+      () => rowButton(id, "delete"),
+      { noLabel: "Cancel", cancelText: `Okay, “${p.name}” was not deleted.`, danger: true }
+    );
+  }
+
+  function confirmDelete(id) {
+    const api = window.CurioProjects;
+    closeQuestion(false);
+    const saved = api.get(id);
+    if (!saved) { drawProjects(); projSay("That project was already gone, so nothing was deleted.", true); return; }
+    const r = api.remove(id);   // by id: no other project can be removed
+    if (!r.ok) { drawProjects(); projSay(r.message, true); return; }
+    const wasOpen = !!openProject && openProject.id === id;
+    if (wasOpen) projForget();   // only the link is cleared: the code boxes are left exactly as they are
+    if (renamingId === id) renamingId = null;
+    drawProjects();
+    projSay(`🗑️ Deleted “${saved.name}”.` + (wasOpen ? " It was the open project, so your code boxes are no longer linked to a saved project. Your work in them was not changed." : ""), false);
+    projListTitle.focus();
+  }
+
+  // ---- save as a new project ----
+  function saveNew() {
+    if (!projectsEnabled) { projSay(window.CurioProjects ? window.CurioProjects.messages.storage : "Saving projects isn't available here.", true); return; }
+    closeQuestion(false);
+    const api = window.CurioProjects;
+    const name = api.cleanName(projName.value);
+    if (name === "") { nameProblem(api.messages.name); return; }
+    if (nameTaken(name, null)) {
+      nameProblem(openProject && openProject.name.toLowerCase() === name.toLowerCase()
+        ? `“${name}” is the project you have open. Press Update Project to save your changes, or type a new name to make a second project.`
+        : `You already have a project called “${name}”. Choose a different name, or open it and press Update Project.`);
+      return;
+    }
+    const now = editorsNow();
+    const r = api.create({ name, html: now.html, css: now.css, js: now.js });
+    if (!r.ok) {
+      if (r.reason === "name") nameProblem(r.message); else projSay(r.message, true);
+      return;
+    }
+    projRemember(r.project);
+    projName.value = r.project.name;
+    projName.removeAttribute("aria-invalid");
+    drawProjects();
+    projSay(`✅ Saved “${r.project.name}”. You can open it again from the list any time.`, false);
+    setPixel("excited", `<strong>Project saved! 💾</strong><br>“${escapeHtml(r.project.name)}” is safe, even if you close the browser. You can keep building and press <strong>Update Project</strong> when you want to save changes.`);
+  }
+
+  // ---- update the open project ----
+  function updateOpen() {
+    if (!projectsEnabled) { projSay(window.CurioProjects ? window.CurioProjects.messages.storage : "Saving projects isn't available here.", true); return; }
+    closeQuestion(false);
+    const api = window.CurioProjects;
+    if (!openProject) { projSay("Open a project first, or use Save Project to make a new one.", true); return; }
+    const saved = api.get(openProject.id);
+    if (!saved) {
+      projForget();
+      drawProjects();
+      projSay("That project was deleted in another tab, so there is nothing to update. Your work is still here. Press Save Project to keep it as a new project.", true);
+      return;
+    }
+    const name = api.cleanName(projName.value);
+    if (name === "") { nameProblem(api.messages.name); return; }
+    if (name !== saved.name && nameTaken(name, saved.id)) {
+      nameProblem(`You already have a project called “${name}”. Choose a different name.`);
+      return;
+    }
+    const now = editorsNow();
+    if (sameText(now, saved) && name === saved.name) { projSay(`Nothing has changed since you saved “${saved.name}”.`, false); return; }
+
+    const changedElsewhere = saved.updatedAt !== openStamp;
+    askFirst(
+      `Update “${saved.name}”? This replaces the saved version with what's in your code boxes now.` +
+        (changedElsewhere ? " It was also saved somewhere else (another tab) since you opened it, and that version will be replaced too." : ""),
+      "Update the project",
+      () => {
+        closeQuestion(false);
+        const latest = editorsNow();   // what is in the boxes NOW, in case it changed while the question was showing
+        const r = api.update(saved.id, { name, html: latest.html, css: latest.css, js: latest.js });
+        if (!r.ok) {
+          if (r.reason === "notfound") { projForget(); drawProjects(); }
+          projSay(r.message, true);
+          return;
+        }
+        projRemember(r.project);
+        projName.value = r.project.name;
+        drawProjects();
+        projSay(`✅ Updated “${r.project.name}”.`, false);
+        projUpdate.focus();
+      },
+      projUpdate
+    );
+  }
+
+  function initProjects() {
+    if (!projPanel || !projName || !projSave || !projUpdate || !projList || !projListTitle || !projConfirm || !projStatus) return;
+    const api = window.CurioProjects;
+    projectsEnabled = !!api && api.isAvailable();
+
+    // Phones: start collapsed (the summary already shows the open project), like the mission card.
+    const roomy = window.matchMedia ? window.matchMedia("(min-width: 601px)").matches : true;
+    projPanel.open = roomy;
+
+    if (!projectsEnabled) {
+      projCurrent.textContent = "Saving projects isn't available in this browser right now.";
+      projList.hidden = true;
+      projListTitle.hidden = true;
+      projCount.textContent = "";
+      projSave.setAttribute("aria-disabled", "true");
+      projSay("You can still download your page with the Download button, so your work is never lost.", false);
+      projSave.addEventListener("click", saveNew);
+      return;
+    }
+
+    // If a project was open before a refresh, find it again (its saved text, not the editors, is the reference).
+    const d = readDraft(OPEN_PROJECT_KEY);
+    if (d && typeof d.id === "string") {
+      const p = api.get(d.id);
+      if (p) { projRemember(p); projName.value = p.name; } else removeKey(OPEN_PROJECT_KEY);
+    }
+    drawProjects();
+
+    projSave.addEventListener("click", saveNew);
+    projUpdate.addEventListener("click", updateOpen);
+    projConfirmYes.addEventListener("click", () => { const p = pendingConfirm; if (p) p.yes(); });
+    projConfirmNo.addEventListener("click", () => {
+      const msg = (pendingConfirm && pendingConfirm.cancelText) || "Okay, nothing was changed. Your work is exactly as you left it.";
+      closeQuestion(true);
+      projSay(msg, false);
+    });
+
+    // The list: one listener for every row. Each button carries the id of ITS project.
+    projList.addEventListener("click", (e) => {
+      const b = e.target.closest ? e.target.closest("button[data-action]") : null;
+      if (!b || !projList.contains(b)) return;
+      const id = b.getAttribute("data-id");
+      switch (b.getAttribute("data-action")) {
+        case "open": openProjectById(id); break;
+        case "rename": startRename(id); break;
+        case "rename-save": commitRename(id); break;
+        case "rename-cancel": endRename(true); projSay("Okay, the name was not changed.", false); break;
+        case "download": downloadProject(id); break;
+        case "delete": askDelete(id); break;
+        default: break;
+      }
+    });
+    projList.addEventListener("keydown", (e) => {
+      const input = e.target.closest ? e.target.closest("#pg-rename-input") : null;
+      if (!input) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        commitRename(input.getAttribute("data-id"));
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        endRename(true);
+        projSay("Okay, the name was not changed.", false);
+      }
+    });
+    projList.addEventListener("input", (e) => {
+      if (e.target && e.target.id === "pg-rename-input") e.target.removeAttribute("aria-invalid");
+    });
+    projConfirm.addEventListener("keydown", (e) => { if (e.key === "Escape" && pendingConfirm) projConfirmNo.click(); });
+    projName.addEventListener("input", () => { projName.removeAttribute("aria-invalid"); });
+    projName.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      if (openProject) updateOpen(); else saveNew();
+    });
+
+    // keep the list and the "unsaved changes" label fresh
+    let labelTimer = null;
+    [htmlEd, cssEd, jsEd].forEach(ed => ed.ta.addEventListener("input", () => {
+      clearTimeout(labelTimer);
+      labelTimer = setTimeout(drawProjects, 300);
+    }));
+    projPanel.addEventListener("toggle", () => {
+      if (!projPanel.open) return;
+      if (openProject && !api.get(openProject.id)) projForget();
+      drawProjects();
+    });
+    window.addEventListener("storage", (e) => {
+      if (e.key !== api.KEY && e.key !== null) return;
+      if (openProject && !api.get(openProject.id)) projForget();
+      drawProjects();
+    });
+  }
+
+  // ------------------------------------------------------------------------
+  // 9f. Back to Mission 05 (Phase 5, Stage 5.4)
+  //     js/mission-05.js keeps a small per-tab record of the attempt in sessionStorage. While an attempt is in
+  //     progress (and not finished) this bar gives the learner a clear way back. It only READS that record and
+  //     touches nothing else: no code, drafts, projects, goals or progress.
+  // ------------------------------------------------------------------------
+  function initMissionReturn() {
+    const bar = document.getElementById("pg-m5-return");
+    const stepEl = document.getElementById("pg-m5-return-step");
+    if (!bar) return;
+    const d = readDraft("curiotech_mission_05_progress");
+    if (!d || d.v !== 1 || d.completed === true || !Number.isInteger(d.step)) return;
+    if (stepEl) stepEl.textContent = typeof d.returnLabel === "string" ? d.returnLabel.slice(0, 60) : "";
+    bar.hidden = false;
+  }
+
+  // ------------------------------------------------------------------------
   // 10. Start up: restore saved drafts (never overwrite them with starter code)
   // ------------------------------------------------------------------------
   buildChipUI();
@@ -1752,10 +2624,15 @@
   htmlEd.updateCount();
   cssEd.updateCount();
   jsEd.updateCount();
+  loadHtmlBaseline();   // remembered only after a Mission 01 blueprint import in this tab
+  loadCssBaseline();    // remembered only after a saved project was opened in this tab
   initProgress();   // goals are NOT checked here: only real actions after load can earn them
   clearOutput();
   setRunUI();
   renderPreview(); // draw immediately (no JavaScript); nothing is saved until the learner edits
+  initHandoff();   // Phase 4.5.6: only does anything for ?from=mission-01 (see section 9c)
+  initProjects();  // Phase 5, Stage 5.2: save / open / update projects (see section 9e)
+  initMissionReturn();   // Phase 5, Stage 5.4: "Back to Mission 05" bar while that mission is in progress
 
   // JavaScript NEVER runs on page load. If the last run never finished (for example an endless loop
   // froze the tab), say so once and make sure nothing starts by itself.

@@ -578,7 +578,15 @@
               <ul id="celebrate-recap-list" class="p44-recap-list"></ul>
             </div>
 
-            <div style="margin-top: 2rem;">
+            <!-- Phase 4 closure: tells the learner whether their completion was saved (see js/mission.js) -->
+            <p id="mission-saved-note" class="stage-description" role="status" aria-live="polite" style="margin: 1.5rem auto 0; max-width: 650px; font-weight: 700;"></p>
+
+            <!-- Phase 4.5.6: hand the saved blueprint to the Creator's Playground (see js/mission.js) -->
+            <p class="stage-description" style="margin: 1.5rem auto 0; max-width: 650px;">
+              Your blueprint is a plan. In the Creator's Playground you can turn it into real HTML and change it however you like.
+            </p>
+            <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;">
+              <button type="button" id="btn-open-playground" class="button">Open my blueprint in the Creator's Playground 🛠️</button>
               <a href="adventure.html" class="button">Return to Adventure Map 🧭</a>
             </div>
           </div>
