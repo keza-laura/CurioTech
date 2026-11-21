@@ -40,12 +40,13 @@
           <h1 class="mission-main-title">Creator's Playground</h1>
         </div>
 
-        <!-- Creator journey: guided at first, then free creation (display only for now) -->
+        <!-- Creator journey: states (done, current, next, skipped) are kept up to date by js/playground.js.
+             Nothing is locked: every tab can be used at any time. -->
         <ol class="pg-journey" aria-label="Creator levels">
-          <li class="pg-step is-current" aria-current="step"><span class="pg-step-num">1</span> Remix</li>
-          <li class="pg-step is-locked"><span class="pg-step-num">2</span> Style <span class="p44-sr-only">(locked)</span></li>
-          <li class="pg-step is-locked"><span class="pg-step-num">3</span> Bring it to life <span class="p44-sr-only">(locked)</span></li>
-          <li class="pg-step is-locked"><span class="pg-step-num">4</span> Free Canvas <span class="p44-sr-only">(locked)</span></li>
+          <li class="pg-step is-current" data-level="1" aria-current="step"><span class="pg-step-num">1</span> Remix <span class="p44-sr-only pg-step-state">(current)</span></li>
+          <li class="pg-step is-upcoming" data-level="2"><span class="pg-step-num">2</span> Style <span class="p44-sr-only pg-step-state">(next)</span></li>
+          <li class="pg-step is-upcoming" data-level="3"><span class="pg-step-num">3</span> Bring it to life <span class="p44-sr-only pg-step-state">(next)</span></li>
+          <li class="pg-step is-upcoming" data-level="4"><span class="pg-step-num">4</span> Free Canvas <span class="p44-sr-only pg-step-state">(next)</span></li>
         </ol>
       </section>
 
@@ -115,9 +116,9 @@
         </aside>
 
         <div class="stage-header">
-          <span class="stage-badge-tag">LEVEL 1 OF 4 &bull; REMIX</span>
-          <h2 class="stage-title">Level 1: Remix</h2>
-          <p class="stage-description">
+          <span id="pg-level-badge" class="stage-badge-tag">LEVEL 1 OF 4 &bull; REMIX</span>
+          <h2 id="pg-level-title" class="stage-title">Level 1: Remix</h2>
+          <p id="pg-level-desc" class="stage-description">
             Change a few words in the HTML tab, make it beautiful in the CSS tab, then bring it to life in the JS tab. You can't break anything, and each Reset button brings back fresh starter code for its own file.
           </p>
         </div>
@@ -138,8 +139,30 @@
         <!-- Workshop: editor + preview -->
         <div id="pg-workshop" class="pg-workshop" data-view="code">
 
-          <!-- Editor panel: HTML and CSS tabs (JS stays locked for now) -->
+          <!-- Editor panel: HTML, CSS and JS tabs (all always available) -->
           <section id="pg-code-panel" class="pg-panel pg-code-panel" aria-labelledby="pg-code-title">
+
+            <!-- Mission card: the current level's goals (filled in by js/playground.js) -->
+            <section id="pg-mission" class="pg-mission" aria-labelledby="pg-mission-title">
+              <details id="pg-mission-details" class="pg-mission-details" open>
+                <summary class="pg-mission-summary">
+                  <span class="pg-mission-line">
+                    <span id="pg-mission-title" class="pg-mission-title">🎯 Level 1: Remix</span>
+                    <span id="pg-mission-count" class="pg-mission-count">0 of 3 done</span>
+                  </span>
+                  <span id="pg-mission-next" class="pg-mission-next">👉 Next: Change the big title</span>
+                </summary>
+                <p id="pg-mission-intro" class="pg-mission-intro"></p>
+                <ul id="pg-mission-goals" class="pg-mission-goals"></ul>
+                <p id="pg-mission-warn" class="pg-mission-warn" hidden></p>
+                <div class="pg-mission-actions">
+                  <button type="button" id="pg-mission-continue" class="button button-small pg-mission-btn" hidden>Continue →</button>
+                  <button type="button" id="pg-mission-skip" class="button button-small button-outline pg-mission-btn">Skip to Free Canvas</button>
+                  <button type="button" id="pg-mission-back" class="button button-small button-outline pg-mission-btn" hidden>Back to guided levels</button>
+                </div>
+              </details>
+            </section>
+
             <div class="pg-panel-head">
               <h3 id="pg-code-title" class="pg-panel-title">✏️ Code Workshop</h3>
               <div class="pg-file-tabs" role="tablist" aria-label="Your code files">

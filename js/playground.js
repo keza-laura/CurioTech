@@ -1,6 +1,7 @@
 // ==========================================================================
-// CurioTech: Creator's Playground - Phase 4.5.4
-// HTML, CSS and JavaScript editing, styling chips and a sandboxed preview.
+// CurioTech: Creator's Playground - Phase 4.5.5
+// HTML, CSS and JavaScript editing, styling chips, a sandboxed preview and a guided
+// learning journey (Remix, Style, Bring it to life, Free Canvas).
 //
 // Safety model (learner code never touches the CurioTech page):
 //   1. The preview is an <iframe sandbox="allow-scripts"> WITHOUT allow-same-origin,
@@ -670,8 +671,11 @@
     clearTimeout(debounceTimer);
     const go = () => {
       debounceTimer = null;
+      const htmlChanged = htmlEd.dirty;   // true only when the learner changed that file
+      const cssChanged = cssEd.dirty;
       if (pendingRender) { pendingRender = false; renderPreview(); }
       saveDirty();
+      checkEditGoals(htmlChanged, cssChanged);
     };
     if (immediate) { go(); return; }
     debounceTimer = setTimeout(go, DEBOUNCE_MS);
@@ -783,6 +787,7 @@
   function endRun() {
     if (!run) return;
     clearTimeout(run.timer);
+    clearTimeout(run.settleTimer);
     run = null;
     clearMarker();
     setRunUI();
@@ -810,7 +815,7 @@
     saveDirty();
 
     // Fresh context: the old frame (and its timers) is destroyed when the new one is mounted.
-    if (run) { clearTimeout(run.timer); run = null; }
+    if (run) { clearTimeout(run.timer); clearTimeout(run.settleTimer); run = null; }
     const id = newRunId();
     runCounter++;
     clearOutput();
@@ -822,7 +827,8 @@
     mountFrame(f);
     run = {
       id, frame: f, win: f.contentWindow, state: "running", startedAt: performance.now(),
-      readyCount: 0, hadError: false, timer: setTimeout(() => onWatchdog(id), WATCHDOG_MS)
+      readyCount: 0, hadError: false, problem: false, customLog: false, confirmed: false,
+      timer: setTimeout(() => onWatchdog(id), WATCHDOG_MS)
     };
     wasEmpty = false;
     setRunUI();
@@ -914,23 +920,22 @@
       clearTimeout(run.timer);
       clearMarker();
       setRunUI();
-      const ms = Math.round(performance.now() - run.startedAt);
+      run.loadMs = Math.round(performance.now() - run.startedAt);
+      watchRunForGoals();
       if (run.hadError) {
         setStatus("⚠️ Your code stopped with an error. Check the Output box for what happened.");
       } else {
-        setStatus(`✅ Your code ran without errors (${ms} ms). Press Stop, or edit your HTML or CSS, to go back to the plain preview.`);
-        if (outputLines === 0) addLine("info", "Your code ran. It didn't print anything. Try console.log(\"hi\") to print a message here.", false);
-        if (!firstSuccessShown) {
-          firstSuccessShown = true;
-          setPixel("excited", "<strong>It ran! 🎉</strong><br>Try clicking things in the preview, and use <code>console.log()</code> to peek inside your code.");
-        }
+        // Not "ran without errors" yet: a timer may still throw. The observation window decides.
+        setStatus(`⏳ Your code started. Watching for errors for ${RUN_SETTLE_MS / 1000} seconds...`);
       }
     } else if (d.k === "out") {
       if (typeof d.s !== "string" || !OUT_LEVELS[d.c]) return;
       addProgramLine(OUT_LEVELS[d.c], d.s);
+      if (OUT_LEVELS[d.c] === "log") noteLogForGoals(d.s);
     } else if (d.k === "err") {
       if (typeof d.m !== "string") return;
       const line = Number.isInteger(d.l) && d.l > 0 ? ` (line ${d.l})` : "";
+      run.problem = true;   // an execution error means this run can never earn a run goal
       addProgramLine("error", d.m + line);
       if (run.state === "finished") {
         setStatus("⚠️ Your code hit an error after it finished starting. Check the Output box for what happened.");
@@ -941,6 +946,10 @@
       }
     } else if (d.k === "csp") {
       if (typeof d.d !== "string" || typeof d.u !== "string") return;
+      run.problem = true;   // code that tried something the playground blocks is not a clean run
+      if (run.state === "finished" && !run.confirmed) {
+        setStatus("⚠️ Your code tried something the playground blocks. Check the Output box for what happened.");
+      }
       const why = /^script/.test(d.d)
         ? "The playground only runs your own JavaScript, so extra scripts are blocked."
         : "Pages here can't load things from, or send things to, the internet.";
@@ -1224,6 +1233,7 @@
       chipPixelShown = true;
       setPixel("excited", "<strong>You styled your page! 🎨</strong><br>That chip wrote real CSS. Look at the lines between <code>chips:start</code> and <code>chips:end</code> in your CSS box.");
     }
+    if (!removing) awardGoals(["style-chip"]);   // a real action: switching a chip on
   }
 
   function buildChipUI() {
@@ -1287,6 +1297,421 @@
   }
 
   // ------------------------------------------------------------------------
+  // 9b. Guided progression: Remix, Style, Bring it to life, Free Canvas
+  //     - Goals are earned from real actions and are never taken away (resets do not matter).
+  //     - Every tab stays available at all times; the levels only guide.
+  //     - Progress lives in localStorage under its own key, separate from the drafts.
+  //     - Nothing is checked when the page loads or a tab is opened.
+  // ------------------------------------------------------------------------
+  const PROGRESS_KEY = "curiotech_playground_progress";
+  const FREE_CANVAS = 4;
+  const RUN_SETTLE_MS = 2000;   // a run must stay error-free this long after it finished loading
+  const STARTER_LOG_LINES = ["Hello from my JavaScript! 🎉", "The button was clicked"];
+
+  const LEVELS = [
+    {
+      id: 1, name: "Remix", icon: "✏️", badge: "LEVEL 1 OF 4 • REMIX",
+      desc: "Make a few small changes to the page in the HTML tab. Any order is fine, and you can't break anything.",
+      intro: "Change the page a little. Use the HTML tab. Any order is fine!",
+      goals: [
+        { id: "remix-title", text: "Change the big title", where: "HTML tab: the <h1> line" },
+        { id: "remix-paragraph", text: "Change the paragraph words", where: "HTML tab: the <p> line" },
+        { id: "remix-add", text: "Add something new", where: "HTML tab: like another <p> or a list item" }
+      ],
+      pixelIntro: "<strong>Level 1: Remix ✏️</strong><br>Make a few small changes in the HTML tab: change the title, change the paragraph, and add something new.",
+      pixelDone: "<strong>Level 1 complete! 🎉</strong><br>You remixed a real webpage. Press <strong>Continue</strong> in the mission card to meet Level 2: Style."
+    },
+    {
+      id: 2, name: "Style", icon: "🎨", badge: "LEVEL 2 OF 4 • STYLE",
+      desc: "Make your page beautiful with CSS. Tap a styling chip, or write your own rules in the CSS tab.",
+      intro: "Make it beautiful! Try a styling chip, or write your own CSS.",
+      goals: [
+        { id: "style-chip", text: "Tap a styling chip", where: "CSS tab: the Styling chips box" },
+        { id: "style-own", text: "Write your own CSS", where: "CSS tab: change a colour or add a rule" }
+      ],
+      pixelIntro: "<strong>Level 2: Style 🎨</strong><br>HTML builds your page, CSS makes it beautiful! Tap a styling chip, then try writing a rule of your own in the CSS tab.",
+      pixelDone: "<strong>Level 2 complete! 🎉</strong><br>Your page has style! Press <strong>Continue</strong> to meet Level 3: Bring it to life."
+    },
+    {
+      id: 3, name: "Bring it to life", icon: "⚡", badge: "LEVEL 3 OF 4 • BRING IT TO LIFE",
+      desc: "Make your page do things with JavaScript. Write code in the JS tab, then press Run Code.",
+      intro: "Make your page DO things! Use the JS tab, then press Run Code.",
+      goals: [
+        { id: "live-run", text: "Run your code with no errors", where: "JS tab, then press Run Code" },
+        { id: "live-message", text: "Print your own message", where: "JS tab: use console.log(\"...\") and run it" }
+      ],
+      pixelIntro: "<strong>Level 3: Bring it to life ⚡</strong><br>Press <strong>Run Code</strong> in the JS tab, then change the message in <code>console.log()</code> and run it again.",
+      pixelDone: "<strong>Level 3 complete! 🎉</strong><br>Your JavaScript works! Press <strong>Continue</strong> to open Free Canvas."
+    },
+    {
+      id: 4, name: "Free Canvas", icon: "🌟", badge: "LEVEL 4 OF 4 • FREE CANVAS",
+      desc: "No goals and no rules. Build anything you like with HTML, CSS and JavaScript.",
+      intro: "No goals, no rules. Create anything you like! Need ideas?",
+      goals: [],
+      ideas: [
+        "Build a profile card with your name and a favourite thing",
+        "Make the button change a colour or a word when you click it",
+        "Count how many times the button was clicked"
+      ],
+      pixelIntro: "<strong>Welcome to Free Canvas! 🌟</strong><br>No goals and no rules from here. Build whatever you like, and ask for the guided levels again any time.",
+      pixelDone: ""
+    }
+  ];
+
+  const GOAL_IDS = [];
+  LEVELS.forEach(lv => lv.goals.forEach(g => GOAL_IDS.push(g.id)));
+  const GOAL_BY_ID = {};
+  LEVELS.forEach(lv => lv.goals.forEach(g => { GOAL_BY_ID[g.id] = { goal: g, level: lv }; }));
+
+  let progress = { level: 1, goals: {}, celebrated: {}, skipped: false };
+  let progressSaveFailed = false;
+
+  const levelOf = n => LEVELS[n - 1];
+  const goalsDoneIn = lv => lv.goals.filter(g => progress.goals[g.id] === true).length;
+  const levelComplete = lv => lv.goals.length > 0 && goalsDoneIn(lv) === lv.goals.length;
+  const nextGoalIn = lv => lv.goals.find(g => progress.goals[g.id] !== true);
+  const squash = s => String(s).replace(/\s+/g, " ").trim();
+  const lcFirst = s => String(s).charAt(0).toLowerCase() + String(s).slice(1);
+
+  // ---- storage (localStorage, always guarded; corrupt or unavailable storage falls back to Level 1) ----
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      if (raw === null) return null;
+      const d = JSON.parse(raw);
+      if (!d || typeof d !== "object") return null;
+      const p = { level: 1, goals: {}, celebrated: {}, skipped: false };
+      if (Number.isInteger(d.level) && d.level >= 1 && d.level <= FREE_CANVAS) p.level = d.level;
+      if (d.goals && typeof d.goals === "object") {
+        GOAL_IDS.forEach(id => { if (d.goals[id] === true) p.goals[id] = true; });
+      }
+      if (d.celebrated && typeof d.celebrated === "object") {
+        [1, 2, 3].forEach(n => { if (d.celebrated[n] === true) p.celebrated[n] = true; });
+      }
+      p.skipped = d.skipped === true;
+      return p;
+    } catch (e) {
+      if (e && e.name !== "SyntaxError") progressSaveFailed = true;   // storage itself is unavailable
+      return null;
+    }
+  }
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+        v: 1, level: progress.level, goals: progress.goals, celebrated: progress.celebrated, skipped: progress.skipped
+      }));
+      progressSaveFailed = false;
+    } catch (e) {
+      progressSaveFailed = true;
+    }
+  }
+
+  // ---- goal detectors (small, forgiving, no side effects) ----
+  const IGNORED_TAGS = ["script", "style", "meta", "link", "title", "noscript", "template", "base"];
+
+  function analyseHtml(html) {
+    const doc = new DOMParser().parseFromString(String(html).slice(0, MAX_CHARS), "text/html");   // inert
+    const h1 = doc.body ? doc.body.querySelector("h1") : null;
+    const p = doc.body ? doc.body.querySelector("p") : null;
+    const tags = {};
+    if (doc.body) {
+      doc.body.querySelectorAll("*").forEach(el => {
+        const n = el.localName;
+        if (IGNORED_TAGS.indexOf(n) === -1) tags[n] = (tags[n] || 0) + 1;
+      });
+    }
+    return { h1: h1 ? squash(h1.textContent) : "", p: p ? squash(p.textContent) : "", tags };
+  }
+  const STARTER_FACTS = analyseHtml(STARTER_HTML);
+
+  /** Which HTML goals does this code meet? (the title/paragraph must differ from the starter and not be empty) */
+  function htmlGoalsMet(html) {
+    const f = analyseHtml(html);
+    const added = Object.keys(f.tags).some(n => f.tags[n] > (STARTER_FACTS.tags[n] || 0));
+    return {
+      "remix-title": f.h1 !== "" && f.h1 !== STARTER_FACTS.h1,
+      "remix-paragraph": f.p !== "" && f.p !== STARTER_FACTS.p,
+      "remix-add": added
+    };
+  }
+
+  /** The set of "selector|property:value" declarations the learner wrote OUTSIDE the chips' block. */
+  function ownCssDeclarations(css) {
+    let text = String(css);
+    const r = chipBlockRange(text);
+    if (r) text = text.slice(0, r.start) + text.slice(r.end);
+    text = text.replace(/\/\*[\s\S]*?\*\//g, "");
+    const set = new Set();
+    const re = /([^{}]+)\{([^{}]*)\}/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const sel = squash(m[1]).toLowerCase();
+      m[2].split(";").forEach(decl => {
+        const i = decl.indexOf(":");
+        if (i > 0) {
+          const prop = decl.slice(0, i).trim().toLowerCase();
+          const val = squash(decl.slice(i + 1)).toLowerCase();
+          if (prop && val) set.add(sel + "|" + prop + ":" + val);
+        }
+      });
+    }
+    return set;
+  }
+  const STARTER_CSS_DECLS = ownCssDeclarations(STARTER_CSS);
+
+  function ownCssMet(css) {
+    for (const d of ownCssDeclarations(css)) {
+      if (!STARTER_CSS_DECLS.has(d)) return true;
+    }
+    return false;
+  }
+
+  const STARTER_LOG_SET = new Set(STARTER_LOG_LINES.map(squash));
+  const isCustomLog = text => squash(text) !== "" && !STARTER_LOG_SET.has(squash(text));
+
+  // ---- the mission card, level indicator and level header ----
+  const missionEl = document.getElementById("pg-mission");
+  const missionDetails = document.getElementById("pg-mission-details");
+  const missionTitle = document.getElementById("pg-mission-title");
+  const missionCount = document.getElementById("pg-mission-count");
+  const missionNext = document.getElementById("pg-mission-next");
+  const missionIntro = document.getElementById("pg-mission-intro");
+  const missionGoals = document.getElementById("pg-mission-goals");
+  const missionWarn = document.getElementById("pg-mission-warn");
+  const missionContinue = document.getElementById("pg-mission-continue");
+  const missionSkip = document.getElementById("pg-mission-skip");
+  const missionBack = document.getElementById("pg-mission-back");
+  const levelBadge = document.getElementById("pg-level-badge");
+  const levelTitle = document.getElementById("pg-level-title");
+  const levelDesc = document.getElementById("pg-level-desc");
+  const levelSteps = document.querySelectorAll(".pg-step[data-level]");
+
+  function renderProgress(opts) {
+    if (!missionEl) return;
+    const o = opts || {};
+    const lv = levelOf(progress.level);
+    const free = lv.id === FREE_CANVAS;
+    const complete = !free && levelComplete(lv);
+
+    // level header
+    if (levelBadge) levelBadge.textContent = lv.badge;
+    if (levelTitle) levelTitle.textContent = free ? "Free Canvas" : `Level ${lv.id}: ${lv.name}`;
+    if (levelDesc) levelDesc.textContent = lv.desc;
+
+    // level indicator (nothing is locked: these are only labels)
+    levelSteps.forEach(li => {
+      const n = Number(li.getAttribute("data-level"));
+      const l = levelOf(n);
+      let state = "upcoming";
+      let label = "(next)";
+      if (n === progress.level) { state = "current"; label = "(current)"; }
+      else if (n < FREE_CANVAS && levelComplete(l)) { state = "done"; label = "(done)"; }
+      else if (progress.skipped && n < progress.level) { state = "skipped"; label = "(skipped)"; }
+      else if (n < progress.level) { state = "done"; label = "(done)"; }
+      li.className = "pg-step is-" + state;
+      if (state === "current") li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+      const st = li.querySelector(".pg-step-state");
+      if (st) st.textContent = label;
+    });
+
+    // mission card
+    missionEl.classList.toggle("is-complete", complete);
+    missionTitle.textContent = free ? `${lv.icon} Free Canvas` : `${lv.icon} Level ${lv.id}: ${lv.name}`;
+    if (free) {
+      missionCount.textContent = "No goals";
+      missionNext.textContent = "✨ Create anything you like!";
+    } else if (complete) {
+      missionCount.textContent = "All done! ✅";
+      missionNext.textContent = lv.id === 3 ? "🎉 Level complete! Open Free Canvas below." : "🎉 Level complete! Continue to the next level below.";
+    } else {
+      missionCount.textContent = `${goalsDoneIn(lv)} of ${lv.goals.length} done`;
+      missionNext.textContent = "👉 Next: " + nextGoalIn(lv).text;
+    }
+    missionIntro.textContent = lv.intro;
+
+    missionGoals.textContent = "";
+    if (free) {
+      lv.ideas.forEach(idea => {
+        const li = document.createElement("li");
+        li.className = "is-idea";
+        const mark = document.createElement("span");
+        mark.className = "pg-goal-mark";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "✨";
+        const text = document.createElement("span");
+        text.className = "pg-goal-text";
+        text.textContent = idea;
+        li.append(mark, text);
+        missionGoals.appendChild(li);
+      });
+    } else {
+      lv.goals.forEach(g => {
+        const done = progress.goals[g.id] === true;
+        const li = document.createElement("li");
+        if (done) li.className = "is-done";
+        const mark = document.createElement("span");
+        mark.className = "pg-goal-mark";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "✓";
+        const state = document.createElement("span");
+        state.className = "p44-sr-only";
+        state.textContent = done ? "Done: " : "Not done yet: ";
+        const text = document.createElement("span");
+        text.className = "pg-goal-text";
+        text.appendChild(state);
+        text.appendChild(document.createTextNode(g.text));
+        const where = document.createElement("span");
+        where.className = "pg-goal-where";
+        where.textContent = g.where;
+        text.appendChild(where);
+        li.append(mark, text);
+        missionGoals.appendChild(li);
+      });
+    }
+
+    // actions: Continue only when this level is complete; Skip until Free Canvas; Back from Free Canvas
+    missionContinue.hidden = !complete;
+    if (complete) {
+      const nx = levelOf(lv.id + 1);
+      missionContinue.textContent = nx.id === FREE_CANVAS ? "Continue to Free Canvas →" : `Continue to Level ${nx.id}: ${nx.name} →`;
+    }
+    missionSkip.hidden = free;
+    missionBack.hidden = !free;
+
+    missionWarn.hidden = !progressSaveFailed;
+    if (progressSaveFailed) {
+      missionWarn.textContent = "Heads up: this browser won't let me save your progress, so it will reset when you close this page.";
+    }
+
+    if (o.open) missionDetails.open = true;
+    if (o.celebrate) {
+      missionEl.classList.remove("is-celebrating");
+      void missionEl.offsetWidth;   // restart the short celebration (it is skipped for reduced motion)
+      missionEl.classList.add("is-celebrating");
+    }
+  }
+
+  /** Earns goals (never un-earns). Tells the learner through Pixel, once for everything earned together. */
+  function awardGoals(ids) {
+    const fresh = ids.filter(id => GOAL_BY_ID[id] && progress.goals[id] !== true);
+    if (fresh.length === 0) return;
+    fresh.forEach(id => { progress.goals[id] = true; });
+
+    const cur = levelOf(progress.level);
+    const justCompleted = cur.id < FREE_CANVAS && levelComplete(cur) && progress.celebrated[cur.id] !== true;
+    if (justCompleted) progress.celebrated[cur.id] = true;
+    saveProgress();
+    renderProgress({ open: justCompleted, celebrate: justCompleted });
+
+    if (justCompleted) {
+      setPixel("excited", cur.pixelDone);
+    } else {
+      const names = fresh.map(id => lcFirst(GOAL_BY_ID[id].goal.text));
+      const inCurrent = fresh.some(id => GOAL_BY_ID[id].level.id === cur.id);
+      let msg = "<strong>Goal complete! ✅</strong><br>" + escapeHtml(names.join(" and ")) + ".";
+      if (inCurrent && cur.goals.length) {
+        msg += ` ${goalsDoneIn(cur)} of ${cur.goals.length} done in Level ${cur.id}.`;
+        const nx = nextGoalIn(cur);
+        if (nx) msg += " Next: " + escapeHtml(lcFirst(nx.text)) + ".";
+      } else if (!inCurrent) {
+        msg += " That counts for a later level, so you're already ahead!";
+      }
+      setPixel("excited", msg);
+    }
+  }
+
+  /** After the debounced edit step: HTML goals (when HTML changed) and the own-CSS goal (when CSS changed). */
+  function checkEditGoals(htmlChanged, cssChanged) {
+    const ids = [];
+    if (htmlChanged && ["remix-title", "remix-paragraph", "remix-add"].some(id => progress.goals[id] !== true)) {
+      const met = htmlGoalsMet(htmlEd.ta.value);
+      Object.keys(met).forEach(id => { if (met[id]) ids.push(id); });
+    }
+    if (cssChanged && progress.goals["style-own"] !== true && ownCssMet(cssEd.ta.value)) ids.push("style-own");
+    awardGoals(ids);
+  }
+
+  /**
+   * A run earns the run goals only after the whole observation window (RUN_SETTLE_MS, counted from the
+   * moment the page finished loading) passes with no error, blocked action, timeout, Stop or new run.
+   * The timer belongs to this run: ending or replacing the run cancels it, and the callback re-checks the id.
+   */
+  function watchRunForGoals() {
+    const id = run.id;
+    run.settleTimer = setTimeout(() => {
+      if (!run || run.id !== id || run.problem || run.state !== "finished") return;   // no award
+      run.confirmed = true;
+      showRunConfirmed();
+      const ids = ["live-run"];
+      if (run.customLog) ids.push("live-message");
+      awardGoals(ids);
+    }, RUN_SETTLE_MS);
+  }
+
+  /** Only now is it fair to say the run was clean. */
+  function showRunConfirmed() {
+    setStatus(`✅ No errors in the first ${RUN_SETTLE_MS / 1000} seconds (it started in ${run.loadMs} ms). Press Stop, or edit your HTML or CSS, to go back to the plain preview.`);
+    if (outputLines === 0) addLine("info", "Your code ran. It didn't print anything. Try console.log(\"hi\") to print a message here.", false);
+    if (!firstSuccessShown) {
+      firstSuccessShown = true;
+      setPixel("excited", "<strong>It ran! 🎉</strong><br>Try clicking things in the preview, and use <code>console.log()</code> to peek inside your code.");
+    }
+  }
+
+  /** A custom console.log line (not one of the starter's own lines). Counts once the run is confirmed clean. */
+  function noteLogForGoals(text) {
+    if (!run || !isCustomLog(text)) return;
+    run.customLog = true;
+    if (run.confirmed && !run.problem) awardGoals(["live-message"]);
+  }
+
+  // ---- level flow: Continue, Skip, Back (all are explicit learner actions; no code is touched) ----
+  function afterLevelChange(introHtml) {
+    renderProgress({ open: true });
+    setPixel("excited", introHtml);
+    // focus the card's summary: a screen reader reads the level, the progress and the next goal together
+    const summary = missionDetails.querySelector("summary");
+    if (summary) summary.focus({ preventScroll: true });
+  }
+
+  missionContinue.addEventListener("click", () => {
+    const cur = levelOf(progress.level);
+    if (cur.id >= FREE_CANVAS || !levelComplete(cur)) return;
+    progress.level = cur.id + 1;
+    progress.skipped = false;
+    saveProgress();
+    const nx = levelOf(progress.level);
+    let intro = nx.pixelIntro;
+    if (nx.id < FREE_CANVAS && levelComplete(nx)) intro += "<br>You've already done these goals, so you can continue right away!";
+    afterLevelChange(intro);
+  });
+
+  missionSkip.addEventListener("click", () => {
+    progress.level = FREE_CANVAS;
+    progress.skipped = true;
+    saveProgress();
+    afterLevelChange("<strong>Straight to Free Canvas! 🌟</strong><br>Your code is exactly as you left it. Build anything you like, and use <strong>Back to guided levels</strong> if you want the goals again.");
+  });
+
+  missionBack.addEventListener("click", () => {
+    const firstOpen = LEVELS.slice(0, 3).find(l => !levelComplete(l));
+    progress.level = firstOpen ? firstOpen.id : 1;
+    progress.skipped = false;
+    saveProgress();
+    afterLevelChange(levelOf(progress.level).pixelIntro);
+  });
+
+  function initProgress() {
+    const loaded = loadProgress();
+    if (loaded) progress = loaded;
+    // On phones the card starts collapsed (its summary already shows the level, progress and next goal).
+    const roomy = window.matchMedia ? window.matchMedia("(min-width: 601px)").matches : true;
+    renderProgress({ open: roomy });
+    missionDetails.open = roomy;
+  }
+
+  // ------------------------------------------------------------------------
   // 10. Start up: restore saved drafts (never overwrite them with starter code)
   // ------------------------------------------------------------------------
   buildChipUI();
@@ -1327,6 +1752,7 @@
   htmlEd.updateCount();
   cssEd.updateCount();
   jsEd.updateCount();
+  initProgress();   // goals are NOT checked here: only real actions after load can earn them
   clearOutput();
   setRunUI();
   renderPreview(); // draw immediately (no JavaScript); nothing is saved until the learner edits

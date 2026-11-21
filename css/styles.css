@@ -3660,3 +3660,235 @@ input:focus-visible {
   font-size: 0.9rem;
   color: #94A3B8;
 }
+
+
+/* --------------------------------------------------------------------------
+   PHASE 4.5.5: Guided progression (level indicator states + mission card)
+   -------------------------------------------------------------------------- */
+.pg-step.is-done {
+  border-color: #10B981;
+  color: var(--color-white);
+}
+
+.pg-step.is-done .pg-step-num {
+  background-color: #10B981;
+}
+
+.pg-step.is-upcoming {
+  opacity: 0.65;
+}
+
+.pg-step.is-upcoming .pg-step-num {
+  background-color: rgba(168, 85, 247, 0.35);
+}
+
+.pg-step.is-skipped {
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+.pg-mission {
+  background-color: rgba(37, 32, 47, 0.85);
+  border: 2px solid var(--color-purple);
+  border-radius: 14px;
+}
+
+.pg-mission.is-complete {
+  border-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.pg-mission-details {
+  padding: 0 1rem;
+}
+
+.pg-mission-summary {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 44px;
+  padding: 0.7rem 1.75rem 0.7rem 0;
+  list-style: none;
+  cursor: pointer;
+}
+
+.pg-mission-summary::-webkit-details-marker {
+  display: none;
+}
+
+.pg-mission-summary::after {
+  content: "\25BE";
+  position: absolute;
+  right: 0.1rem;
+  top: 0.7rem;
+  color: var(--color-lavender);
+}
+
+.pg-mission-details:not([open]) .pg-mission-summary::after {
+  content: "\25B8";
+}
+
+.pg-mission-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.pg-mission-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.pg-mission-title:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.pg-mission-count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+  background-color: rgba(168, 85, 247, 0.2);
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+}
+
+.pg-mission.is-complete .pg-mission-count {
+  color: #D1FAE5;
+  background-color: rgba(16, 185, 129, 0.25);
+}
+
+.pg-mission-next {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-lavender);
+}
+
+.pg-mission.is-complete .pg-mission-next {
+  color: #D1FAE5;
+}
+
+.pg-mission-intro {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #CBD5E1;
+}
+
+.pg-mission-goals {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pg-mission-goals li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.55rem 0.65rem;
+  background-color: rgba(11, 11, 15, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 10px;
+}
+
+.pg-mission-goals li.is-done {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: #10B981;
+}
+
+.pg-goal-mark {
+  flex: 0 0 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-lavender);
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: transparent;
+}
+
+.pg-mission-goals li.is-done .pg-goal-mark {
+  background-color: #10B981;
+  border-color: #10B981;
+  color: var(--color-white);
+}
+
+.pg-mission-goals li.is-idea .pg-goal-mark {
+  border: 0;
+  color: inherit;
+  font-size: 1.1rem;
+}
+
+.pg-goal-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #E2E8F0;
+  overflow-wrap: anywhere;
+}
+
+.pg-goal-where {
+  display: block;
+  font-size: 0.8rem;
+  color: #94A3B8;
+}
+
+.pg-mission-warn {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #FBBF24;
+}
+
+.pg-mission-warn[hidden] {
+  display: none;
+}
+
+.pg-mission-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 0.9rem;
+}
+
+.pg-mission-btn {
+  min-height: 44px;
+}
+
+.pg-mission-btn[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pg-mission.is-celebrating {
+    animation: pgMissionPulse 1.2s ease-out 1;
+  }
+
+  @keyframes pgMissionPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    }
+
+    100% {
+      box-shadow: 0 0 0 14px rgba(16, 185, 129, 0);
+    }
+  }
+}
+
+.pg-mission-summary:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
