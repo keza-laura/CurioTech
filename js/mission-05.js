@@ -15,8 +15,9 @@
 //   Opening the Playground, visiting the celebration step or ticking a box never completes the mission.
 //   An existing record is never overwritten, and this file never reads or writes Mission 01's record.
 //
-// In-progress state (sessionStorage "curiotech_mission_05_progress", per tab) remembers the step, the
-// idea, the plan and the attempt's start time, so the learner can go to the Playground and come back.
+// In-progress state (localStorage "curiotech_mission_05_progress") remembers the step, the
+// idea, the plan and the attempt's start time, so the learner can go to the Playground and come back,
+// or close the tab and carry on later. Leaving through the map ends the attempt.
 // ==========================================================================
 
 (function () {
@@ -163,7 +164,7 @@
   /** A saved state, checked and trimmed; null when it is missing or unusable. */
   function readState() {
     let d;
-    try { d = JSON.parse(sessionStorage.getItem(STATE_KEY)); } catch (e) { return null; }
+    try { d = JSON.parse(localStorage.getItem(STATE_KEY)); } catch (e) { return null; }
     if (!d || typeof d !== "object" || d.v !== 1 || isNaN(Date.parse(d.startedAt))) return null;
     const s = freshState();
     const step = Number.isInteger(d.step) ? Math.min(LAST_STEP, Math.max(0, d.step)) : 0;
@@ -187,7 +188,7 @@
 
   function saveState() {
     state.returnLabel = `Step ${state.step + 1} of 6: ${STEPS[state.step].name}`;   // shown by the Playground's "Back to Mission 05" bar
-    try { sessionStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: the page still works */ }
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: the page still works */ }
   }
 
   // ---- completion record (localStorage, never overwritten, never Mission 01's key) ----
@@ -562,7 +563,7 @@
 
   // Leaving through the map ends this attempt (a new visit starts a fresh one). The completion record stays.
   const leave = $("m5-leave");
-  if (leave) leave.addEventListener("click", () => { try { sessionStorage.removeItem(STATE_KEY); } catch (e) { /* nothing to remove */ } });
+  if (leave) leave.addEventListener("click", () => { try { localStorage.removeItem(STATE_KEY); } catch (e) { /* nothing to remove */ } });
 
   // ---- start ----
   const before = readDone();

@@ -906,11 +906,27 @@
     if (/Maximum call stack/.test(m)) {
       return "A function kept calling itself and never stopped. Make sure it has a way to finish.";
     }
-    if (/SyntaxError|Unexpected (token|identifier|end|string|number)|Invalid or unexpected token|missing \)/.test(m)) {
-      return "JavaScript couldn't read your code. Look near that line for a missing quote, bracket <code>) } ]</code> or comma.";
-    }
     if (/Identifier '.*' has already been declared/.test(m)) {
       return "You used the same name twice with <code>let</code> or <code>const</code>. Pick a different name, or remove one.";
+    }
+    if (/Unexpected end of input/.test(m)) {
+      return "Your code stopped in the middle. Something was opened but never closed: check every <code>(</code>, <code>{</code>, <code>[</code> and quote has a partner.";
+    }
+    if (/before initialization/.test(m)) {
+      return "You used a <code>let</code> or <code>const</code> before the line that creates it. Move the creating line higher up.";
+    }
+    if (/is not iterable/.test(m)) {
+      return "You tried to loop over something that isn't a list. Check that it's an array like <code>[1, 2, 3]</code>.";
+    }
+    if (/Illegal return/.test(m)) {
+      return "<code>return</code> only works inside a function. Move it inside one, or take it out.";
+    }
+    if (/Invalid left-hand side|Unexpected token '='/.test(m)) {
+      return "You used <code>=</code> where JavaScript expected a value. To compare two things use <code>===</code>; to store a value use <code>let name = value</code>.";
+    }
+    // The general "couldn't read your code" help comes after the specific cases above
+    if (/SyntaxError|Unexpected (token|identifier|end|string|number)|Invalid or unexpected token|missing \)/.test(m)) {
+      return "JavaScript couldn't read your code. Look near that line for a missing quote, bracket <code>) } ]</code> or comma.";
     }
     return "JavaScript stopped here. The message shows what went wrong, and the line number is a good place to start looking.";
   }
@@ -1375,6 +1391,45 @@
     }
   ];
 
+  // Hints for each goal: gentle first, then more specific, then an example. Plain text (shown with textContent).
+  const HINTS = {
+    "remix-title": [
+      "Look in the HTML tab for the line that starts with <h1>.",
+      "The words between <h1> and </h1> are your title. Select them and type something new. Keep the tags.",
+      "For example: <h1>My Robot Page</h1>"
+    ],
+    "remix-paragraph": [
+      "Find the line that starts with <p> near the top of the HTML tab.",
+      "Change the sentence between <p> and </p>. Keep the tags where they are.",
+      "For example: <p>I love building robots!</p>"
+    ],
+    "remix-add": [
+      "You can add a new line of HTML anywhere inside the page.",
+      "Add another <p>...</p> under the first one, or a new <li>...</li> inside the list.",
+      "For example, add this line inside the list: <li>🎸 Music</li>"
+    ],
+    "style-chip": [
+      "Open the CSS tab and look for the Styling chips box under the editor.",
+      "Tap any chip, like a colour or a font, and watch your page change in the preview.",
+      "Tap the same chip again to take it away. Try one more to see the difference."
+    ],
+    "style-own": [
+      "In the CSS tab, find a rule like h1 { ... }. A rule is a name followed by settings in { }.",
+      "Change a value inside a rule. For example, change the colour after color:",
+      "Or add a new rule at the bottom: p { color: purple; font-size: 1.2rem; }"
+    ],
+    "live-run": [
+      "Open the JS tab, then press the Run Code button.",
+      "JavaScript only runs when you press Run Code. Wait for the message under the button.",
+      "If you see an error, read Pixel's help in the speech bubble, fix that line, then press Run Code again."
+    ],
+    "live-message": [
+      "Find a line with console.log(...) in the JS tab.",
+      "Change the words inside the quotes to your own message.",
+      "For example: console.log(\"Hello, I am learning to code!\"); then press Run Code and look in the Output box."
+    ]
+  };
+
   const GOAL_IDS = [];
   LEVELS.forEach(lv => lv.goals.forEach(g => GOAL_IDS.push(g.id)));
   const GOAL_BY_ID = {};
@@ -1502,6 +1557,8 @@
   const missionIntro = document.getElementById("pg-mission-intro");
   const missionGoals = document.getElementById("pg-mission-goals");
   const missionWarn = document.getElementById("pg-mission-warn");
+  const hintBtn = document.getElementById("pg-mission-hint-btn");
+  const hintBox = document.getElementById("pg-mission-hint");
   const missionContinue = document.getElementById("pg-mission-continue");
   const missionSkip = document.getElementById("pg-mission-skip");
   const missionBack = document.getElementById("pg-mission-back");
@@ -1509,6 +1566,43 @@
   const levelTitle = document.getElementById("pg-level-title");
   const levelDesc = document.getElementById("pg-level-desc");
   const levelSteps = document.querySelectorAll(".pg-step[data-level]");
+
+  // ---- hints: one at a time for the next goal; starts over whenever the next goal changes ----
+  let hintState = { goalId: "", shown: 0 };
+
+  function syncHints(goal) {
+    if (!hintBtn || !hintBox) return;
+    const hints = goal ? HINTS[goal.id] : null;
+    if (!hints) {                       // Free Canvas, a finished level, or no hints for this goal
+      hintBtn.hidden = true;
+      hintBox.hidden = true;
+      hintBox.textContent = "";
+      hintState = { goalId: "", shown: 0 };
+      return;
+    }
+    if (hintState.goalId !== goal.id) {
+      hintState = { goalId: goal.id, shown: 0 };
+      hintBox.hidden = true;
+      hintBox.textContent = "";
+    }
+    hintBtn.hidden = false;
+    hintBtn.textContent = hintState.shown === 0 ? "💡 Need a hint?"
+      : hintState.shown < hints.length ? "💡 Another hint" : "💡 Start the hints again";
+  }
+
+  function showNextHint() {
+    const found = GOAL_BY_ID[hintState.goalId];
+    const hints = found ? HINTS[found.goal.id] : null;
+    if (!hints) return;
+    hintState.shown = hintState.shown >= hints.length ? 1 : hintState.shown + 1;
+    const text = hints[hintState.shown - 1];
+    hintBox.textContent = `💡 Hint ${hintState.shown} of ${hints.length}: ${text}`;
+    hintBox.hidden = false;
+    setPixel("thinking", `<strong>Here's a hint 💡</strong><br>${escapeHtml(text)}`);
+    syncHints(found.goal);
+  }
+
+  if (hintBtn) hintBtn.addEventListener("click", showNextHint);
 
   function renderProgress(opts) {
     if (!missionEl) return;
@@ -1601,6 +1695,7 @@
     }
     missionSkip.hidden = free;
     missionBack.hidden = !free;
+    syncHints(free || complete ? null : nextGoalIn(lv));
 
     missionWarn.hidden = !progressSaveFailed;
     if (progressSaveFailed) {
@@ -2569,15 +2664,24 @@
 
   // ------------------------------------------------------------------------
   // 9f. Back to Mission 05 (Phase 5, Stage 5.4)
-  //     js/mission-05.js keeps a small per-tab record of the attempt in sessionStorage. While an attempt is in
+  //     js/mission-05.js keeps a small record of the attempt in localStorage. While an attempt is in
   //     progress (and not finished) this bar gives the learner a clear way back. It only READS that record and
   //     touches nothing else: no code, drafts, projects, goals or progress.
   // ------------------------------------------------------------------------
+  function readMissionProgress() {
+    try {
+      const data = JSON.parse(localStorage.getItem("curiotech_mission_05_progress"));
+      return data && typeof data === "object" ? data : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function initMissionReturn() {
     const bar = document.getElementById("pg-m5-return");
     const stepEl = document.getElementById("pg-m5-return-step");
     if (!bar) return;
-    const d = readDraft("curiotech_mission_05_progress");
+    const d = readMissionProgress();
     if (!d || d.v !== 1 || d.completed === true || !Number.isInteger(d.step)) return;
     if (stepEl) stepEl.textContent = typeof d.returnLabel === "string" ? d.returnLabel.slice(0, 60) : "";
     bar.hidden = false;
@@ -2632,7 +2736,78 @@
   renderPreview(); // draw immediately (no JavaScript); nothing is saved until the learner edits
   initHandoff();   // Phase 4.5.6: only does anything for ?from=mission-01 (see section 9c)
   initProjects();  // Phase 5, Stage 5.2: save / open / update projects (see section 9e)
+
+  // The dashboard's portfolio links here with ?project=<id>. It opens through the same path as the list's
+  // Open button (so unsaved work is asked about first), then tidies the address so a refresh doesn't reopen it.
+  (function openLinkedProject() {
+    let id = null;
+    try { id = new URLSearchParams(window.location.search).get("project"); } catch (e) { id = null; }
+    if (!id) return;
+    if (window.CurioProjects && window.CurioProjects.isAvailable()) openProjectById(String(id).slice(0, 64));
+    try { window.history.replaceState(null, "", window.location.pathname); } catch (e) { /* the address stays: harmless */ }
+  })();
   initMissionReturn();   // Phase 5, Stage 5.4: "Back to Mission 05" bar while that mission is in progress
+
+  // ------------------------------------------------------------------------
+  // 9g. Friendly HTML tip: points at the first tag that looks unclosed. It only READS the HTML and
+  //     never blocks anything: the preview, saving and goals work exactly the same.
+  // ------------------------------------------------------------------------
+  const VOID_TAGS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+  const OPTIONAL_END = new Set(["html", "head", "body", "p", "li", "dt", "dd", "tr", "td", "th", "thead", "tbody", "tfoot", "option", "colgroup"]);
+
+  /** Returns a short plain-text tip about the first HTML mistake found, or "" when all looks fine. */
+  function htmlTip(source) {
+    // Hide comments and the insides of <script> / <style> (same length, so line numbers stay right)
+    const blank = s => s.replace(/[^\n]/g, " ");
+    const html = String(source)
+      .replace(/<!--[\s\S]*?-->/g, blank)
+      .replace(/(<(script|style)\b[^>]*>)([\s\S]*?)(<\/\2\s*>)/gi, (all, open, name, body, close) => open + blank(body) + close);
+    const lineAt = index => html.slice(0, index).split("\n").length;
+
+    const stack = [];
+    const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)[^>]*?(\/?)>/g;
+    let m;
+    let lastEnd = 0;
+    while ((m = tagRe.exec(html)) !== null) {
+      lastEnd = tagRe.lastIndex;
+      const closing = m[1] === "/";
+      const name = m[2].toLowerCase();
+      if (VOID_TAGS.has(name) || m[3] === "/") continue;
+      if (!closing) { if (!OPTIONAL_END.has(name)) stack.push({ name, line: lineAt(m.index) }); continue; }
+      if (OPTIONAL_END.has(name)) continue;
+      const at = stack.map(t => t.name).lastIndexOf(name);
+      if (at === -1) return `Line ${lineAt(m.index)}: there is a </${name}> but no <${name}> before it. Remove it, or add the opening <${name}>.`;
+      if (at !== stack.length - 1) {
+        const open = stack[stack.length - 1];
+        return `Line ${open.line}: <${open.name}> doesn't have a closing </${open.name}>. Add it before the </${name}> on line ${lineAt(m.index)}.`;
+      }
+      stack.pop();
+    }
+    if (stack.length > 0) {
+      const open = stack[stack.length - 1];
+      return `Line ${open.line}: <${open.name}> doesn't have a closing </${open.name}>. Add </${open.name}> where it should end.`;
+    }
+    const tail = html.slice(lastEnd);
+    const broken = /<[a-zA-Z/][^<]*$/.exec(tail);
+    if (broken) return `Line ${lineAt(lastEnd + broken.index)}: a tag starts with < but never ends with >.`;
+    return "";
+  }
+
+  const htmlCheckEl = document.getElementById("pg-html-check");
+  let htmlCheckTimer = null;
+  function showHtmlTip() {
+    if (!htmlCheckEl || !htmlEd) return;
+    const tip = htmlTip(htmlEd.ta.value);
+    htmlCheckEl.textContent = tip ? "💡 Tip: " + tip : "";
+  }
+  if (htmlCheckEl && htmlEd) {
+    // Wait until the learner pauses typing, so a half-written tag doesn't flash a tip
+    htmlEd.ta.addEventListener("input", () => {
+      clearTimeout(htmlCheckTimer);
+      htmlCheckTimer = setTimeout(showHtmlTip, 900);
+    });
+    showHtmlTip();
+  }
 
   // JavaScript NEVER runs on page load. If the last run never finished (for example an endless loop
   // froze the tab), say so once and make sure nothing starts by itself.
