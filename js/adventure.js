@@ -20,9 +20,9 @@ const ADVENTURE_DESTINATIONS = [
     description: "Welcome to HTML Island! Surrounded by cyan digital waters, this tropical tech sanctuary holds the ancient building blocks of the web. Here, you will learn how browsers request pages and how HTML elements, tags, headings, and paragraphs construct everything we see online.",
     missions: [
       "Mission 01: Enter the Web (Browsers & Web Architecture)",
-      "Mission 02: Build the Structure (HTML Tags, Elements & Boilerplate) — coming soon"
+      "Mission 02: Build the Structure (HTML Tags, Elements & the Page Skeleton)"
     ],
-    stageNote: "⭐ This destination is open! Start Mission 01 below. Mission 02 is coming soon."
+    stageNote: "⭐ This destination is open! Start Mission 01, then Mission 02 opens."
   },
   {
     id: "css-city",
@@ -37,8 +37,8 @@ const ADVENTURE_DESTINATIONS = [
     missions: [
       "Mission 03: Make It Beautiful (CSS rules, colours, shapes and a neon sign)"
     ],
-    // Locked until Mission 01 is completed (see initAdventureMap)
-    stageNote: "🔒 Locked until you finish Mission 01 on HTML Island. Then Mission 03: Make It Beautiful opens here.",
+    // Locked until Mission 02 is completed (see initAdventureMap)
+    stageNote: "🔒 Locked until you finish Mission 02 on HTML Island. Then Mission 03: Make It Beautiful opens here.",
     unlockedBadge: "✦ Active Quest",
     unlockedNote: "⭐ CSS City is open! Start Mission 03: Make It Beautiful.",
     actionHref: "mission-03.html",
@@ -55,9 +55,14 @@ const ADVENTURE_DESTINATIONS = [
     brief: "An electrifying biome humming with dynamic energy! Bring pages to life with logic, variables, and events.",
     description: "Electric vines and glowing lightning bugs power this biome! In the JavaScript Jungle, you will discover variables, functions, and event listeners that give web pages a living brain to react to clicks, keystrokes, and touch.",
     missions: [
-      "Mission 04: Bring It to Life (JavaScript Variables, Functions & Click Events) — coming soon"
+      "Mission 04: Bring It to Life (Variables, Events & a Click Game)"
     ],
-    stageNote: "🔒 Locked for now. JavaScript Jungle opens after CSS City, and it's coming soon!"
+    // Locked until Mission 03 is completed (see initAdventureMap)
+    stageNote: "🔒 Locked until you finish Mission 03 in CSS City. Then Mission 04: Bring It to Life opens here.",
+    unlockedBadge: "✦ Active Quest",
+    unlockedNote: "⭐ JavaScript Jungle is open! Start Mission 04: Bring It to Life.",
+    actionHref: "mission-04.html",
+    actionLabel: "Start Mission 04: Bring It to Life →"
   },
   {
     id: "creator-lab",
@@ -97,6 +102,9 @@ const MISSION_05_DONE_KEY = "curiotech_mission_05_completed";
 // Mission 03 (written by js/mission-03.js) is read the same way:
 //       localStorage "curiotech_mission_03_completed"  ->  { v: 1, done: true, completedAt }
 const MISSION_03_DONE_KEY = "curiotech_mission_03_completed";
+// Missions 02 and 04 (written by js/mission-02.js and js/mission-04.js) are read the same way.
+const MISSION_02_DONE_KEY = "curiotech_mission_02_completed";
+const MISSION_04_DONE_KEY = "curiotech_mission_04_completed";
 
 /** True only for a valid completion record: { v: 1, done: true }. Reads only, never writes. */
 function isRecordComplete(key) {
@@ -111,6 +119,8 @@ function isRecordComplete(key) {
 function isMission01Complete() { return isRecordComplete(MISSION_01_DONE_KEY); }
 function isMission05Complete() { return isRecordComplete(MISSION_05_DONE_KEY); }
 function isMission03Complete() { return isRecordComplete(MISSION_03_DONE_KEY); }
+function isMission02Complete() { return isRecordComplete(MISSION_02_DONE_KEY); }
+function isMission04Complete() { return isRecordComplete(MISSION_04_DONE_KEY); }
 
 // --------------------------------------------------------------------------
 // 2. Adventure Map Initialization & Modal Controller
@@ -119,14 +129,25 @@ function initAdventureMap() {
   const mission01Done = isMission01Complete();
   const mission05Done = isMission05Complete();
   const mission03Done = isMission03Complete();
+  const mission02Done = isMission02Complete();
+  const mission04Done = isMission04Complete();
 
-  // CSS City opens once Mission 01 is completed (Mission 02 is not built yet). Nothing is written here.
+  // JavaScript Jungle opens once Mission 03 is completed. Nothing is written here.
+  const jungle = ADVENTURE_DESTINATIONS.find(d => d.id === "js-jungle");
+  if (jungle && mission03Done) {
+    jungle.isUnlocked = true;
+    jungle.badge = jungle.unlockedBadge;
+    jungle.stageNote = mission04Done ? "✔ You finished Mission 04! Head to the Creator's Playground, or try Mission 05." : jungle.unlockedNote;
+    jungle.actionLabel = mission04Done ? "Replay Mission 04: Bring It to Life →" : jungle.actionLabel;
+  }
+
+  // CSS City opens once Mission 02 is completed. Nothing is written here.
   const city = ADVENTURE_DESTINATIONS.find(d => d.id === "css-city");
-  if (city && mission01Done) {
+  if (city && mission02Done) {
     city.isUnlocked = true;
     city.badge = city.unlockedBadge;
     city.stageNote = mission03Done
-      ? "✔ You finished Mission 03! JavaScript Jungle is coming soon."
+      ? "✔ You finished Mission 03! JavaScript Jungle is open now: try Mission 04."
       : city.unlockedNote;
     city.actionLabel = mission03Done ? "Replay Mission 03: Make It Beautiful →" : city.actionLabel;
   }
@@ -167,11 +188,15 @@ function initAdventureMap() {
 
     // Render missions list (a finished Mission 01 gets a check mark)
     const doneHere = dest.id === "html-island" && mission01Done;
-    const cityDone = dest.id === "css-city" && mission03Done;
+    const doneFlags = {
+      "html-island": [mission01Done, mission02Done],
+      "css-city": [mission03Done],
+      "js-jungle": [mission04Done]
+    }[dest.id] || [];
     modalMissions.innerHTML = dest.missions
-      .map((m, i) => `<li><span>${(doneHere || cityDone) && i === 0 ? "✔" : "✦"}</span> <strong>${m}</strong></li>`).join("");
+      .map((m, i) => `<li><span>${doneFlags[i] ? "✔" : "✦"}</span> <strong>${m}</strong></li>`).join("");
     modalNote.textContent = doneHere
-      ? "✔ You finished Mission 01! Next, build your own page in the Creator's Playground. Mission 02 is coming soon."
+      ? "✔ You finished Mission 01! Next up: Mission 02 on the Mission Log, or build your own page in the Creator's Playground."
       : dest.stageNote;
 
     // Set action button state
@@ -290,6 +315,61 @@ function initAdventureMap() {
       if (labPill) {
         labPill.textContent = lab.unlockedBadge;
         labPill.className = "dest-status-pill dest-status-active";
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  // Mission 02 (open after Mission 01), JavaScript Jungle and Mission 04 (open after Mission 03)
+  // ------------------------------------------------------------------------
+  function openLogMission(num, unlocked, done) {
+    const status = document.getElementById(`mission-${num}-status`);
+    const link = document.getElementById(`mission-${num}-link`);
+    if (!unlocked) return;
+    if (status) {
+      status.textContent = done ? "✔ Completed" : "✦ Ready to Explore";
+      status.className = "dest-status-pill " + (done ? "dest-status-done" : "dest-status-active");
+    }
+    if (link) {
+      link.hidden = false;
+      if (done) {
+        link.innerHTML = `Replay Mission ${num} &rarr;`;
+        link.classList.add("button-outline");
+      }
+    }
+  }
+  openLogMission("02", mission01Done, mission02Done);
+  // (Mission 03 opens with CSS City, below.)
+  openLogMission("04", mission03Done, mission04Done);
+
+  // "Up next": one clear way on to the next mission, in order. Mission 05 is open to everyone but comes last.
+  (function renderUpNext() {
+    const title = document.getElementById("adv-next-title");
+    const text = document.getElementById("adv-next-text");
+    const link = document.getElementById("adv-next-link");
+    if (!title || !text || !link) return;
+    let next;
+    if (!mission01Done) next = ["Mission 01: Enter the Web", "Start here and learn how webpages work.", "mission.html", "Start Mission 01 →"];
+    else if (!mission02Done) next = ["Mission 02: Build the Structure", "Learn elements and tags on HTML Island, then build a page skeleton.", "mission-02.html", "Start Mission 02 →"];
+    else if (!mission03Done) next = ["Mission 03: Make It Beautiful", "Style a tower and a neon sign in CSS City.", "mission-03.html", "Start Mission 03 →"];
+    else if (!mission04Done) next = ["Mission 04: Bring It to Life", "Make a page react with JavaScript in the Jungle.", "mission-04.html", "Start Mission 04 →"];
+    else if (!mission05Done) next = ["Mission 05: The Creator Mission", "Plan, build and save a page of your own.", "mission-05.html", "Start Mission 05 →"];
+    else next = ["You finished every mission! 🎉", "Keep creating in the Creator's Playground.", "playground.html", "Open the Playground →"];
+    title.textContent = next[0];
+    text.textContent = next[1];
+    link.setAttribute("href", next[2]);
+    link.textContent = next[3];
+  })();
+
+  if (jungle && jungle.isUnlocked) {
+    const jungleCard = document.querySelector('.dest-card[data-dest-id="js-jungle"]');
+    if (jungleCard) {
+      jungleCard.classList.remove("locked");
+      jungleCard.setAttribute("aria-label", `Destination 03: JavaScript Jungle. Status: ${mission04Done ? "Mission 04 complete" : "Active Quest"}. Click to inspect briefing.`);
+      const pill = jungleCard.querySelector(".dest-status-pill");
+      if (pill) {
+        pill.textContent = mission04Done ? "✔ Mission 04 complete" : jungle.unlockedBadge;
+        pill.className = "dest-status-pill " + (mission04Done ? "dest-status-done" : "dest-status-active");
       }
     }
   }

@@ -227,8 +227,8 @@ input:focus-visible {
   width: 100%;
 }
 
-/* Distinct Logout button for dashboard navigation */
-.nav-logout-btn {
+/* Distinct Home button at the end of the page navigation (there are no accounts, so no logout) */
+.nav-home-btn {
   margin-left: 0.85rem;
   padding: 0.45rem 1.15rem;
   font-size: 0.9rem;
@@ -245,14 +245,14 @@ input:focus-visible {
   min-height: 44px;   /* 44px touch target */
 }
 
-.nav-logout-btn:hover {
+.nav-home-btn:hover {
   background-color: var(--color-purple);
   color: var(--color-white);
   border-color: var(--color-lavender);
   box-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
 }
 
-.nav-logout-btn:focus-visible {
+.nav-home-btn:focus-visible {
   outline: 2px solid var(--color-lavender);
   outline-offset: 3px;
 }
@@ -666,7 +666,7 @@ input:focus-visible {
     padding: 2rem 1.25rem;
   }
 
-  .nav-logout-btn {
+  .nav-home-btn {
     margin-left: 0;
   }
 
@@ -5090,4 +5090,143 @@ body.dest-modal-open {
   .m3-tower {
     transition: none;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Missions 02 and 04 (mission-02.html, mission-04.html). They reuse the m3- activity layout above.
+   -------------------------------------------------------------------------- */
+/* Mission 02: a small "page" shown in a browser-like frame */
+.m2-page {
+  min-width: 0;
+  background-color: #FFFFFF;
+  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.m2-preview {
+  padding: 1rem;
+  min-height: 220px;
+  color: #1F2937;
+  font-family: sans-serif;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.m2-preview h1 { margin: 0 0 0.5rem; font-size: 1.6rem; color: #111827; }
+.m2-preview h2 { margin: 0 0 0.5rem; font-size: 1.3rem; color: #111827; }
+.m2-preview p { margin: 0 0 0.6rem; }
+.m2-preview ul { margin: 0 0 0.6rem; padding-left: 1.4rem; }
+.m2-preview a { color: #6D28D9; }
+
+.m2-plain {
+  margin: 0 0 0.6rem;
+  color: #6B7280;
+}
+
+.m2-tabtitle {
+  margin: -1rem -1rem 0.75rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  color: #4B5563;
+  background-color: #E5E7EB;
+}
+
+.m2-final {
+  max-width: 480px;
+  margin: 1.25rem auto;
+}
+
+/* Mission 04: the counter and the click game */
+.m4-lab-stage {
+  align-items: center;
+}
+
+.m4-lab-box {
+  width: 100%;
+  text-align: center;
+}
+
+.m4-score-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+}
+
+.m4-score {
+  margin: 0 0 0.75rem;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.m4-bar {
+  height: 14px;
+  margin: 0 auto 1rem;
+  max-width: 260px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.m4-bar-fill {
+  width: 0;
+  height: 100%;
+  background-color: #10B981;
+  transition: width 0.15s ease;
+}
+
+.m4-game-msg {
+  min-height: 1.5rem;
+  margin: 0.75rem 0;
+  font-weight: 800;
+  color: #FDE68A;
+  overflow-wrap: anywhere;
+}
+
+.m4-final-code {
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m4-bar-fill {
+    transition: none;
+  }
+}
+
+/* "Up next" banner at the top of the Adventure Map (js/adventure.js) */
+.adv-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin: 0 0 1.75rem;
+  padding: 1.25rem 1.5rem;
+  background-color: rgba(168, 85, 247, 0.14);
+  border: 1.5px solid rgba(168, 85, 247, 0.55);
+  border-radius: 14px;
+}
+
+.adv-next-label {
+  margin: 0 0 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--color-lavender);
+}
+
+.adv-next-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.adv-next-text {
+  margin: 0;
+  color: #CBD5E1;
 }

@@ -24,7 +24,7 @@
         <a href="#adventure-map" class="nav-link">Adventure Map</a>
         <a href="#missions-summary" class="nav-link">Missions Log</a>
         <a href="playground.html" class="nav-link">Creator's Playground</a>
-        <a href="index.html" class="nav-logout-btn">Logout</a>
+        <a href="index.html" class="nav-home-btn">Home</a>
       </nav>
     </div>
   </header>
@@ -167,6 +167,16 @@
         </div>
       </section>
 
+      <!-- Up next: one clear way on to the next mission (filled by js/adventure.js) -->
+      <section id="adv-next" class="adv-next" aria-labelledby="adv-next-title">
+        <div>
+          <p class="adv-next-label">UP NEXT</p>
+          <h2 id="adv-next-title" class="adv-next-title">Mission 01: Enter the Web</h2>
+          <p id="adv-next-text" class="adv-next-text">Start here and learn how webpages work.</p>
+        </div>
+        <a id="adv-next-link" href="mission.html" class="button">Start Mission 01 &rarr;</a>
+      </section>
+
       <!-- 2. 2D Interactive Adventure Map -->
       <section id="adventure-map" class="map-section" aria-labelledby="map-heading">
         <div class="map-section-header">
@@ -187,7 +197,7 @@
               <span class="dest-order-badge">DESTINATION 01</span>
               <div class="dest-icon-container" aria-hidden="true">🏝️</div>
               <h3 class="dest-name">HTML Island</h3>
-              <div class="dest-mission-label">Mission 01 &bull; Mission 02 coming soon</div>
+              <div class="dest-mission-label">Mission 01 &bull; Mission 02</div>
               <p class="dest-brief">
                 Start here! Find out how web pages work and what they are made of.
               </p>
@@ -271,7 +281,7 @@
       <!-- 3. Missions Log Summary Section -->
       <section id="missions-summary" class="missions-log-section" aria-labelledby="missions-heading">
         <h2 id="missions-heading" class="section-title" style="text-align: left; margin-bottom: 0.25rem;">Adventure Mission Log</h2>
-        <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Your 5-mission adventure. Mission 01 and Mission 05 are open now, and the others are on their way.</p>
+        <p class="section-subtitle" style="text-align: left; margin-bottom: 1.5rem;">Your 5-mission adventure. All five missions are playable. Each mission opens after the one before it (01, 02, 03, 04), and Mission 05 is open to everyone.</p>
 
         <div class="missions-log-grid">
 
@@ -288,49 +298,55 @@
               <span id="mission-01-status" class="dest-status-pill dest-status-active">✦ Ready to Explore</span>
               <a id="mission-01-link" href="mission.html" class="button button-small">Start Mission 01 &rarr;</a>
               <!-- Shown by js/adventure.js once Mission 01 is completed -->
-              <a id="mission-01-next" href="playground.html" class="button button-small" hidden>Next: Creator's Playground &rarr;</a>
+              <a id="mission-01-next" href="mission-02.html" class="button button-small" hidden>Next: Mission 02 &rarr;</a>
             </div>
           </article>
 
-          <article class="mission-log-card">
+          <article id="mission-02" class="mission-log-card">
             <div>
               <span class="mission-log-number">Mission 02</span>
               <h3 class="mission-log-title">Build the Structure</h3>
               <p class="mission-log-dest">📍 Destination: HTML Island</p>
               <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
-                Master semantic tags, elements, headings, paragraphs, and boilerplate skeletons.
+                Learn elements, tags, headings, paragraphs, lists and the head and body of a page, then build a full page skeleton.
               </p>
             </div>
-            <div style="margin-top: 1rem;">
-              <span class="dest-status-pill dest-status-locked">Coming soon</span>
+            <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Locked until Mission 01 is completed; js/adventure.js opens it -->
+              <span id="mission-02-status" class="dest-status-pill dest-status-locked">🔒 Finish Mission 01 first</span>
+              <a id="mission-02-link" href="mission-02.html" class="button button-small" hidden>Start Mission 02 &rarr;</a>
             </div>
           </article>
 
-          <article class="mission-log-card">
+          <article id="mission-03" class="mission-log-card">
             <div>
               <span class="mission-log-number">Mission 03</span>
               <h3 class="mission-log-title">Make It Beautiful</h3>
               <p class="mission-log-dest">📍 Destination: CSS City</p>
               <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
-                Apply vibrant CSS styling, selectors, custom colors, box model spacing, and mobile design.
+                Learn how a CSS rule is built, restyle a city tower, and design your own neon sign.
               </p>
             </div>
-            <div style="margin-top: 1rem;">
-              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Locked until Mission 02 is completed; js/adventure.js opens it -->
+              <span id="mission-03-status" class="dest-status-pill dest-status-locked">🔒 Finish Mission 02 first</span>
+              <a id="mission-03-link" href="mission-03.html" class="button button-small" hidden>Start Mission 03 &rarr;</a>
             </div>
           </article>
 
-          <article class="mission-log-card">
+          <article id="mission-04" class="mission-log-card">
             <div>
               <span class="mission-log-number">Mission 04</span>
               <h3 class="mission-log-title">Bring It to Life</h3>
               <p class="mission-log-dest">📍 Destination: JavaScript Jungle</p>
               <p style="font-size: 0.85rem; color: #CBD5E1; line-height: 1.45;">
-                Ignite web pages with interactive JavaScript variables, functions, and click events.
+                Meet variables, events and actions, then build your own click game that reacts to the player.
               </p>
             </div>
-            <div style="margin-top: 1rem;">
-              <span class="dest-status-pill dest-status-locked">🔒 Locked</span>
+            <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Locked until Mission 03 is completed; js/adventure.js opens it -->
+              <span id="mission-04-status" class="dest-status-pill dest-status-locked">🔒 Finish Mission 03 first</span>
+              <a id="mission-04-link" href="mission-04.html" class="button button-small" hidden>Start Mission 04 &rarr;</a>
             </div>
           </article>
 
