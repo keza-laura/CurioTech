@@ -95,8 +95,9 @@ let maxCompletedStage = 0; // Tracks highest stage unlocked
 let inspectedElements = new Set();
 let isBlueprintCreated = false;
 
-// Phase 4.4: temporary (per-tab) activity state. Mirrored to sessionStorage so a
-// page refresh resumes the mission; closing the tab starts fresh.
+// In-progress activity state. Mirrored to localStorage so a refresh, a closed tab or a
+// new visit resumes the mission where the learner left off. It is cleared when the learner
+// leaves from the celebration stage. The completion record has its own key.
 const ACTIVITIES_STORAGE_KEY = "curiotech_mission_01_activities";
 const CHALLENGE_COUNT = 3;
 const BUILDER_BLOCKS = {
@@ -213,11 +214,11 @@ function initMission() {
   }
 
   /**
-   * Phase 4.4: save/restore temporary progress (sessionStorage only, always guarded)
+   * Save/restore in-progress state (localStorage, always guarded)
    */
   function saveProgress() {
     try {
-      sessionStorage.setItem(ACTIVITIES_STORAGE_KEY, JSON.stringify({
+      localStorage.setItem(ACTIVITIES_STORAGE_KEY, JSON.stringify({
         stage: currentStageIndex,
         maxStage: maxCompletedStage,
         inspected: Array.from(inspectedElements),
@@ -230,8 +231,7 @@ function initMission() {
 
   function clearProgress() {
     try {
-      sessionStorage.removeItem(ACTIVITIES_STORAGE_KEY);
-      sessionStorage.removeItem("curiotech_mission_01_stage");
+      localStorage.removeItem(ACTIVITIES_STORAGE_KEY);
     } catch (e) {}
   }
 
@@ -330,8 +330,10 @@ function initMission() {
 
     if (btnNext) {
       if (currentStageIndex === 5) {
-        btnNext.textContent = "Finish Mission & Exit ➔";
-        btnNext.onclick = () => { clearProgress(); window.location.href = "adventure.html"; };
+        // Earned = the same requirements the completion record checks. Then this button leads on to Mission 02.
+        const earned = inspectedElements.size >= INSPECT_REQUIRED && allChallengesSolved() && isBlueprintCreated;
+        btnNext.textContent = earned ? "Next: Mission 02, Build the Structure ➔" : "Finish Mission & Exit ➔";
+        btnNext.onclick = () => { clearProgress(); window.location.href = earned ? "mission-02.html" : "adventure.html"; };
         btnNext.disabled = false;
       } else {
         btnNext.textContent = `Continue to ${MISSION_STAGES[currentStageIndex + 1].name} →`;
@@ -359,10 +361,7 @@ function initMission() {
       showSavedNote(recordMission01Complete());
     }
 
-    // Save temporary session progress
-    try {
-      sessionStorage.setItem("curiotech_mission_01_stage", currentStageIndex.toString());
-    } catch (e) {}
+    // Save in-progress state (the stage is part of it)
     saveProgress();
 
     // Scroll smoothly to top of card on stage change
@@ -1145,7 +1144,7 @@ function initMission() {
   function applySavedProgress() {
     let saved = null;
     try {
-      saved = JSON.parse(sessionStorage.getItem(ACTIVITIES_STORAGE_KEY));
+      saved = JSON.parse(localStorage.getItem(ACTIVITIES_STORAGE_KEY));
     } catch (e) {}
     if (!saved || typeof saved !== "object") return;
 

@@ -449,6 +449,8 @@
     note.textContent = text;
     note.classList.toggle("is-good", good);
     note.classList.toggle("is-warn", !good);
+    const finish = $("m5-next-mission");   // the end of the adventure: see everything on the dashboard
+    if (finish) finish.hidden = !good;
   }
 
   // ---- building the choice lists ----

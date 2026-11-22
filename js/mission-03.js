@@ -475,6 +475,8 @@
 
     const note = $("m3-complete-note");
     const result = recordComplete();
+    const nextLink = $("m3-next-mission");
+    if (nextLink) nextLink.hidden = !(result === "saved" || result === "already");
     if (result === "saved") {
       note.textContent = "✅ Mission 03 complete! It is saved on this device, and CSS City is marked as finished.";
       note.className = "m5-status is-good";
