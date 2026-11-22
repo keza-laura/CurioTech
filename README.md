@@ -22,20 +22,22 @@ CurioTech is a **front-end only prototype**. There is no server, no database and
 
 ```text
  index.html ──> login.html ──> dashboard.html ──> adventure.html (the Adventure Map)
- (landing)      (demo login)    (home base)         │
+ (landing)      (guest start)   (home base)         │
                                   │                 ├── mission.html      Mission 01: Enter the Web
                                   │                 │      └─ finish it ──> the Creator's Lab unlocks
+                                  │                 ├── mission-03.html   Mission 03: Make It Beautiful (CSS City, after Mission 01)
                                   │                 ├── mission-05.html   Mission 05: The Creator Mission
                                   │                 └── playground.html   Creator's Playground (from the Lab)
                                   └── playground.html                     Creator's Playground (free play)
 ```
 
 1. **Landing page** (`index.html`): introduces CurioTech and the learning journey.
-2. **Demo sign-in** (`login.html`): enter any email in a valid format (for example `learner@example.com`) and any non-empty password. Nothing is stored or sent anywhere.
+2. **Guest start** (`login.html`): there are no accounts, so one button, **Start as Guest**, goes straight to the dashboard. The page explains that progress is saved in this browser only.
 3. **Dashboard** (`dashboard.html`): the home base. From here learners enter the Adventure, open the Playground, or jump to Mission 05.
 4. **Adventure Map** (`adventure.html`): four destinations (HTML Island, CSS City, JavaScript Jungle and the Creator's Lab), Pixel's tips, and a Mission Log listing five missions.
    * **HTML Island** and **Mission 01** are open.
-   * **CSS City**, **JavaScript Jungle** and Missions 02 to 04 appear as locked (coming soon).
+   * **CSS City** opens once Mission 01 is completed, and holds **Mission 03: Make It Beautiful**.
+   * **JavaScript Jungle** and Missions 02 and 04 appear as locked (coming soon).
    * The **Creator's Lab** is locked until Mission 01 is completed. Once it is unlocked, its briefing opens the Creator's Playground.
    * **Mission 05** is open to everyone and does not require Mission 01 first.
 5. **Missions**: Mission 01 teaches how webpages work; Mission 05 is a guided independent project.
@@ -59,6 +61,17 @@ A six-stage guided mission: **Discover**, **Explore**, **Experiment**, **Challen
 
 Mission 01 is recorded as complete only when the learner reaches the celebration stage **and** has inspected 3 different elements, solved all 3 quests and saved the blueprint. Opening the mission, or a stage, never counts.
 
+### Mission 03: Make It Beautiful (`mission-03.html`, `js/mission-03.js`)
+
+A five-step mission in CSS City: **Discover**, **Experiment**, **Challenge**, **Create**, **Celebrate**.
+
+* **Discover**: the three parts of a CSS rule (selector, property, value).
+* **Experiment**: style a city tower with a colour, roundness, height and neon glow, and watch the real CSS appear below it. At least 3 different settings are needed.
+* **Challenge**: three style quests (pick the property, spot the correct rule, finish the rule). Wrong answers give a hint and can be retried.
+* **Create**: design a neon sign (words, colour, font, size, glow) and save the design.
+* **Celebrate**: shows the saved sign. Mission 03 is recorded as complete only when the learner reaches this step **and** changed 3 different tower settings, solved all 3 quests and saved the sign. Opening the mission never counts. An existing record is never overwritten.
+* In-progress state is kept in `localStorage` so the learner can close the tab and carry on. The sign words are only ever shown as plain text.
+
 ### Mission 05: The Creator Mission (`mission-05.html`, `js/mission-05.js`)
 
 A six-step guided project: **Choose your idea**, **Make a tiny plan**, **Build it in the Creator's Playground**, **Run it, look at it, improve it**, **Save your project**, **You're a Creator!**
@@ -72,11 +85,19 @@ A six-step guided project: **Choose your idea**, **Make a tiny plan**, **Build i
 
 * Three editors (HTML, CSS, JavaScript) with a live preview. HTML and CSS update as you type; **JavaScript only runs when you press Run Code**, and has a Stop button and a console-style Output box.
 * Four guided levels with Pixel: **Remix**, **Style**, **Bring it to life** and **Free Canvas**. Learners can skip to the Free Canvas.
+* **Hints:** the mission card has a **Need a hint?** button. It gives up to three hints for the next goal (gentle, then specific, then an example) and starts over when the next goal changes.
+* **Friendly help with mistakes:** JavaScript errors get a plain-language explanation from Pixel (the original message is always shown too). A gentle tip under the HTML editor points at the first tag that looks unclosed. Tips never block the preview, saving or goals.
 * Reset-to-starter buttons for each editor.
 * **Download my page**: saves the HTML, CSS and JavaScript together as one `.html` file.
 * Limits: 20,000 characters per editor; at most 200 lines of program output.
 * Safety: the preview and the run mode use a sandboxed frame (`sandbox="allow-scripts"`) with a Content Security Policy, so a learner's code is kept apart from CurioTech's own page and storage, and is restricted in what it can load or send.
 * Hand-off: if the learner arrives from Mission 01 with a blueprint, the Playground offers to use it or keep the work already there.
+
+### Dashboard: progress, next step and portfolio (`dashboard.html`, `js/dashboard.js`)
+
+* Reads the mission completion records and saved projects (read-only) to show XP, level, missions completed, badges and progress bars.
+* A **next-step button** at the top of the page (repeated under Continue Learning) always points at the next sensible thing: Mission 01, then Mission 05, then the Playground.
+* The **Portfolio** shows each saved project as a card with a small picture, its name, the date and an **Open in Playground** button (`playground.html?project=<id>`). The picture is a sandboxed frame with no scripts and a Content Security Policy, so a learner's page cannot run code or load anything from the internet there.
 
 ### My Projects (inside the Playground)
 
@@ -104,27 +125,26 @@ Plain, standard web technologies with no frameworks, build tools or server code:
 ```text
 CurioTech-1/
 ├── index.html          # Public landing page
-├── login.html          # Demo sign-in page with front-end validation
+├── login.html          # Guest start page (no accounts)
 ├── dashboard.html      # Learner dashboard (home base)
 ├── adventure.html      # Adventure Map: destinations, Pixel, Mission Log
 ├── mission.html        # Mission 01: Enter the Web
+├── mission-03.html     # Mission 03: Make It Beautiful
 ├── mission-05.html     # Mission 05: The Creator Mission
 ├── playground.html     # Creator's Playground and My Projects
-├── course.html         # Older course overview page (no longer linked from the dashboard)
-├── lesson.html         # Older lesson and quiz page (no longer linked from the dashboard)
 ├── README.md
 ├── css/
 │   └── styles.css      # Shared stylesheet for every page
 ├── js/
-│   ├── main.js         # Shared: login validation and redirect
-│   ├── dashboard.js    # Dashboard interactions
+│   ├── main.js         # Shared script (no behaviour of its own yet)
+│   ├── dashboard.js    # Dashboard: live XP, level, badges, progress and portfolio from saved data
 │   ├── adventure.js    # Adventure Map: destination briefings, Lab unlock, Mission 05 status
 │   ├── pixel.js        # Pixel the robot companion on the Adventure Map
 │   ├── mission.js      # Mission 01 logic and completion record
+│   ├── mission-03.js   # Mission 03 logic and completion record
 │   ├── mission-05.js   # Mission 05 logic and completion record
 │   ├── playground.js   # Playground editors, preview, Run, levels, download, My Projects UI
-│   ├── projects.js     # Saved-projects storage module (used by the Playground and Mission 05)
-│   └── course.js       # Older course and quiz engine (used only by course.html and lesson.html)
+│   └── projects.js     # Saved-projects storage module (used by the Playground and Mission 05)
 └── assets/
     └── images/
         └── logo.png    # CurioTech logo
@@ -134,7 +154,7 @@ CurioTech-1/
 
 * **`js/projects.js`**: the only code that reads and writes saved projects. It validates every project, caps the list at 10, and sets aside damaged data instead of deleting it. Mission 05 only reads it.
 * **`js/adventure.js`**: reads the two mission completion records (read-only) to unlock the Creator's Lab and to show Mission 05 as completed.
-* **`js/mission.js`** and **`js/mission-05.js`**: each is the only writer of its own completion record, and neither ever overwrites an existing record.
+* **`js/mission.js`**, **`js/mission-03.js`** and **`js/mission-05.js`**: each is the only writer of its own completion record, and neither ever overwrites an existing record.
 * **`css/styles.css`**: sections are grouped by page. Classes starting `pg-` belong to the Playground and `m5-` to Mission 05.
 
 ---
@@ -143,7 +163,7 @@ CurioTech-1/
 
 No build step is needed, and there is nothing to install.
 
-**Simplest way:** open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, sign in with any email in a valid format and any password, and explore from the dashboard.
+**Simplest way:** open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, press **Start as Guest**, and explore from the dashboard.
 
 **Optional:** you can also serve the folder with any static web server and open its address in a browser. Pick whichever server you already have; the project does not need or include one. Browsers can treat saved data for a `file://` page and for a `http://localhost` page as separate, so use the same way of opening it each time if you want your saved projects to be there next time.
 
@@ -162,17 +182,19 @@ All learner data stays in the learner's own browser. Nothing is sent anywhere.
 | `curiotech_projects` | The saved Playground projects (name, HTML, CSS, JavaScript, dates). Up to 10. |
 | `curiotech_projects_corrupt_backup` | A copy of project data that could not be read, set aside instead of deleted. |
 | `curiotech_mission_01_completed` | Mission 01 completion record: `{ v: 1, done: true, completedAt }`. |
+| `curiotech_mission_03_completed` | Mission 03 completion record: `{ v: 1, done: true, completedAt }`. |
+| `curiotech_mission_03_progress` | Mission 03 in-progress state (step, tower settings, quests, sign). Cleared when the learner leaves from the celebration step. |
 | `curiotech_mission_05_completed` | Mission 05 completion record: `{ v: 1, done: true, completedAt, projectId, projectName }`. |
 | `curiotech_playground_progress` | The Playground's guided-level progress. |
+| `curiotech_mission_01_activities` | Mission 01 in-progress state (stage, inspected elements, quest results, blueprint). Cleared when the learner leaves from the celebration stage. |
+| `curiotech_mission_05_progress` | Mission 05 in-progress state (step, idea, plan, start time). Cleared when the learner leaves through the map. |
 
 A completion record only counts when it reads `v: 1` and `done: true`. A missing, damaged or wrong record never shows a mission as complete and never unlocks the Creator's Lab.
 
 **Kept for the current tab only** (`sessionStorage`: cleared when the tab or session ends):
 
 * The Playground's working drafts (`curiotech_playground_html_draft`, `..._css_draft`, `..._js_draft`) and their run, baseline and open-project markers.
-* Mission 01's in-progress state and Mission 05's in-progress steps (`curiotech_mission_05_progress`).
 * The one-time Mission 01 blueprint hand-off to the Playground (`curiotech_blueprint_handoff`).
-* Progress for the older lesson pages (`curiotech_session_completed_lessons`).
 
 Clearing the browser's site data erases saved projects and completion records. There is no backup or sync.
 
@@ -182,7 +204,7 @@ Clearing the browser's site data erases saved projects and completion records. T
 
 There are no automated tests in this project. Check it by hand:
 
-1. **Journey:** open `index.html`, sign in, then from the dashboard press **Enter Adventure**.
+1. **Journey:** open `index.html`, press **Start as Guest**, then from the dashboard press **Enter Adventure**.
 2. **Lab locked:** on a fresh browser the Creator's Lab shows as locked, Mission 05 shows "Ready to Explore", and the Lab's briefing offers the Playground and Mission 05 links.
 3. **Mission 01:** work through all six stages (the Continue button waits until you have inspected 3 elements). On the celebration screen you should see "Saved!". Back on the map, Mission 01 shows **Completed** and the Creator's Lab shows **Unlocked**.
 4. **Playground:** open it from the Lab. Edit the code, press **Run Code**, save a project, then **Open**, **Rename**, **Download** and **Delete** it. Refresh the page and confirm your project is still listed.
@@ -197,15 +219,11 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 
 ## 9. Current Limitations and Unfinished Areas
 
-* **Prototype login:** there are no real accounts. Anyone can sign in with any valid-looking email.
+* **No accounts:** CurioTech starts guests straight on the dashboard. There is no sign-in, so progress cannot follow a learner to another browser or device. The Logout buttons simply return to the home page.
 * **One device only:** progress and projects live in one browser on one device. There is no cloud saving, sharing, or backend.
-* **Missions 02 to 04, CSS City and JavaScript Jungle** are shown as coming soon. Only Mission 01 and Mission 05 are playable.
-* **Dashboard placeholders:** Total XP, Level, Lessons Completed, Achievements, the progress bars, the "Projects Created" figure, the badges (First Steps, Curious Mind, Young Creator) and the Portfolio are placeholders. They do **not** update from missions or saved projects yet.
-* **Older pages:** `course.html` and `lesson.html` (an earlier "Introduction to Web Development" course and quiz) are still in the project but are no longer linked from the dashboard.
-* **Per-tab progress:** Mission 01 and Mission 05 keep in-progress steps for the current tab only. Opening the mission in a new tab starts it from the beginning (completion records are kept permanently).
+* **Missions 02 and 04 and JavaScript Jungle** are shown as coming soon. Missions 01, 03 and 05 are playable. Mission 03 opens after Mission 01 because Mission 02 is not built yet.
+* **Playground drafts are per-tab:** the Playground's working drafts still live in `sessionStorage`. Saved projects are the permanent copy.
 * **Playground limits:** 20,000 characters per editor, 10 saved projects, and a JavaScript output cap of 200 lines.
-* **Accessibility gaps:** the shared top navigation links and a few older Pixel controls on the Adventure Map are smaller than the 44px touch-target size used elsewhere.
-* **Button style:** many buttons use a `button-outline` class that has no style of its own, so they look the same as the main purple buttons.
 
 ---
 
@@ -214,12 +232,12 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 ### Completed
 
 * **Phase 1: Landing page**: semantic, responsive landing page with the brand colours.
-* **Phase 2: Simulated login**: front-end email and password validation, with nothing stored or sent.
+* **Phase 2: Login page**: a front-end sign-in form (replaced by the guest start in the prototype hardening pass).
 * **Phase 3: Learner dashboard**: dashboard layout, course cards and a distinct Logout button.
-* **Phase 4: The Digital Adventure**: the Adventure Map, Pixel the robot companion and Mission 01, with its completion record. (An earlier course and lesson prototype from this period remains in the project.)
+* **Phase 4: The Digital Adventure**: the Adventure Map, Pixel the robot companion and Mission 01, with its completion record.
 * **Phase 5: Creator's Project Builder**: the Creator's Playground (editors, live preview, Run, four guided levels, download), saved projects (My Projects), Mission 05, and the Adventure Map and dashboard connections, including the Creator's Lab unlock.
 
 ### Planned (not built yet)
 
-* **Phase 6**: a working "Projects Created" figure, the Young Creator badge and other achievements, and a portfolio of finished projects.
+* **Phase 6**: more achievements, sharing and certificates (the "Projects Created" figure, the Young Creator badge and a portfolio of saved projects already work).
 * More missions for CSS City and JavaScript Jungle.
