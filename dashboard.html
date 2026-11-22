@@ -41,6 +41,11 @@
         <p class="welcome-subtitle">
           Every new skill starts with one small step. Explore, experiment, and keep building.
         </p>
+        <!-- One clear next step, set by js/dashboard.js from the learner's real progress -->
+        <div class="welcome-next">
+          <a href="adventure.html" id="dash-hero-next" class="button">Start Mission 01 &rarr;</a>
+          <p id="dash-hero-next-note" class="welcome-next-note">Your next step: Mission 01, Enter the Web.</p>
+        </div>
       </section>
 
       <!-- 2. Learning Overview (4 Summary Cards) -->
@@ -51,31 +56,31 @@
           <article class="overview-card">
             <span class="overview-icon" aria-hidden="true">✨</span>
             <span class="overview-label">Total XP</span>
-            <span class="overview-value">0 XP</span>
-            <span class="overview-note">XP is coming soon</span>
+            <span class="overview-value" id="dash-xp">0 XP</span>
+            <span class="overview-note">Earn XP from missions and projects</span>
           </article>
 
           <!-- Card 2: Current Level -->
           <article class="overview-card">
             <span class="overview-icon" aria-hidden="true">🎯</span>
             <span class="overview-label">Current Level</span>
-            <span class="overview-value">Beginner</span>
-            <span class="overview-note">Starting level</span>
+            <span class="overview-value" id="dash-level">Beginner</span>
+            <span class="overview-note" id="dash-level-note">Starting level</span>
           </article>
 
-          <!-- Card 3: Lessons Completed -->
+          <!-- Card 3: Missions Completed -->
           <article class="overview-card">
             <span class="overview-icon" aria-hidden="true">📚</span>
-            <span class="overview-label">Lessons Completed</span>
-            <span class="overview-value">0</span>
-            <span class="overview-note">Ready to begin</span>
+            <span class="overview-label">Missions Completed</span>
+            <span class="overview-value" id="dash-missions">0</span>
+            <span class="overview-note" id="dash-missions-note">Ready to begin</span>
           </article>
 
           <!-- Card 4: Achievements -->
           <article class="overview-card">
             <span class="overview-icon" aria-hidden="true">🏆</span>
             <span class="overview-label">Achievements</span>
-            <span class="overview-value">0</span>
+            <span class="overview-value" id="dash-badges">0</span>
             <span class="overview-note">Badges to unlock</span>
           </article>
 
@@ -104,10 +109,10 @@
             <div class="course-progress-wrapper">
               <div class="progress-header">
                 <span>Adventure Progress</span>
-                <span>0%</span>
+                <span id="dash-adventure-pct">0%</span>
               </div>
-              <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar-fill" style="width: 0%;"></div>
+              <div class="progress-bar-track" id="dash-adventure-track" role="progressbar" aria-label="Adventure progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" id="dash-adventure-fill" style="width: 0%;"></div>
               </div>
             </div>
             <div class="course-action">
@@ -168,9 +173,10 @@
         <h2 id="continue-learning-title" class="section-title" style="text-align: left; margin-bottom: 0.5rem;">Continue Learning</h2>
         <div class="empty-state-card">
           <div class="empty-state-icon" aria-hidden="true">🚀</div>
-          <p class="empty-state-text">
+          <p class="empty-state-text" id="dash-next-text">
             Ready to start? Begin the Digital Adventure above, or jump into the Creator's Playground any time.
           </p>
+          <a href="adventure.html" id="dash-next-link" class="button button-small">Enter Adventure &rarr;</a>
         </div>
       </section>
 
@@ -184,31 +190,43 @@
         <div class="achievements-grid">
 
           <!-- Badge 1: First Steps -->
-          <article class="achievement-card">
+          <article class="achievement-card" data-badge="first-steps">
             <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">First Steps</h3>
                 <span class="achievement-status">Locked</span>
               </div>
-              <p class="achievement-desc">Complete your first lesson.</p>
+              <p class="achievement-desc">Complete Mission 01: Enter the Web.</p>
+            </div>
+          </article>
+
+          <!-- Badge: City Stylist -->
+          <article class="achievement-card" data-badge="city-stylist">
+            <div class="achievement-icon" aria-hidden="true">🔒</div>
+            <div class="achievement-info">
+              <div class="achievement-header">
+                <h3 class="achievement-title">City Stylist</h3>
+                <span class="achievement-status">Locked</span>
+              </div>
+              <p class="achievement-desc">Complete Mission 03: Make It Beautiful.</p>
             </div>
           </article>
 
           <!-- Badge 2: Curious Mind -->
-          <article class="achievement-card">
+          <article class="achievement-card" data-badge="curious-mind">
             <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">Curious Mind</h3>
                 <span class="achievement-status">Locked</span>
               </div>
-              <p class="achievement-desc">Complete your first challenge.</p>
+              <p class="achievement-desc">Complete Mission 05: The Creator Mission.</p>
             </div>
           </article>
 
           <!-- Badge 3: Young Creator -->
-          <article class="achievement-card">
+          <article class="achievement-card" data-badge="young-creator">
             <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
@@ -232,29 +250,29 @@
         <div class="progress-panel">
           <div class="progress-header">
             <span>Overall Learning Progress</span>
-            <span>0%</span>
+            <span id="dash-overall-pct">0%</span>
           </div>
-          <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar-fill" style="width: 0%;"></div>
+          <div class="progress-bar-track" id="dash-overall-track" role="progressbar" aria-label="Overall learning progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar-fill" id="dash-overall-fill" style="width: 0%;"></div>
           </div>
 
           <div class="progress-stats">
             <div>
-              <div class="stat-item-number">0%</div>
+              <div class="stat-item-number" id="dash-stat-pct">0%</div>
               <div class="stat-item-label">Overall Progress</div>
             </div>
             <div>
-              <div class="stat-item-number">0</div>
-              <div class="stat-item-label">Lessons Completed</div>
+              <div class="stat-item-number" id="dash-stat-missions">0</div>
+              <div class="stat-item-label">Missions Completed</div>
             </div>
             <div>
-              <div class="stat-item-number">0</div>
+              <div class="stat-item-number" id="dash-stat-projects">0</div>
               <div class="stat-item-label">Projects Created</div>
             </div>
           </div>
 
           <p class="demo-note-inline">
-            <em>These numbers are still being built, so they don't update yet. Your Mission 01 progress shows on the Adventure Map, and your Playground levels show in the Playground.</em>
+            <em>Progress is saved in this browser on this device. Five missions make up the Adventure; three are playable so far.</em>
           </p>
         </div>
       </section>
@@ -268,10 +286,11 @@
 
         <div class="portfolio-panel">
           <div class="portfolio-icon" aria-hidden="true">🎨</div>
-          <p class="portfolio-text">
-            Your finished projects will show up here soon. For now, build a page in the Creator's Playground and download it to keep.
+          <p class="portfolio-text" id="dash-portfolio-text">
+            You have no saved projects yet. Build a page in the Creator's Playground and save it to see it here.
           </p>
-          <span class="portfolio-badge">Coming soon</span>
+          <ul class="portfolio-list" id="dash-portfolio-list" hidden></ul>
+          <a href="playground.html" id="dash-portfolio-action" class="button button-small">Open Playground &rarr;</a>
         </div>
       </section>
 
@@ -287,6 +306,7 @@
 
   <!-- Base platform scripts and page-specific dashboard interactions -->
   <script src="js/main.js"></script>
+  <script src="js/projects.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 
