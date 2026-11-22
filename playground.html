@@ -209,7 +209,10 @@
                 <p id="pg-mission-intro" class="pg-mission-intro"></p>
                 <ul id="pg-mission-goals" class="pg-mission-goals"></ul>
                 <p id="pg-mission-warn" class="pg-mission-warn" hidden></p>
+                <!-- Hints for the next goal, one at a time (see js/playground.js) -->
+                <p id="pg-mission-hint" class="pg-mission-hint" role="status" aria-live="polite" hidden></p>
                 <div class="pg-mission-actions">
+                  <button type="button" id="pg-mission-hint-btn" class="button button-small button-outline pg-mission-btn" hidden>💡 Need a hint?</button>
                   <button type="button" id="pg-mission-continue" class="button button-small pg-mission-btn" hidden>Continue →</button>
                   <button type="button" id="pg-mission-skip" class="button button-small button-outline pg-mission-btn">Skip to Free Canvas</button>
                   <button type="button" id="pg-mission-back" class="button button-small button-outline pg-mission-btn" hidden>Back to guided levels</button>
@@ -241,6 +244,8 @@
                 <button type="button" id="pg-html-reset" class="button button-small button-outline pg-reset-btn">↺ Reset HTML to Starter</button>
                 <p id="pg-html-note" class="pg-note" role="status" aria-live="polite"></p>
               </div>
+              <!-- Gentle tip when a tag looks unclosed (see js/playground.js) -->
+              <p id="pg-html-check" class="pg-code-tip" role="status" aria-live="polite"></p>
             </div>
 
             <!-- CSS file (with styling chips) -->
