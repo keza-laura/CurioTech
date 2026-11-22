@@ -1,0 +1,409 @@
+/* ==========================================================================
+   CurioTech - Homepage refinements (index.html only)
+   Loaded after css/styles.css. Everything here is scoped to the homepage
+   (.home-header, .home-courses, .home-path, #benefits ...) so the shared header
+   and button rules used by the dashboard, course and mission pages are untouched.
+   The hero section is deliberately not styled here.
+   ========================================================================== */
+
+/* Sticky header would otherwise cover the top of anchor targets */
+html {
+  scroll-padding-top: 5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Icons (Lucide-style: 24px grid, 2px rounded strokes, inherit text colour)
+   -------------------------------------------------------------------------- */
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Header and navigation
+   -------------------------------------------------------------------------- */
+.home-header .container {
+  min-height: 44px;
+}
+
+.home-header .site-nav {
+  gap: 0.25rem;
+}
+
+.home-header .nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border-radius: 8px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.home-header .nav-link:hover {
+  background-color: rgba(168, 85, 247, 0.12);
+}
+
+.home-header .site-nav .button-small {
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1.25rem;
+}
+
+/* The hamburger is hidden on desktop */
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--color-white);
+  background-color: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background-color: rgba(168, 85, 247, 0.25);
+  border-color: var(--color-lavender);
+}
+
+.menu-toggle .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.menu-toggle .icon-close {
+  display: none;
+}
+
+.home-header.is-open .menu-toggle .icon-menu {
+  display: none;
+}
+
+.home-header.is-open .menu-toggle .icon-close {
+  display: block;
+}
+
+/* Tablet and mobile: collapse the links into a dropdown under the header */
+@media (max-width: 768px) {
+  .home-header {
+    padding: 0.65rem 0;
+  }
+
+  /* Overrides the shared stacked/centered header so logo is left, button is right */
+  .home-header .container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .home-header .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem 1rem;
+    background-color: var(--color-plum);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.35);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .home-header.is-open .site-nav {
+    display: flex;
+  }
+
+  .home-header .nav-link {
+    padding: 0 1rem;
+    font-size: 1rem;
+  }
+
+  .home-header .site-nav .button-small {
+    width: 100%;
+    max-width: none;
+    margin: 0.5rem 0 0;
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Section 2: The Learning Journey intro (original content, spacing only)
+   -------------------------------------------------------------------------- */
+.intro {
+  padding: 4rem 0 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Section 3: Explore Our Courses
+   -------------------------------------------------------------------------- */
+.home-courses {
+  padding: 2.5rem 0 4rem;
+}
+
+.hc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 0 auto;
+  list-style: none;
+}
+
+.hc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.08), rgba(37, 32, 47, 1) 55%);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.hc-card:hover {
+  border-color: rgba(168, 85, 247, 0.6);
+  transform: translateY(-2px);
+}
+
+.hc-icon,
+.hp-icon,
+.benefit-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-lavender);
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 10px;
+}
+
+.hc-icon .icon,
+.hp-icon .icon,
+.benefit-icon .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.hc-title {
+  margin: 1rem 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.hc-text {
+  flex: 1;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #E2E8F0;
+}
+
+.hc-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+  background-color: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 999px;
+}
+
+.hc-level .icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.hc-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.25rem;
+}
+
+.hc-action .icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.hc-action:hover .icon {
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .home-courses {
+    padding: 1.5rem 0 3rem;
+  }
+
+  .hc-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+
+  /* The shared mobile rule makes .button 100% wide, which suits a stacked card */
+  .hc-action {
+    width: 100%;
+    max-width: none;
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Section 4: Your Learning Path (five connected steps)
+   -------------------------------------------------------------------------- */
+.home-path {
+  padding: 3rem 0 4.5rem;
+}
+
+.hp-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 2rem;
+  list-style: none;
+}
+
+.hp-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.25rem 1.1rem;
+  background-color: var(--color-plum);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 14px;
+}
+
+.hp-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.hp-body .step-number {
+  margin-bottom: 0.5rem;
+}
+
+.hp-title {
+  margin-bottom: 0.3rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.hp-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #E2E8F0;
+}
+
+/* Connector between a step and the next one */
+.hp-arrow {
+  position: absolute;
+  top: 50%;
+  right: -1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin-top: -0.65rem;
+  color: var(--color-purple);
+}
+
+.hp-arrow .icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+/* Tablet and mobile: one vertical column, arrows point down between rows */
+@media (max-width: 900px) {
+  .hp-list {
+    grid-template-columns: 1fr;
+    gap: 1.9rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .hp-step {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1.1rem;
+  }
+
+  .hp-arrow {
+    top: auto;
+    right: auto;
+    bottom: -1.6rem;
+    left: 50%;
+    margin: 0 0 0 -0.65rem;
+    transform: rotate(90deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Benefits: emoji replaced with icons (same content)
+   -------------------------------------------------------------------------- */
+.benefit-icon {
+  margin-bottom: 1rem;
+  font-size: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Section 5: Final call to action
+   -------------------------------------------------------------------------- */
+.cta-section {
+  padding: 4rem 0;
+}
+
+.cta-box {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), var(--color-plum) 60%);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 3rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hc-card,
+  .hc-action .icon {
+    transition: none;
+  }
+
+  .hc-card:hover,
+  .hc-action:hover .icon {
+    transform: none;
+  }
+}
