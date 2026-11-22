@@ -35,9 +35,14 @@ const ADVENTURE_DESTINATIONS = [
     brief: "A neon metropolis of visual styling! Master colors, fonts, margins, padding, and responsive layouts.",
     description: "Towering neon skyscrapers glow with purple and lavender energy! In CSS City, architects transform plain HTML bones into breathtaking, styled interfaces using modern CSS rules, colors, spacing, and responsive design.",
     missions: [
-      "Mission 03: Make It Beautiful (CSS Selectors, Colors, Padding & Layouts) — coming soon"
+      "Mission 03: Make It Beautiful (CSS rules, colours, shapes and a neon sign)"
     ],
-    stageNote: "🔒 Locked for now. CSS City opens after HTML Island, and it's coming soon!"
+    // Locked until Mission 01 is completed (see initAdventureMap)
+    stageNote: "🔒 Locked until you finish Mission 01 on HTML Island. Then Mission 03: Make It Beautiful opens here.",
+    unlockedBadge: "✦ Active Quest",
+    unlockedNote: "⭐ CSS City is open! Start Mission 03: Make It Beautiful.",
+    actionHref: "mission-03.html",
+    actionLabel: "Start Mission 03: Make It Beautiful →"
   },
   {
     id: "js-jungle",
@@ -89,6 +94,9 @@ const MISSION_01_DONE_KEY = "curiotech_mission_01_completed";
 // Mission 05 (written by js/mission-05.js) is read the same way:
 //       localStorage "curiotech_mission_05_completed"  ->  { v: 1, done: true, completedAt, projectId, projectName }
 const MISSION_05_DONE_KEY = "curiotech_mission_05_completed";
+// Mission 03 (written by js/mission-03.js) is read the same way:
+//       localStorage "curiotech_mission_03_completed"  ->  { v: 1, done: true, completedAt }
+const MISSION_03_DONE_KEY = "curiotech_mission_03_completed";
 
 /** True only for a valid completion record: { v: 1, done: true }. Reads only, never writes. */
 function isRecordComplete(key) {
@@ -102,6 +110,7 @@ function isRecordComplete(key) {
 
 function isMission01Complete() { return isRecordComplete(MISSION_01_DONE_KEY); }
 function isMission05Complete() { return isRecordComplete(MISSION_05_DONE_KEY); }
+function isMission03Complete() { return isRecordComplete(MISSION_03_DONE_KEY); }
 
 // --------------------------------------------------------------------------
 // 2. Adventure Map Initialization & Modal Controller
@@ -109,6 +118,18 @@ function isMission05Complete() { return isRecordComplete(MISSION_05_DONE_KEY); }
 function initAdventureMap() {
   const mission01Done = isMission01Complete();
   const mission05Done = isMission05Complete();
+  const mission03Done = isMission03Complete();
+
+  // CSS City opens once Mission 01 is completed (Mission 02 is not built yet). Nothing is written here.
+  const city = ADVENTURE_DESTINATIONS.find(d => d.id === "css-city");
+  if (city && mission01Done) {
+    city.isUnlocked = true;
+    city.badge = city.unlockedBadge;
+    city.stageNote = mission03Done
+      ? "✔ You finished Mission 03! JavaScript Jungle is coming soon."
+      : city.unlockedNote;
+    city.actionLabel = mission03Done ? "Replay Mission 03: Make It Beautiful →" : city.actionLabel;
+  }
 
   // Creator's Lab opens once Mission 01 is completed (a valid record). Nothing is written here.
   const lab = ADVENTURE_DESTINATIONS.find(d => d.id === "creator-lab");
@@ -146,8 +167,9 @@ function initAdventureMap() {
 
     // Render missions list (a finished Mission 01 gets a check mark)
     const doneHere = dest.id === "html-island" && mission01Done;
+    const cityDone = dest.id === "css-city" && mission03Done;
     modalMissions.innerHTML = dest.missions
-      .map((m, i) => `<li><span>${doneHere && i === 0 ? "✔" : "✦"}</span> <strong>${m}</strong></li>`).join("");
+      .map((m, i) => `<li><span>${(doneHere || cityDone) && i === 0 ? "✔" : "✦"}</span> <strong>${m}</strong></li>`).join("");
     modalNote.textContent = doneHere
       ? "✔ You finished Mission 01! Next, build your own page in the Creator's Playground. Mission 02 is coming soon."
       : dest.stageNote;
@@ -268,6 +290,35 @@ function initAdventureMap() {
       if (labPill) {
         labPill.textContent = lab.unlockedBadge;
         labPill.className = "dest-status-pill dest-status-active";
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  // CSS City card and Mission 03 in the Mission Log: open after Mission 01; "Completed" for a valid record
+  // ------------------------------------------------------------------------
+  if (city && city.isUnlocked) {
+    const cityCard = document.querySelector('.dest-card[data-dest-id="css-city"]');
+    if (cityCard) {
+      cityCard.classList.remove("locked");
+      cityCard.setAttribute("aria-label", `Destination 02: CSS City. Status: ${mission03Done ? "Mission 03 complete" : "Active Quest"}. Click to inspect briefing.`);
+      const pill = cityCard.querySelector(".dest-status-pill");
+      if (pill) {
+        pill.textContent = mission03Done ? "✔ Mission 03 complete" : city.unlockedBadge;
+        pill.className = "dest-status-pill " + (mission03Done ? "dest-status-done" : "dest-status-active");
+      }
+    }
+    const m3Status = document.getElementById("mission-03-status");
+    const m3Link = document.getElementById("mission-03-link");
+    if (m3Status) {
+      m3Status.textContent = mission03Done ? "✔ Completed" : "✦ Ready to Explore";
+      m3Status.className = "dest-status-pill " + (mission03Done ? "dest-status-done" : "dest-status-active");
+    }
+    if (m3Link) {
+      m3Link.hidden = false;
+      if (mission03Done) {
+        m3Link.innerHTML = "Replay Mission 03 &rarr;";
+        m3Link.classList.add("button-outline");
       }
     }
   }
