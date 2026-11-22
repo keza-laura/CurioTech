@@ -1,68 +1,199 @@
 // ==========================================================================
-// CurioTech - Dashboard Interactions (Phase 3 & Phase 4)
+// CurioTech - Dashboard (live progress)
+// Reads the real mission completion records and saved Playground projects,
+// then fills in XP, level, missions, badges, progress bars and the portfolio.
+// This file only READS storage; the missions and the Playground are the writers.
 // ==========================================================================
+(function () {
+  "use strict";
 
-console.log("CurioTech Dashboard initialized.");
+  var MISSION_01_KEY = "curiotech_mission_01_completed";
+  var MISSION_03_KEY = "curiotech_mission_03_completed";
+  var MISSION_05_KEY = "curiotech_mission_05_completed";
+  var TOTAL_MISSIONS = 5;          // missions on the Adventure Map (3 playable so far: 01, 03 and 05)
 
-// --------------------------------------------------------------------------
-// 1. Session Learning Progress Reflector
-// --------------------------------------------------------------------------
-// In Phase 4, completing quizzes marks lessons complete for the current session.
-// We reflect this temporary progress on the dashboard when returning from a lesson.
-document.addEventListener("DOMContentLoaded", function () {
-  try {
-    const raw = sessionStorage.getItem("curiotech_session_completed_lessons");
-    const completedIds = raw ? JSON.parse(raw) : [];
+  var XP_MISSION_01 = 100;
+  var XP_MISSION_03 = 125;
+  var XP_MISSION_05 = 150;
+  var XP_PER_PROJECT = 20;
 
-    if (completedIds.length > 0) {
-      // 1. Update Course Card 1 Progress
-      const courseProgressPercent = Math.round((completedIds.length / 4) * 100);
-      const courseCard = document.querySelector(".course-card");
-      if (courseCard) {
-        const percentSpan = courseCard.querySelector(".progress-header span:last-child");
-        const progressFill = courseCard.querySelector(".progress-bar-fill");
-        const actionBtn = document.getElementById("btn-start-course");
+  // Level thresholds in XP, lowest first
+  var LEVELS = [
+    { name: "Beginner", min: 0 },
+    { name: "Explorer", min: 100 },
+    { name: "Creator", min: 250 },
+    { name: "Builder", min: 400 }
+  ];
 
-        if (percentSpan) percentSpan.textContent = courseProgressPercent + "%";
-        if (progressFill) progressFill.style.width = courseProgressPercent + "%";
-        if (actionBtn) {
-          actionBtn.textContent = completedIds.length === 4 ? "Review Course" : "Continue Course";
-        }
-      }
+  function byId(id) { return document.getElementById(id); }
+  function setText(id, text) { var el = byId(id); if (el) el.textContent = text; }
 
-      // 2. Update Top Metric Card: Lessons Completed
-      const overviewCards = document.querySelectorAll(".overview-card");
-      if (overviewCards.length >= 3) {
-        const lessonsVal = overviewCards[2].querySelector(".overview-value");
-        if (lessonsVal) lessonsVal.textContent = completedIds.length.toString();
-      }
-
-      // 3. Update Overall Progress Section
-      const progressPanel = document.querySelector(".progress-panel");
-      if (progressPanel) {
-        const overallFill = progressPanel.querySelector(".progress-bar-fill");
-        const overallHeaderSpan = progressPanel.querySelector(".progress-header span:last-child");
-        const statItemNumber = progressPanel.querySelector(".stat-item-number");
-        const lessonsStat = progressPanel.querySelectorAll(".stat-item-number")[1];
-
-        if (overallFill) overallFill.style.width = courseProgressPercent + "%";
-        if (overallHeaderSpan) overallHeaderSpan.textContent = courseProgressPercent + "%";
-        if (statItemNumber) statItemNumber.textContent = courseProgressPercent + "%";
-        if (lessonsStat) lessonsStat.textContent = completedIds.length.toString();
-      }
+  /** True only for a well-formed completion record. Anything else counts as not done. */
+  function isDone(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (raw === null) return false;
+      var rec = JSON.parse(raw);
+      return !!rec && rec.v === 1 && rec.done === true;
+    } catch (e) {
+      return false;
     }
-  } catch (err) {
-    console.warn("Unable to read session progress:", err);
   }
-});
 
-// --------------------------------------------------------------------------
-// 2. Coming Soon Buttons or Badges
-// --------------------------------------------------------------------------
-// If any interactive "Coming Soon" elements are clicked, provide friendly feedback.
-const comingSoonBtns = document.querySelectorAll(".btn-coming-soon");
-comingSoonBtns.forEach(function (btn) {
-  btn.addEventListener("click", function () {
-    alert("This feature is coming soon in a future phase!");
-  });
-});
+  function readProjects() {
+    try {
+      if (window.CurioProjects && window.CurioProjects.isAvailable()) return window.CurioProjects.list();
+    } catch (e) { /* fall through */ }
+    return [];
+  }
+
+  function setBar(fillId, trackId, percent) {
+    var fill = byId(fillId);
+    var track = byId(trackId);
+    if (fill) fill.style.width = percent + "%";
+    if (track) track.setAttribute("aria-valuenow", String(percent));
+  }
+
+  function setBadge(name, unlocked) {
+    var card = document.querySelector('[data-badge="' + name + '"]');
+    if (!card) return;
+    card.classList.toggle("is-unlocked", unlocked);
+    var icon = card.querySelector(".achievement-icon");
+    var status = card.querySelector(".achievement-status");
+    if (icon) icon.textContent = unlocked ? "🏅" : "🔒";
+    if (status) status.textContent = unlocked ? "Unlocked" : "Locked";
+  }
+
+  // A small picture of a project. Scripts never run here (sandbox with no permissions), and the
+  // Content Security Policy stops the learner's page from loading anything from the internet.
+  function previewDocument(p) {
+    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\">" +
+      "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; img-src data:\">" +
+      "<style>body{margin:8px;font-family:sans-serif}</style></head><body>" +
+      p.html + "<style>" + p.css + "</style></body></html>";
+  }
+
+  function renderPortfolio(projects) {
+    var text = byId("dash-portfolio-text");
+    var list = byId("dash-portfolio-list");
+    var action = byId("dash-portfolio-action");
+    if (!list || !text) return;
+    list.textContent = "";
+    if (projects.length === 0) {
+      list.hidden = true;
+      return;
+    }
+    text.textContent = projects.length === 1
+      ? "Your first project is saved. Open it to keep building, or start another."
+      : "You have " + projects.length + " saved projects. Open one to keep building.";
+    if (action) action.textContent = "New project in the Playground →";
+
+    projects.forEach(function (p) {
+      var item = document.createElement("li");
+      item.className = "portfolio-item";
+
+      var frame = document.createElement("div");
+      frame.className = "portfolio-thumb";
+      var preview = document.createElement("iframe");
+      preview.setAttribute("sandbox", "");               // no scripts, no forms, no same-origin access
+      preview.setAttribute("tabindex", "-1");
+      preview.setAttribute("aria-hidden", "true");
+      preview.setAttribute("loading", "lazy");
+      preview.setAttribute("title", "Preview of " + p.name);
+      preview.srcdoc = previewDocument(p);
+      frame.appendChild(preview);
+
+      var name = document.createElement("span");
+      name.className = "portfolio-item-name";
+      name.textContent = p.name;                         // textContent: learner text is never run as HTML
+      var date = document.createElement("span");
+      date.className = "portfolio-item-date";
+      var when = new Date(p.updatedAt);
+      date.textContent = isNaN(when.getTime()) ? "" : "Updated " + when.toLocaleDateString();
+
+      var open = document.createElement("a");
+      open.className = "button button-small button-outline portfolio-item-open";
+      open.href = "playground.html?project=" + encodeURIComponent(p.id);
+      open.textContent = "Open in Playground";
+      open.setAttribute("aria-label", "Open " + p.name + " in the Playground");
+
+      item.append(frame, name, date, open);
+      list.appendChild(item);
+    });
+    list.hidden = false;
+  }
+
+  function render() {
+    var m1 = isDone(MISSION_01_KEY);
+    var m3 = isDone(MISSION_03_KEY);
+    var m5 = isDone(MISSION_05_KEY);
+    var projects = readProjects();
+    var projectCount = projects.length;
+    var missionsDone = (m1 ? 1 : 0) + (m3 ? 1 : 0) + (m5 ? 1 : 0);
+
+    // XP and level
+    var xp = (m1 ? XP_MISSION_01 : 0) + (m3 ? XP_MISSION_03 : 0) + (m5 ? XP_MISSION_05 : 0) + projectCount * XP_PER_PROJECT;
+    var level = LEVELS[0];
+    var next = null;
+    LEVELS.forEach(function (l, i) {
+      if (xp >= l.min) { level = l; next = LEVELS[i + 1] || null; }
+    });
+    setText("dash-xp", xp + " XP");
+    setText("dash-level", level.name);
+    setText("dash-level-note", next ? (next.min - xp) + " XP to " + next.name : "Top level reached");
+
+    // Missions and overall progress
+    var percent = Math.round((missionsDone / TOTAL_MISSIONS) * 100);
+    setText("dash-missions", String(missionsDone));
+    setText("dash-missions-note", missionsDone === 0 ? "Ready to begin" : "of " + TOTAL_MISSIONS + " missions");
+    setText("dash-adventure-pct", percent + "%");
+    setBar("dash-adventure-fill", "dash-adventure-track", percent);
+    setText("dash-overall-pct", percent + "%");
+    setBar("dash-overall-fill", "dash-overall-track", percent);
+    setText("dash-stat-pct", percent + "%");
+    setText("dash-stat-missions", String(missionsDone));
+    setText("dash-stat-projects", String(projectCount));
+
+    // Badges
+    var firstSteps = m1;
+    var curiousMind = m5;
+    var youngCreator = projectCount > 0;
+    setBadge("first-steps", firstSteps);
+    var cityStylist = m3;
+    setBadge("curious-mind", curiousMind);
+    setBadge("city-stylist", cityStylist);
+    setBadge("young-creator", youngCreator);
+    setText("dash-badges", String((firstSteps ? 1 : 0) + (cityStylist ? 1 : 0) + (curiousMind ? 1 : 0) + (youngCreator ? 1 : 0)));
+
+    // One clear next step, shown at the top of the page and again under "Continue Learning"
+    var step;
+    if (!m1) {
+      step = { text: "Ready to start? Begin Mission 01 on the Adventure Map.", note: "Your next step: Mission 01, Enter the Web.",
+               label: "Start Mission 01 →", href: "adventure.html" };
+    } else if (!m3) {
+      step = { text: "Great start! Next up: Mission 03, style a tower and a neon sign in CSS City.", note: "Your next step: Mission 03, Make It Beautiful.",
+               label: "Go to Mission 03 →", href: "mission-03.html" };
+    } else if (!m5) {
+      step = { text: "Looking stylish! Next up: Mission 05, build your own project.", note: "Your next step: Mission 05, the Creator Mission.",
+               label: "Go to Mission 05 →", href: "adventure.html#mission-05" };
+    } else {
+      step = { text: "You finished every playable mission. Keep creating in the Playground!", note: "Your next step: keep creating. More missions are coming.",
+               label: "Open Playground →", href: "playground.html" };
+    }
+    setText("dash-next-text", step.text);
+    setText("dash-hero-next-note", step.note);
+    [byId("dash-next-link"), byId("dash-hero-next")].forEach(function (a) {
+      if (!a) return;
+      a.textContent = step.label;
+      a.setAttribute("href", step.href);
+    });
+    var startBtn = byId("btn-start-course");
+    if (startBtn && missionsDone > 0) startBtn.textContent = "Continue Adventure →";
+
+    renderPortfolio(projects);
+  }
+
+  document.addEventListener("DOMContentLoaded", render);
+  // Coming back with the Back button can show a cached page: refresh the numbers
+  window.addEventListener("pageshow", function (event) { if (event.persisted) render(); });
+})();
