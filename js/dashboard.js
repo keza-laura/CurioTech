@@ -8,12 +8,16 @@
   "use strict";
 
   var MISSION_01_KEY = "curiotech_mission_01_completed";
+  var MISSION_02_KEY = "curiotech_mission_02_completed";
+  var MISSION_04_KEY = "curiotech_mission_04_completed";
   var MISSION_03_KEY = "curiotech_mission_03_completed";
   var MISSION_05_KEY = "curiotech_mission_05_completed";
-  var TOTAL_MISSIONS = 5;          // missions on the Adventure Map (3 playable so far: 01, 03 and 05)
+  var TOTAL_MISSIONS = 5;          // missions on the Adventure Map (all five are playable)
 
   var XP_MISSION_01 = 100;
+  var XP_MISSION_02 = 110;
   var XP_MISSION_03 = 125;
+  var XP_MISSION_04 = 140;
   var XP_MISSION_05 = 150;
   var XP_PER_PROJECT = 20;
 
@@ -22,7 +26,8 @@
     { name: "Beginner", min: 0 },
     { name: "Explorer", min: 100 },
     { name: "Creator", min: 250 },
-    { name: "Builder", min: 400 }
+    { name: "Builder", min: 400 },
+    { name: "Master", min: 600 }
   ];
 
   function byId(id) { return document.getElementById(id); }
@@ -125,14 +130,16 @@
 
   function render() {
     var m1 = isDone(MISSION_01_KEY);
+    var m2 = isDone(MISSION_02_KEY);
     var m3 = isDone(MISSION_03_KEY);
+    var m4 = isDone(MISSION_04_KEY);
     var m5 = isDone(MISSION_05_KEY);
     var projects = readProjects();
     var projectCount = projects.length;
-    var missionsDone = (m1 ? 1 : 0) + (m3 ? 1 : 0) + (m5 ? 1 : 0);
+    var missionsDone = (m1 ? 1 : 0) + (m2 ? 1 : 0) + (m3 ? 1 : 0) + (m4 ? 1 : 0) + (m5 ? 1 : 0);
 
     // XP and level
-    var xp = (m1 ? XP_MISSION_01 : 0) + (m3 ? XP_MISSION_03 : 0) + (m5 ? XP_MISSION_05 : 0) + projectCount * XP_PER_PROJECT;
+    var xp = (m1 ? XP_MISSION_01 : 0) + (m2 ? XP_MISSION_02 : 0) + (m3 ? XP_MISSION_03 : 0) + (m4 ? XP_MISSION_04 : 0) + (m5 ? XP_MISSION_05 : 0) + projectCount * XP_PER_PROJECT;
     var level = LEVELS[0];
     var next = null;
     LEVELS.forEach(function (l, i) {
@@ -162,22 +169,30 @@
     var cityStylist = m3;
     setBadge("curious-mind", curiousMind);
     setBadge("city-stylist", cityStylist);
+    setBadge("structure-builder", m2);
+    setBadge("code-wizard", m4);
     setBadge("young-creator", youngCreator);
-    setText("dash-badges", String((firstSteps ? 1 : 0) + (cityStylist ? 1 : 0) + (curiousMind ? 1 : 0) + (youngCreator ? 1 : 0)));
+    setText("dash-badges", String((firstSteps ? 1 : 0) + (m2 ? 1 : 0) + (cityStylist ? 1 : 0) + (m4 ? 1 : 0) + (curiousMind ? 1 : 0) + (youngCreator ? 1 : 0)));
 
     // One clear next step, shown at the top of the page and again under "Continue Learning"
     var step;
     if (!m1) {
       step = { text: "Ready to start? Begin Mission 01 on the Adventure Map.", note: "Your next step: Mission 01, Enter the Web.",
                label: "Start Mission 01 →", href: "adventure.html" };
+    } else if (!m2) {
+      step = { text: "Great start! Next up: Mission 02, learn how a page is built from elements and tags.", note: "Your next step: Mission 02, Build the Structure.",
+               label: "Go to Mission 02 →", href: "mission-02.html" };
     } else if (!m3) {
-      step = { text: "Great start! Next up: Mission 03, style a tower and a neon sign in CSS City.", note: "Your next step: Mission 03, Make It Beautiful.",
+      step = { text: "Nice building! Next up: Mission 03, style a tower and a neon sign in CSS City.", note: "Your next step: Mission 03, Make It Beautiful.",
                label: "Go to Mission 03 →", href: "mission-03.html" };
+    } else if (!m4) {
+      step = { text: "Looking stylish! Next up: Mission 04, make a page react with JavaScript.", note: "Your next step: Mission 04, Bring It to Life.",
+               label: "Go to Mission 04 →", href: "mission-04.html" };
     } else if (!m5) {
-      step = { text: "Looking stylish! Next up: Mission 05, build your own project.", note: "Your next step: Mission 05, the Creator Mission.",
+      step = { text: "Almost there! Next up: Mission 05, build and save your own project.", note: "Your next step: Mission 05, the Creator Mission.",
                label: "Go to Mission 05 →", href: "adventure.html#mission-05" };
     } else {
-      step = { text: "You finished every playable mission. Keep creating in the Playground!", note: "Your next step: keep creating. More missions are coming.",
+      step = { text: "You finished every mission! Keep creating in the Playground.", note: "Your next step: keep creating. New missions can be added any time.",
                label: "Open Playground →", href: "playground.html" };
     }
     setText("dash-next-text", step.text);

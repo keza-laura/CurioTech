@@ -90,15 +90,17 @@ const EXPERIMENT_ELEMENTS = {
 // --------------------------------------------------------------------------
 // 2. Mission State Management
 // --------------------------------------------------------------------------
-let currentStageIndex = 0;
-let maxCompletedStage = 0; // Tracks highest stage unlocked
+// The shared mission engine (js/mission-kit.js) owns the current step, the stepper, Pixel's stage text, saving the
+// in-progress state and the completion record. It is set when the engine starts, at the end of initMission().
+let ctx = null;
+const stage = () => (ctx ? ctx.step : 0);
 let inspectedElements = new Set();
 let isBlueprintCreated = false;
 
 // In-progress activity state. Mirrored to localStorage so a refresh, a closed tab or a
 // new visit resumes the mission where the learner left off. It is cleared when the learner
 // leaves from the celebration stage. The completion record has its own key.
-const ACTIVITIES_STORAGE_KEY = "curiotech_mission_01_activities";
+const ACTIVITIES_STORAGE_KEY = "curiotech_mission_01_progress";
 const CHALLENGE_COUNT = 3;
 const BUILDER_BLOCKS = {
   nav: { icon: "🧭", tag: "<nav>", label: "Navigation menu" },
@@ -136,9 +138,6 @@ let blueprintState = {
 // 3. UI Controller Functions
 // --------------------------------------------------------------------------
 function initMission() {
-  const stepperPills = document.querySelectorAll(".step-pill");
-  const stagePanels = document.querySelectorAll(".stage-panel");
-  const btnPrev = document.getElementById("btn-stage-prev");
   const btnNext = document.getElementById("btn-stage-next");
   const pixelSpeechEl = document.getElementById("mission-pixel-speech");
   const pixelAvatar = document.getElementById("mission-pixel-avatar");
@@ -172,14 +171,8 @@ function initMission() {
 
   function refreshContinueLock() {
     if (!btnNext) return;
-    const locked = currentStageIndex === 2 && inspectionsRemaining() > 0;
-    btnNext.classList.toggle("is-locked", locked);
-    if (locked) {
-      btnNext.setAttribute("aria-disabled", "true");
-      btnNext.classList.remove("pulse-glow");
-    } else {
-      btnNext.removeAttribute("aria-disabled");
-    }
+    if (stage() === 2 && inspectionsRemaining() > 0) btnNext.classList.remove("pulse-glow");
+    if (ctx) ctx.refreshGate();   // the engine sets is-locked and aria-disabled from the stage's gate
   }
 
   /** Shows, updates or removes the helper message (fromClick: the learner pressed Continue) */
@@ -187,8 +180,8 @@ function initMission() {
     if (!inspectHintBox) return;
     if (fromClick) inspectHintShown = true;
     const left = inspectionsRemaining();
-    if (currentStageIndex !== 2 || left === 0 || !inspectHintShown) {
-      if (currentStageIndex !== 2 || left === 0) inspectHintShown = false;
+    if (stage() !== 2 || left === 0 || !inspectHintShown) {
+      if (stage() !== 2 || left === 0) inspectHintShown = false;
       inspectHintBox.textContent = "";
       inspectHintBox.hidden = true;
       return;
@@ -213,20 +206,9 @@ function initMission() {
     return activityState.challenges.every(c => c.solved);
   }
 
-  /**
-   * Save/restore in-progress state (localStorage, always guarded)
-   */
+  /** The engine saves the in-progress state (see beforeSave in the mission description below). */
   function saveProgress() {
-    try {
-      localStorage.setItem(ACTIVITIES_STORAGE_KEY, JSON.stringify({
-        stage: currentStageIndex,
-        maxStage: maxCompletedStage,
-        inspected: Array.from(inspectedElements),
-        activity: activityState,
-        blueprint: blueprintState,
-        blueprintSaved: isBlueprintCreated
-      }));
-    } catch (e) {}
+    if (ctx) ctx.save();
   }
 
   function clearProgress() {
@@ -236,189 +218,13 @@ function initMission() {
   }
 
   /**
-   * Mission 01 completion (localStorage, so it survives refreshes, new tabs and new sessions).
-   * It is saved ONLY when the learner is on the celebration stage AND the mission's own requirements
-   * are all met: 3 different elements inspected (Stage 3), all 3 quests solved (Stage 4) and the
-   * blueprint saved (Stage 5). Opening the mission, or a stage, never counts.
-   * Nothing in this project ever removes or overwrites it: clearProgress() above only touches this
-   * mission's per-tab keys, and an existing record is left exactly as it was.
-   * js/adventure.js reads { v: 1, done: true, completedAt } to show the finished state.
-   * Returns true when the completion is saved, false when it is not (not earned yet, or storage unavailable).
-   */
-  const MISSION_01_DONE_KEY = "curiotech_mission_01_completed";
-
-  function recordMission01Complete() {
-    if (currentStageIndex !== 5 || inspectedElements.size < INSPECT_REQUIRED || !allChallengesSolved() || !isBlueprintCreated) {
-      return false;
-    }
-    let existing = null;
-    try { existing = JSON.parse(localStorage.getItem(MISSION_01_DONE_KEY)); } catch (e) { existing = null; }
-    if (existing && existing.v === 1 && existing.done === true) return true;   // already saved: never overwritten
-    try {
-      localStorage.setItem(MISSION_01_DONE_KEY, JSON.stringify({ v: 1, done: true, completedAt: new Date().toISOString() }));
-      return true;
-    } catch (e) {
-      return false;   // storage blocked or full: the learner is told on the celebration screen
-    }
-  }
-
-  function showSavedNote(saved) {
-    const note = document.getElementById("mission-saved-note");
-    if (!note) return;
-    note.textContent = saved
-      ? "✅ Saved! Your Adventure Map now shows Mission 01 as complete."
-      : "You finished Mission 01! This browser wouldn't let me save it, so the Adventure Map may not show it as complete.";
-  }
-
-  /**
-   * Renders the current stage view, updates Pixel, and configures buttons
-   */
-  function renderStage() {
-    const stage = MISSION_STAGES[currentStageIndex];
-    if (!stage) return;
-
-    // 1. Show active panel, hide others
-    stagePanels.forEach((panel, idx) => {
-      if (idx === currentStageIndex) {
-        panel.classList.add("active");
-      } else {
-        panel.classList.remove("active");
-      }
-    });
-
-    // 2. Update Stepper Pills
-    stepperPills.forEach((pill, idx) => {
-      pill.classList.remove("active");
-      if (idx === currentStageIndex) {
-        pill.classList.add("active");
-        pill.classList.remove("completed");
-        pill.setAttribute("aria-current", "step");
-      } else {
-        pill.removeAttribute("aria-current");
-        if (idx < maxCompletedStage) {
-          pill.classList.add("completed");
-        } else {
-          pill.classList.remove("completed");
-        }
-      }
-      if (idx <= maxCompletedStage) {
-        pill.disabled = false;
-      } else {
-        pill.disabled = true;
-      }
-    });
-
-    // 3. Update Pixel mascot dialogue and expression
-    if (pixelSpeechEl) {
-      pixelSpeechEl.innerHTML = stage.pixelText;
-      // Stage 4 has its own single announcer for quest feedback; avoid two competing live regions
-      pixelSpeechEl.setAttribute("aria-live", currentStageIndex === 3 ? "off" : "polite");
-    }
-    if (pixelAvatar) {
-      pixelAvatar.setAttribute("data-expression", stage.pixelExpr);
-      pixelAvatar.setAttribute("aria-label", `Pixel Mascot (${stage.pixelExpr})`);
-    }
-    if (pixelTag) {
-      pixelTag.textContent = stage.pixelExpr.charAt(0).toUpperCase() + stage.pixelExpr.slice(1);
-      pixelTag.className = `pixel-expression-pill expr-pill-${stage.pixelExpr}`;
-    }
-
-    // 4. Update Navigation Buttons
-    if (btnPrev) {
-      btnPrev.disabled = currentStageIndex === 0;
-    }
-
-    if (btnNext) {
-      if (currentStageIndex === 5) {
-        // Earned = the same requirements the completion record checks. Then this button leads on to Mission 02.
-        const earned = inspectedElements.size >= INSPECT_REQUIRED && allChallengesSolved() && isBlueprintCreated;
-        btnNext.textContent = earned ? "Next: Mission 02, Build the Structure ➔" : "Finish Mission & Exit ➔";
-        btnNext.onclick = () => { clearProgress(); window.location.href = earned ? "mission-02.html" : "adventure.html"; };
-        btnNext.disabled = false;
-      } else {
-        btnNext.textContent = `Continue to ${MISSION_STAGES[currentStageIndex + 1].name} →`;
-        btnNext.onclick = goNextStage;
-
-        // Stage-specific gating rules
-        if (currentStageIndex === 2) {
-          btnNext.disabled = false; // guarded in goNextStage instead of the native disabled state
-        } else if (currentStageIndex === 3) {
-          btnNext.disabled = !allChallengesSolved();
-        } else if (currentStageIndex === 4) {
-          btnNext.disabled = !isBlueprintCreated;
-        } else {
-          btnNext.disabled = false;
-        }
-      }
-    }
-
-    refreshContinueLock();
-    updateInspectHint(false);
-
-    // Stage 6 shows a personalised recap of what the learner did
-    if (currentStageIndex === 5) {
-      renderRecap();
-      showSavedNote(recordMission01Complete());
-    }
-
-    // Save in-progress state (the stage is part of it)
-    saveProgress();
-
-    // Scroll smoothly to top of card on stage change
-    document.querySelector(".mission-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  /**
-   * Accessibility: after the learner changes stage, move focus to the new stage heading
-   * (so keyboard and screen-reader users start at the top of the new content).
+   * Accessibility: move focus to an element that is not normally focusable
    */
   function focusElement(el) {
     if (!el) return;
     if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
     el.focus({ preventScroll: true });
   }
-
-  function focusStageHeading() {
-    const panel = stagePanels[currentStageIndex];
-    focusElement(panel && panel.querySelector(".stage-title, .celebrate-title"));
-  }
-
-  function goNextStage() {
-    // Guard: Stage 3 needs 3 different inspected elements; explain instead of moving on
-    if (currentStageIndex === 2 && inspectionsRemaining() > 0) {
-      updateInspectHint(true);
-      return;
-    }
-    if (currentStageIndex < MISSION_STAGES.length - 1) {
-      currentStageIndex++;
-      if (currentStageIndex > maxCompletedStage) {
-        maxCompletedStage = currentStageIndex;
-      }
-      renderStage();
-      focusStageHeading();
-    }
-  }
-
-  function goPrevStage() {
-    if (currentStageIndex > 0) {
-      currentStageIndex--;
-      renderStage();
-      focusStageHeading();
-    }
-  }
-
-  // Stepper pill clicks
-  stepperPills.forEach((pill, idx) => {
-    pill.addEventListener("click", () => {
-      if (idx <= maxCompletedStage) {
-        currentStageIndex = idx;
-        renderStage();
-        focusStageHeading();
-      }
-    });
-  });
-
-  if (btnPrev) btnPrev.addEventListener("click", goPrevStage);
 
   // ------------------------------------------------------------------------
   // 4. Stage 3: Experiment Inspector Controller
@@ -455,7 +261,7 @@ function initMission() {
     }
 
     // Enable next button once 3 elements are inspected
-    if (inspectedElements.size >= 3 && currentStageIndex === 2) {
+    if (inspectedElements.size >= 3 && stage() === 2) {
       if (btnNext) {
         btnNext.disabled = false;
         btnNext.classList.add("pulse-glow");
@@ -492,7 +298,7 @@ function initMission() {
       if (inspectorTag) inspectorTag.textContent = "---";
       if (inspectorDesc) inspectorDesc.textContent = "Select a block from the webpage preview to inspect its purpose and HTML tag.";
       if (inspectorExample) inspectorExample.textContent = "---";
-      if (currentStageIndex === 2 && btnNext) {
+      if (stage() === 2 && btnNext) {
         btnNext.classList.remove("pulse-glow");
         refreshContinueLock();
         updateInspectHint(false);
@@ -679,7 +485,7 @@ function initMission() {
       setPixel("excited", SOLVED_COPY[i].pixel);
     }
 
-    if (allChallengesSolved() && currentStageIndex === 3 && btnNext) {
+    if (allChallengesSolved() && stage() === 3 && btnNext) {
       btnNext.disabled = false;
       btnNext.classList.add("pulse-glow");
       if (revealed) {
@@ -1141,16 +947,11 @@ function initMission() {
   // ------------------------------------------------------------------------
   // 8. Restore temporary progress (if any) and paint every activity
   // ------------------------------------------------------------------------
-  function applySavedProgress() {
-    let saved = null;
-    try {
-      saved = JSON.parse(localStorage.getItem(ACTIVITIES_STORAGE_KEY));
-    } catch (e) {}
+  /** Puts the engine's saved activity data (checked field by field here) back into the activities. */
+  function applySavedProgress(saved) {
     if (!saved || typeof saved !== "object") return;
 
     const int = (v, lo, hi, d) => (Number.isInteger(v) ? Math.min(hi, Math.max(lo, v)) : d);
-    maxCompletedStage = int(saved.maxStage, 0, 5, 0);
-    currentStageIndex = int(saved.stage, 0, maxCompletedStage, 0);
 
     if (Array.isArray(saved.inspected)) {
       saved.inspected.forEach(k => { if (EXPERIMENT_ELEMENTS[k]) inspectedElements.add(k); });
@@ -1224,11 +1025,91 @@ function initMission() {
     if (isBlueprintCreated) paintSavedBlueprintButton();
   }
 
-  applySavedProgress();
-  paintAllActivities();
+  // ------------------------------------------------------------------------
+  // 9. Hand over to the shared mission engine (js/mission-kit.js)
+  //    It runs the stepper, Continue / Back, Pixel's text for each stage, saving the in-progress state and the
+  //    completion record. Mission 01's own activities above stay exactly as they were.
+  //
+  //    Completion (localStorage "curiotech_mission_01_completed" -> { v: 1, done: true, completedAt }) is saved
+  //    ONLY on the celebration stage AND when the mission's own requirements are met: 3 different elements
+  //    inspected (Stage 3), all 3 quests solved (Stage 4) and the blueprint saved (Stage 5). Opening the
+  //    mission, or a stage, never counts. An existing record is never overwritten.
+  //    js/adventure.js reads { v: 1, done: true } to show the finished state.
+  // ------------------------------------------------------------------------
+  const LAST_STAGE = MISSION_STAGES.length - 1;
 
-  // Initial stage render
-  renderStage();
+  CurioMission.start({
+    prefix: "m1",
+    name: "Mission 01",
+    stateKey: ACTIVITIES_STORAGE_KEY,
+    doneKey: "curiotech_mission_01_completed",
+    panelSelector: ".stage-panel",
+    dom: {
+      next: "btn-stage-next", prev: "btn-stage-prev", hint: "inspect-hint", note: "mission-saved-note",
+      pixelSpeech: "mission-pixel-speech", pixelAvatar: "mission-pixel-avatar", pixelTag: "mission-pixel-tag"
+    },
+    liveHint: false,      // the inspector writes its own helper message (updateInspectHint)
+    plainNote: true,      // the celebration note keeps its page styling
+    steps: MISSION_STAGES.map((st, i) => ({ next: i < LAST_STAGE ? `Continue to ${MISSION_STAGES[i + 1].name} →` : "" })),
+    pixel: MISSION_STAGES.map(st => ({ expr: st.pixelExpr, html: st.pixelText })),
+    quests: [],           // Mission 01 has its own three-quest activity in Stage 4
+    freshData: () => ({}),
+    cleanData: d => (d && typeof d === "object" ? d : {}),
+
+    // Stage 3 needs 3 different inspected elements. (Stages 4 and 5 keep the button natively disabled until done.)
+    gate(step) {
+      return step === 2 && inspectionsRemaining() > 0 ? "Inspect 3 different elements to unlock your Challenge." : "";
+    },
+    beforeNext(step) {
+      if (step === 2 && inspectionsRemaining() > 0) { updateInspectHint(true); return false; }
+      return true;
+    },
+    met() {
+      return inspectedElements.size >= INSPECT_REQUIRED && allChallengesSolved() && isBlueprintCreated;
+    },
+    messages: {
+      saved: "✅ Saved! Your Adventure Map now shows Mission 01 as complete.",
+      already: "✅ Saved! Your Adventure Map now shows Mission 01 as complete.",
+      failed: "You finished Mission 01! This browser wouldn't let me save it, so the Adventure Map may not show it as complete."
+    },
+
+    // The activities are the live model; copy them into the engine's data each time it saves
+    beforeSave(c) {
+      c.data.inspected = Array.from(inspectedElements);
+      c.data.activity = activityState;
+      c.data.blueprint = blueprintState;
+      c.data.blueprintSaved = isBlueprintCreated;
+    },
+    // Stage 4 has its own single announcer for quest feedback; avoid two competing live regions
+    pixelLive: step => (step === 3 ? "off" : "polite"),
+
+    afterRender(step) {
+      if (btnNext) {
+        // Stages 4 and 5 use the native disabled state; Stage 3 is guarded by the gate above instead
+        if (step === 3) btnNext.disabled = !allChallengesSolved();
+        else if (step === 4) btnNext.disabled = !isBlueprintCreated;
+        else btnNext.disabled = false;
+      }
+      refreshContinueLock();
+      updateInspectHint(false);
+    },
+    render(step) {
+      if (step === LAST_STAGE) renderRecap();   // a personalised recap of what the learner did (text only)
+    },
+
+    // On the last stage the Continue button leads on to Mission 02 once Mission 01 is on record
+    finalNext(c) {
+      return c.done()
+        ? { label: "Next: Mission 02, Build the Structure ➔", href: "mission-02.html" }
+        : { label: "Finish Mission & Exit ➔", href: "adventure.html" };
+    },
+
+    init(c) {
+      ctx = c;
+      applySavedProgress(c.data);
+      paintAllActivities();
+    }
+  });
 }
 
 // --------------------------------------------------------------------------
