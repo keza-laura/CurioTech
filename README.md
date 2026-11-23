@@ -25,7 +25,9 @@ CurioTech is a **front-end only prototype**. There is no server, no database and
  (landing)      (guest start)   (home base)         │
                                   │                 ├── mission.html      Mission 01: Enter the Web
                                   │                 │      └─ finish it ──> the Creator's Lab unlocks
+                                  │                 ├── mission-02.html   Mission 02: Build the Structure (after Mission 01)
                                   │                 ├── mission-03.html   Mission 03: Make It Beautiful (CSS City, after Mission 01)
+                                  │                 ├── mission-04.html   Mission 04: Bring It to Life (JavaScript Jungle, after Mission 03)
                                   │                 ├── mission-05.html   Mission 05: The Creator Mission
                                   │                 └── playground.html   Creator's Playground (from the Lab)
                                   └── playground.html                     Creator's Playground (free play)
@@ -36,8 +38,9 @@ CurioTech is a **front-end only prototype**. There is no server, no database and
 3. **Dashboard** (`dashboard.html`): the home base. From here learners enter the Adventure, open the Playground, or jump to Mission 05.
 4. **Adventure Map** (`adventure.html`): four destinations (HTML Island, CSS City, JavaScript Jungle and the Creator's Lab), Pixel's tips, and a Mission Log listing five missions.
    * **HTML Island** and **Mission 01** are open.
-   * **CSS City** opens once Mission 01 is completed, and holds **Mission 03: Make It Beautiful**.
-   * **JavaScript Jungle** and Missions 02 and 04 appear as locked (coming soon).
+   * **Mission 02: Build the Structure** is on HTML Island and opens once Mission 01 is completed.
+   * **CSS City** opens once Mission 02 is completed, and holds **Mission 03: Make It Beautiful**.
+   * **JavaScript Jungle** opens once Mission 03 is completed, and holds **Mission 04: Bring It to Life**.
    * The **Creator's Lab** is locked until Mission 01 is completed. Once it is unlocked, its briefing opens the Creator's Playground.
    * **Mission 05** is open to everyone and does not require Mission 01 first.
 5. **Missions**: Mission 01 teaches how webpages work; Mission 05 is a guided independent project.
@@ -57,9 +60,19 @@ A six-stage guided mission: **Discover**, **Explore**, **Experiment**, **Challen
 * **Experiment**: a Webpage Inspector (click page blocks to learn what they are) and a Tag Tinkerer.
 * **Challenge**: three quick quests (Element Matcher, Tag Detective, Build the Page).
 * **Create**: the Webpage Blueprint Studio, where the learner chooses a title, tagline, graphic and button and saves a blueprint.
-* **Celebrate**: the learner can send the blueprint to the Creator's Playground as ready-made HTML.
+* **Celebrate**: the learner can send the blueprint to the Creator's Playground as ready-made HTML. Once the mission is earned, the closing button leads straight on to Mission 02.
 
 Mission 01 is recorded as complete only when the learner reaches the celebration stage **and** has inspected 3 different elements, solved all 3 quests and saved the blueprint. Opening the mission, or a stage, never counts.
+
+### Mission 02: Build the Structure (`mission-02.html`, `js/mission-02.js`)
+
+A five-step mission on HTML Island: **Discover**, **Experiment**, **Challenge**, **Create**, **Celebrate**.
+
+* **Discover**: an element is an opening tag, content and a closing tag, and a page has a head and a body.
+* **Experiment**: four pieces of text each wait for a tag (`h1`, `p`, `ul`, `a` and so on). The page and the HTML update as tags are chosen. At least 3 pieces need a tag.
+* **Challenge**: three structure quests (the biggest heading, the closing tag, head or body).
+* **Create**: fill in a page title, heading, paragraph and list items and watch a full HTML skeleton appear. Save the page.
+* **Celebrate**: recorded as complete only when 3 pieces were tagged, all 3 quests were solved and the page was saved. The learner's words are only ever shown as plain text, so typing tags into the boxes cannot change the page.
 
 ### Mission 03: Make It Beautiful (`mission-03.html`, `js/mission-03.js`)
 
@@ -71,6 +84,17 @@ A five-step mission in CSS City: **Discover**, **Experiment**, **Challenge**, **
 * **Create**: design a neon sign (words, colour, font, size, glow) and save the design.
 * **Celebrate**: shows the saved sign. Mission 03 is recorded as complete only when the learner reaches this step **and** changed 3 different tower settings, solved all 3 quests and saved the sign. Opening the mission never counts. An existing record is never overwritten.
 * In-progress state is kept in `localStorage` so the learner can close the tab and carry on. The sign words are only ever shown as plain text.
+
+### Mission 04: Bring It to Life (`mission-04.html`, `js/mission-04.js`)
+
+A five-step mission in JavaScript Jungle: **Discover**, **Experiment**, **Challenge**, **Create**, **Celebrate**.
+
+* **Discover**: a variable, an event and an action, in a four-line program.
+* **Experiment**: the Zap lab. A counter button runs the same idea the code panel shows (`score = score + step`). Press it 5 times and change the step size once.
+* **Challenge**: three code quests (what `let` does, the `click` event, predicting `n = n + 3`).
+* **Create**: set up a click game (button words, points per click, goal, winning message), play it until it is won, then save it. The code panel shows the real code for the choices made.
+* **Celebrate**: recorded as complete only when the lab was used, all 3 quests were solved, and a game was won and saved.
+* **Safety:** nothing the learner types is ever run as code. The lab and the game are small fixed functions in the mission file that only use numbers from fixed lists, and the learner's words are shown as plain text.
 
 ### Mission 05: The Creator Mission (`mission-05.html`, `js/mission-05.js`)
 
@@ -129,7 +153,9 @@ CurioTech-1/
 ├── dashboard.html      # Learner dashboard (home base)
 ├── adventure.html      # Adventure Map: destinations, Pixel, Mission Log
 ├── mission.html        # Mission 01: Enter the Web
+├── mission-02.html     # Mission 02: Build the Structure
 ├── mission-03.html     # Mission 03: Make It Beautiful
+├── mission-04.html     # Mission 04: Bring It to Life
 ├── mission-05.html     # Mission 05: The Creator Mission
 ├── playground.html     # Creator's Playground and My Projects
 ├── README.md
@@ -140,9 +166,12 @@ CurioTech-1/
 │   ├── dashboard.js    # Dashboard: live XP, level, badges, progress and portfolio from saved data
 │   ├── adventure.js    # Adventure Map: destination briefings, Lab unlock, Mission 05 status
 │   ├── pixel.js        # Pixel the robot companion on the Adventure Map
-│   ├── mission.js      # Mission 01 logic and completion record
-│   ├── mission-03.js   # Mission 03 logic and completion record
-│   ├── mission-05.js   # Mission 05 logic and completion record
+│   ├── mission.js      # Mission 01 activities (inspector, quests, blueprint studio)
+│   ├── mission-kit.js  # Shared mission engine (steps, stepper, Pixel, saving, completion) used by all five missions
+│   ├── mission-02.js   # Mission 02 content and activities
+│   ├── mission-03.js   # Mission 03 content and activities
+│   ├── mission-04.js   # Mission 04 content and activities
+│   ├── mission-05.js   # Mission 05 plan form and saved-project checks
 │   ├── playground.js   # Playground editors, preview, Run, levels, download, My Projects UI
 │   └── projects.js     # Saved-projects storage module (used by the Playground and Mission 05)
 └── assets/
@@ -154,7 +183,8 @@ CurioTech-1/
 
 * **`js/projects.js`**: the only code that reads and writes saved projects. It validates every project, caps the list at 10, and sets aside damaged data instead of deleting it. Mission 05 only reads it.
 * **`js/adventure.js`**: reads the two mission completion records (read-only) to unlock the Creator's Lab and to show Mission 05 as completed.
-* **`js/mission.js`**, **`js/mission-03.js`** and **`js/mission-05.js`**: each is the only writer of its own completion record, and neither ever overwrites an existing record.
+* **`js/mission-kit.js`**: the shared engine for every mission. It runs the steps, the stepper, Continue / Back, Pixel's text, saving the in-progress state and the completion record, and it writes the record only on the last step when the mission's own requirements (and any quests) are met. Each mission file describes only its own content, gates and activities, with a few optional hooks (for example Mission 05 checks the saved project and Mission 01 leads on to Mission 02 from its last button).
+* Each mission's completion record is written only through the kit, under that mission's own key, and an existing record is never overwritten.
 * **`css/styles.css`**: sections are grouped by page. Classes starting `pg-` belong to the Playground and `m5-` to Mission 05.
 
 ---
@@ -182,12 +212,16 @@ All learner data stays in the learner's own browser. Nothing is sent anywhere.
 | `curiotech_projects` | The saved Playground projects (name, HTML, CSS, JavaScript, dates). Up to 10. |
 | `curiotech_projects_corrupt_backup` | A copy of project data that could not be read, set aside instead of deleted. |
 | `curiotech_mission_01_completed` | Mission 01 completion record: `{ v: 1, done: true, completedAt }`. |
+| `curiotech_mission_02_completed` | Mission 02 completion record: `{ v: 1, done: true, completedAt }`. |
+| `curiotech_mission_02_progress` | Mission 02 in-progress state. Cleared when the learner leaves from the celebration step. |
+| `curiotech_mission_04_completed` | Mission 04 completion record: `{ v: 1, done: true, completedAt }`. |
+| `curiotech_mission_04_progress` | Mission 04 in-progress state. Cleared when the learner leaves from the celebration step. |
 | `curiotech_mission_03_completed` | Mission 03 completion record: `{ v: 1, done: true, completedAt }`. |
 | `curiotech_mission_03_progress` | Mission 03 in-progress state (step, tower settings, quests, sign). Cleared when the learner leaves from the celebration step. |
 | `curiotech_mission_05_completed` | Mission 05 completion record: `{ v: 1, done: true, completedAt, projectId, projectName }`. |
 | `curiotech_playground_progress` | The Playground's guided-level progress. |
-| `curiotech_mission_01_activities` | Mission 01 in-progress state (stage, inspected elements, quest results, blueprint). Cleared when the learner leaves from the celebration stage. |
-| `curiotech_mission_05_progress` | Mission 05 in-progress state (step, idea, plan, start time). Cleared when the learner leaves through the map. |
+| `curiotech_mission_01_progress` | Mission 01 in-progress state (stage, inspected elements, quest results, blueprint). Cleared when the learner leaves from the celebration stage. |
+| `curiotech_mission_05_progress` | Mission 05 in-progress state (step, and `data`: idea, plan, start time, return label). The Playground's "Back to Mission 05" bar reads it. Cleared when the learner leaves through the map. |
 
 A completion record only counts when it reads `v: 1` and `done: true`. A missing, damaged or wrong record never shows a mission as complete and never unlocks the Creator's Lab.
 
@@ -219,9 +253,9 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 
 ## 9. Current Limitations and Unfinished Areas
 
-* **No accounts:** CurioTech starts guests straight on the dashboard. There is no sign-in, so progress cannot follow a learner to another browser or device. The Logout buttons simply return to the home page.
+* **No accounts:** CurioTech starts guests straight on the dashboard. There is no sign-in, so progress cannot follow a learner to another browser or device. The top-right button on each page is **Home** and returns to the landing page.
 * **One device only:** progress and projects live in one browser on one device. There is no cloud saving, sharing, or backend.
-* **Missions 02 and 04 and JavaScript Jungle** are shown as coming soon. Missions 01, 03 and 05 are playable. Mission 03 opens after Mission 01 because Mission 02 is not built yet.
+* **All five missions are playable, and each one leads to the next.** The order is 01, 02, 03, 04, then 05. Each of Missions 02, 03 and 04 opens after the one before it, and Mission 05 is open to everyone but comes last. On the map, an **Up next** banner always points at the next mission. Every celebration screen has a **Next mission** button that appears once that mission is on record (Mission 05's leads to the dashboard). The mission pages do not block direct links: the map only controls what is offered.
 * **Playground drafts are per-tab:** the Playground's working drafts still live in `sessionStorage`. Saved projects are the permanent copy.
 * **Playground limits:** 20,000 characters per editor, 10 saved projects, and a JavaScript output cap of 200 lines.
 
@@ -233,7 +267,7 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 
 * **Phase 1: Landing page**: semantic, responsive landing page with the brand colours.
 * **Phase 2: Login page**: a front-end sign-in form (replaced by the guest start in the prototype hardening pass).
-* **Phase 3: Learner dashboard**: dashboard layout, course cards and a distinct Logout button.
+* **Phase 3: Learner dashboard**: dashboard layout, course cards and a distinct Home button.
 * **Phase 4: The Digital Adventure**: the Adventure Map, Pixel the robot companion and Mission 01, with its completion record.
 * **Phase 5: Creator's Project Builder**: the Creator's Playground (editors, live preview, Run, four guided levels, download), saved projects (My Projects), Mission 05, and the Adventure Map and dashboard connections, including the Creator's Lab unlock.
 
