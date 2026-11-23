@@ -1,32 +1,42 @@
 // ==========================================================================
-// CurioTech: shared mission engine (used by mission-02.html and mission-04.html)
+// CurioTech: shared mission engine (used by every mission page)
 //
-// A mission page has five steps (panels "<prefix>-step-0" .. "-4"), a stepper, Back / Continue buttons,
-// Pixel, an optional quest list, and a completion record. This file owns everything that is the same for
-// every mission; each mission's own file only describes its content and its two or three live activities.
+// A mission page is a row of steps (panels), a stepper, Back / Continue buttons, Pixel, an optional quest
+// list, and a completion record. This file owns everything that is the same for every mission; each
+// mission's own file only describes its content and its live activities.
 //
 //   CurioMission.start({
-//     prefix, name, stateKey, doneKey,         // ids start with "<prefix>-", e.g. "m2-next"
-//     steps:  [{ next: "Continue →" } x5],      // label of the Continue button on each step
-//     pixel:  [{ expr, html } x5],              // what Pixel says on each step (fixed text written in code)
-//     quests: [{ title, question, options, answer, code?, right, wrong }],   // shown in "<prefix>-quests"
+//     prefix, name, stateKey, doneKey,          // element ids default to "<prefix>-..." (e.g. "m2-next")
+//     steps:  [{ next: "Continue →" | fn(ctx) }],   // one entry per step; label of the Continue button
+//     pixel:  [{ expr, html }],                 // what Pixel says on each step (fixed text written in code)
+//     quests: [...],                            // optional quest list shown in "<prefix>-quests" (step 3)
 //     freshData(), cleanData(raw),              // the mission's own saved state (always validated on read)
 //     gate(step, ctx) -> string,                // "" when the learner may continue, else what is missing
-//     met(ctx) -> boolean,                      // are the mission's own requirements met? (quests are checked here)
-//     init(ctx),                                // bind the live activities once
-//     render(step, ctx)                         // paint a step (called every time a step is shown)
+//     met(ctx) -> boolean,                      // are the mission's own requirements met?
+//     init(ctx), render(step, ctx),             // bind the live activities once / paint a step
+//
+//     // optional
+//     panelSelector,        // e.g. ".stage-panel" when panels are not named "<prefix>-step-N"
+//     dom: { next, prev, hint, pixelSpeech, pixelAvatar, pixelTag, note, leave, banner, nextMission },   // ids
+//     liveHint,             // false: the mission writes its own hint text (default true)
+//     plainNote,            // true: leave the completion note's own styling alone
+//     messages,             // { saved, already, failed, notmet } overrides for the completion note
+//     bannerText(record),   // text for the "already completed" banner
+//     beforeNext(step, ctx) -> false to veto moving on (the mission explains why itself)
+//     beforeSave(ctx), afterRender(step, ctx), pixelLive(step) -> "polite" | "off",
+//     canCelebrate(ctx) -> false to send the learner back one step instead of celebrating,
+//     recordExtra(ctx) -> extra fields for the completion record,
+//     finalNext(ctx) -> { label, href }: the Continue button on the last step leads on to this page
 //   })
 //
-// Completion (localStorage doneKey -> { v: 1, done: true, completedAt }) is written ONLY when the learner is
-// on the celebration step AND met(ctx) is true AND every quest is solved. An existing record is never
-// overwritten. In-progress state (stateKey) lets the learner close the tab and come back; it is cleared when
-// they leave from the celebration step. Nothing here reads or writes another mission's keys.
+// Completion (localStorage doneKey -> { v: 1, done: true, completedAt, ...extra }) is written ONLY when the
+// learner is on the last step AND met(ctx) is true AND every quest is solved. An existing record is never
+// overwritten. In-progress state (stateKey) lets the learner close the tab and come back; it is cleared
+// when they leave from the last step. Nothing here reads or writes another mission's keys.
 // ==========================================================================
 
 (function () {
   "use strict";
-
-  const LAST_STEP = 4;
 
   const clampInt = (n, lo, hi, d) => (Number.isInteger(n) ? Math.min(hi, Math.max(lo, n)) : d);
   const cleanText = (s, max) => (typeof s === "string" ? s.replace(/\s+/g, " ").trim().slice(0, max) : "");
@@ -38,23 +48,33 @@
     return e;
   }
 
+  const KEYS = {
+    pixelSpeech: "pixel-speech", pixelAvatar: "pixel-avatar", pixelTag: "pixel-tag", hint: "hint",
+    prev: "prev", next: "next", note: "complete-note", leave: "leave", banner: "done-banner",
+    nextMission: "next-mission", quests: "quests", questCount: "quest-count"
+  };
+
   function start(cfg) {
     const p = cfg.prefix;
-    const $ = id => document.getElementById(p + "-" + id);
+    const last = cfg.steps.length - 1;
+    const quests = cfg.quests || [];
+    const $ = key => document.getElementById((cfg.dom && cfg.dom[key]) || (p + "-" + KEYS[key]));
+    const liveHint = cfg.liveHint !== false;
 
     // ---- state ----
     function freshState() {
-      return { v: 1, step: 0, maxStep: 0, quests: cfg.quests.map(() => false), data: cfg.freshData() };
+      return { v: 1, step: 0, maxStep: 0, quests: quests.map(() => false), data: cfg.freshData() };
     }
 
     function readState() {
       let d;
       try { d = JSON.parse(localStorage.getItem(cfg.stateKey)); } catch (e) { return null; }
-      if (!d || typeof d !== "object" || d.v !== 1) return null;
+      // A saved state from before a mission moved onto this engine has no "data": start fresh instead of guessing
+      if (!d || typeof d !== "object" || d.v !== 1 || !d.data || typeof d.data !== "object") return null;
       const s = freshState();
-      s.step = clampInt(d.step, 0, LAST_STEP, 0);
-      s.maxStep = clampInt(d.maxStep, s.step, LAST_STEP, s.step);
-      s.quests = cfg.quests.map((q, i) => Array.isArray(d.quests) && d.quests[i] === true);
+      s.step = clampInt(d.step, 0, last, 0);
+      s.maxStep = clampInt(d.maxStep, s.step, last, s.step);
+      s.quests = quests.map((q, i) => Array.isArray(d.quests) && d.quests[i] === true);
       s.data = cfg.cleanData(d.data);
       return s;
     }
@@ -62,6 +82,7 @@
     const state = readState() || freshState();
 
     function save() {
+      if (cfg.beforeSave) cfg.beforeSave(ctx);
       try { localStorage.setItem(cfg.stateKey, JSON.stringify(state)); } catch (e) { /* storage unavailable: the page still works */ }
     }
 
@@ -81,7 +102,8 @@
       if (!allQuestsSolved() || !cfg.met(ctx)) return "notmet";
       if (readDone()) return "already";
       try {
-        localStorage.setItem(cfg.doneKey, JSON.stringify({ v: 1, done: true, completedAt: new Date().toISOString() }));
+        const extra = cfg.recordExtra ? cfg.recordExtra(ctx) : {};
+        localStorage.setItem(cfg.doneKey, JSON.stringify(Object.assign({ v: 1, done: true, completedAt: new Date().toISOString() }, extra)));
       } catch (e) {
         return "failed";
       }
@@ -90,9 +112,9 @@
 
     // ---- Pixel and hints ----
     function setPixel(expr, html) {
-      const speech = $("pixel-speech");
-      const avatar = $("pixel-avatar");
-      const tag = $("pixel-tag");
+      const speech = $("pixelSpeech");
+      const avatar = $("pixelAvatar");
+      const tag = $("pixelTag");
       if (speech && html) speech.innerHTML = html;     // fixed strings written in the mission's own file
       if (avatar) {
         avatar.setAttribute("data-expression", expr);
@@ -105,49 +127,65 @@
     }
 
     const hintEl = $("hint");
+    let hintFlip = false;
     function showHint(text) {
       if (!hintEl) return;
-      hintEl.textContent = text;
-      hintEl.hidden = text === "";
+      if (!text) { hintEl.textContent = ""; hintEl.hidden = true; return; }
+      hintFlip = !hintFlip;
+      hintEl.textContent = text + (hintFlip ? " " : "");   // an invisible change lets a repeated message be announced again
+      hintEl.hidden = false;
     }
 
     // ---- gates and steps ----
-    const panels = Array.from({ length: LAST_STEP + 1 }, (_, i) => $("step-" + i));
-    const pills = Array.from(document.querySelectorAll(".mission-stepper .step-pill"));
+    const panels = cfg.panelSelector
+      ? Array.from(document.querySelectorAll(cfg.panelSelector))
+      : Array.from({ length: last + 1 }, (_, i) => document.getElementById(`${p}-step-${i}`));
+    let pills = Array.from(document.querySelectorAll(".mission-stepper .step-pill"));
+    if (!pills.length) pills = Array.from(document.querySelectorAll(".step-pill"));
     const prevBtn = $("prev");
     const nextBtn = $("next");
+    const questStep = 2;
 
     function gateText(step) {
-      if (step === 2 && !allQuestsSolved()) {
-        return `Solve all ${cfg.quests.length} quests to continue (${state.quests.filter(Boolean).length} of ${cfg.quests.length} done).`;
+      if (quests.length && step === questStep && !allQuestsSolved()) {
+        return `Solve all ${quests.length} quests to continue (${state.quests.filter(Boolean).length} of ${quests.length} done).`;
       }
-      return cfg.gate(step, ctx) || "";
+      return (cfg.gate && cfg.gate(step, ctx)) || "";
     }
 
+    /** Updates the Continue button, and (unless the mission manages its own hint) any message that is showing. */
     function refreshGate() {
-      const locked = state.step < LAST_STEP && gateText(state.step) !== "";
-      if (locked) nextBtn.setAttribute("aria-disabled", "true"); else nextBtn.removeAttribute("aria-disabled");
-      nextBtn.classList.toggle("is-locked", locked);
+      const why = state.step < last ? gateText(state.step) : "";
+      if (why) nextBtn.setAttribute("aria-disabled", "true"); else nextBtn.removeAttribute("aria-disabled");
+      nextBtn.classList.toggle("is-locked", !!why);
+      if (liveHint && hintEl && !hintEl.hidden) showHint(why);
     }
 
     function renderCelebrateNote() {
-      const note = $("complete-note");
-      if (!note) return;
+      const note = $("note");
       const result = recordComplete();
-      const texts = {
-        saved: [`✅ ${cfg.name} complete! It is saved on this device.`, "is-good"],
-        already: ["✅ You completed this mission before, and that record stays safe.", "is-good"],
-        failed: ["Your browser would not let me save your progress, so the mission may not show as complete. You still did it!", "is-warn"],
-        notmet: ["Almost! Go back and finish every step so the mission can count as complete.", "is-warn"]
-      };
-      note.textContent = texts[result][0];
-      note.className = "m5-status " + texts[result][1];
+      if (note) {
+        const msgs = Object.assign({
+          saved: `✅ ${cfg.name} complete! It is saved on this device.`,
+          already: "✅ You completed this mission before, and that record stays safe.",
+          failed: "Your browser would not let me save your progress, so the mission may not show as complete. You still did it!",
+          notmet: "Almost! Go back and finish every step so the mission can count as complete."
+        }, cfg.messages || {});
+        const good = result === "saved" || result === "already";
+        note.textContent = msgs[result];
+        if (!cfg.plainNote) note.className = "m5-status " + (good ? "is-good" : "is-warn");
+      }
       // The way on to the next mission appears once this one is on record
-      const nextLink = $("next-mission");
+      const nextLink = $("nextMission");
       if (nextLink) nextLink.hidden = !(result === "saved" || result === "already");
     }
 
     function renderStep(moveFocus) {
+      // A mission may refuse to celebrate until it is really earned (it sends the learner back instead)
+      if (state.step === last && cfg.canCelebrate && !cfg.canCelebrate(ctx)) {
+        state.step = last - 1;
+        state.maxStep = Math.min(state.maxStep, last - 1);
+      }
       const step = state.step;
       panels.forEach((pn, i) => pn.classList.toggle("active", i === step));
       pills.forEach((b, i) => {
@@ -156,13 +194,26 @@
         b.disabled = i > state.maxStep;
         if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
       });
-      setPixel(cfg.pixel[step].expr, cfg.pixel[step].html);
+      const pix = cfg.pixel[step];
+      setPixel(pix.expr, pix.html);
+      const speech = $("pixelSpeech");
+      if (speech && cfg.pixelLive) speech.setAttribute("aria-live", cfg.pixelLive(step));
       prevBtn.disabled = step === 0;
-      nextBtn.hidden = step === LAST_STEP;
-      nextBtn.textContent = cfg.steps[step].next;
       showHint("");
       cfg.render(step, ctx);
-      if (step === LAST_STEP) renderCelebrateNote();
+      if (step === last) renderCelebrateNote();
+
+      // Continue button: hidden on the last step unless the mission leads on to another page from there
+      const label = cfg.steps[step].next;
+      if (step === last) {
+        const f = cfg.finalNext ? cfg.finalNext(ctx) : null;
+        nextBtn.hidden = !f;
+        if (f) nextBtn.textContent = f.label;
+      } else {
+        nextBtn.hidden = false;
+        nextBtn.textContent = typeof label === "function" ? label(ctx) : label;
+      }
+      if (cfg.afterRender) cfg.afterRender(step, ctx);
       refreshGate();
       save();
 
@@ -176,25 +227,25 @@
     }
 
     function go(step, moveFocus) {
-      state.step = Math.max(0, Math.min(LAST_STEP, step));
+      state.step = Math.max(0, Math.min(last, step));
       if (state.step > state.maxStep) state.maxStep = state.step;
       renderStep(moveFocus !== false);
     }
 
     // ---- quests ----
     const questsBox = $("quests");
-    const questCount = $("quest-count");
+    const questCount = $("questCount");
     const questEls = [];
 
     function renderQuestCount() {
       if (!questCount) return;
       const n = state.quests.filter(Boolean).length;
-      questCount.textContent = n === cfg.quests.length ? `✅ All ${cfg.quests.length} quests solved!` : `${n} of ${cfg.quests.length} quests solved.`;
-      questCount.classList.toggle("is-good", n === cfg.quests.length);
+      questCount.textContent = n === quests.length ? `✅ All ${quests.length} quests solved!` : `${n} of ${quests.length} quests solved.`;
+      questCount.classList.toggle("is-good", n === quests.length);
     }
 
     function paintQuest(qi) {
-      const q = cfg.quests[qi];
+      const q = quests[qi];
       const { buttons, fb } = questEls[qi];
       if (!state.quests[qi]) return;
       buttons.forEach((b, oi) => {
@@ -206,7 +257,7 @@
     }
 
     function answer(qi, oi) {
-      const q = cfg.quests[qi];
+      const q = quests[qi];
       const { buttons, fb } = questEls[qi];
       if (state.quests[qi]) return;
       if (oi === q.answer) {
@@ -223,13 +274,12 @@
       renderQuestCount();
       save();
       refreshGate();
-      if (state.step === 2) showHint("");
     }
 
     function buildQuests() {
       if (!questsBox) return;
       questsBox.textContent = "";
-      cfg.quests.forEach((q, qi) => {
+      quests.forEach((q, qi) => {
         const box = el("div", "challenge-box");
         box.appendChild(el("p", "m3-quest-title", q.title));
         box.appendChild(el("p", "challenge-question", q.question));
@@ -254,17 +304,19 @@
     const ctx = {
       state,
       get data() { return state.data; },
+      get step() { return state.step; },
+      get maxStep() { return state.maxStep; },
       save,
       refreshGate,
       setPixel,
       showHint,
       go,
+      done: () => !!readDone(),
       /** Call after the learner changes something in a live activity */
       changed(pixelExpr, pixelHtml) {
         if (pixelHtml) setPixel(pixelExpr || "happy", pixelHtml);
         save();
         refreshGate();
-        if (state.step === 1 || state.step === 3) showHint("");
       },
       clampInt,
       cleanText,
@@ -272,29 +324,39 @@
     };
 
     nextBtn.addEventListener("click", () => {
+      if (state.step === last) {
+        const f = cfg.finalNext ? cfg.finalNext(ctx) : null;
+        if (!f) return;
+        try { localStorage.removeItem(cfg.stateKey); } catch (e) { /* nothing to remove */ }
+        window.location.href = f.href;
+        return;
+      }
+      if (cfg.beforeNext && cfg.beforeNext(state.step, ctx) === false) return;
       const why = gateText(state.step);
       if (why) { showHint(why); return; }
       go(state.step + 1);
     });
-    prevBtn.addEventListener("click", () => go(state.step - 1));
-    pills.forEach((b, i) => b.addEventListener("click", () => { if (!b.disabled) go(i); }));
+    prevBtn.addEventListener("click", () => { if (state.step > 0) go(state.step - 1); });
+    pills.forEach((b, i) => b.addEventListener("click", () => { if (i <= state.maxStep) go(i); }));
 
     const leave = $("leave");
     if (leave) leave.addEventListener("click", () => { try { localStorage.removeItem(cfg.stateKey); } catch (e) { /* nothing to remove */ } });
 
     // ---- start ----
-    const banner = $("done-banner");
-    if (readDone() && banner) {
-      banner.textContent = "🎉 You already completed this mission. You can replay it any time. Your first completion stays recorded.";
+    const banner = $("banner");
+    const before = readDone();
+    if (before && banner) {
+      banner.textContent = cfg.bannerText ? cfg.bannerText(before)
+        : "🎉 You already completed this mission. You can replay it any time. Your first completion stays recorded.";
       banner.hidden = false;
     }
     buildQuests();
-    cfg.quests.forEach((q, i) => paintQuest(i));
+    quests.forEach((q, i) => paintQuest(i));
     renderQuestCount();
     cfg.init(ctx);
     renderStep(false);
     return ctx;
   }
 
-  window.CurioMission = Object.freeze({ start, LAST_STEP });
+  window.CurioMission = Object.freeze({ start });
 })();
