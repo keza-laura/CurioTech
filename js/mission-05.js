@@ -4,20 +4,23 @@
 // A guided, independent project: Idea -> Plan -> Build -> Experiment -> Save -> Celebrate.
 // The building happens in the Creator's Playground, and saving uses the existing My Projects feature
 // (window.CurioProjects from js/projects.js). This page never saves projects itself.
+// The shared engine (js/mission-kit.js) runs the steps, pills, Pixel, saving and the completion record;
+// this file holds the plan form, the checks on the saved project and the Playground hand-off.
 //
 // COMPLETION (localStorage "curiotech_mission_05_completed"):
 //   { v: 1, done: true, completedAt, projectId, projectName }
-//   Written ONLY when the learner presses "Finish the mission" on the Save step AND, at that moment, a
-//   project exists that
+//   Written ONLY on the celebration step AND, at that moment, a project exists that
 //     1. was saved while this attempt of the mission was running (its createdAt is not before the moment
 //        the attempt began, so an old project cannot count and no project is overwritten), and
 //     2. has some HTML, and is not just the untouched Playground starter code.
-//   Opening the Playground, visiting the celebration step or ticking a box never completes the mission.
-//   An existing record is never overwritten, and this file never reads or writes Mission 01's record.
+//   The celebration step is only reached through "Finish the mission" on the Save step, which looks for that
+//   project first. Opening the Playground, ticking a box or going back never completes the mission.
+//   An existing record is never overwritten, and this file never reads or writes another mission's record.
 //
-// In-progress state (localStorage "curiotech_mission_05_progress") remembers the step, the
-// idea, the plan and the attempt's start time, so the learner can go to the Playground and come back,
-// or close the tab and carry on later. Leaving through the map ends the attempt.
+// In-progress state (localStorage "curiotech_mission_05_progress") remembers the step, the idea, the plan
+// and the attempt's start time, so the learner can go to the Playground and come back, or close the tab and
+// carry on later. Leaving through the map ends the attempt. The Playground's "Back to Mission 05" bar
+// reads this record (step, completed and returnLabel) and never writes it.
 // ==========================================================================
 
 (function () {
@@ -27,7 +30,7 @@
   const DONE_KEY = "curiotech_mission_05_completed";
   const MAX_IDEA_CHARS = 60;
   const MAX_NAME_CHARS = 40;
-  const LAST_STEP = 5;
+
 
   // The Playground's own starter code. These MUST stay identical to STARTER_HTML / STARTER_CSS / STARTER_JS in
   // js/playground.js: they are only used to tell an untouched starter project from the learner's own work.
@@ -131,11 +134,6 @@
 
   // ---- page elements ----
   const $ = (id) => document.getElementById(id);
-  const panels = Array.from(document.querySelectorAll(".stage-panel"));
-  const pills = Array.from(document.querySelectorAll(".step-pill"));
-  const prevBtn = $("m5-prev");
-  const nextBtn = $("m5-next");
-  const hintEl = $("m5-hint");
   const ideasHost = $("m5-ideas");
   const ownIdea = $("m5-own-idea");
   const nameInput = $("m5-name");
@@ -145,32 +143,34 @@
   const triedBox = $("m5-tried");
   const checkBtn = $("m5-check");
   const saveStatus = $("m5-save-status");
-  const doneBanner = $("m5-done-banner");
-  if (!panels.length || !prevBtn || !nextBtn || !ideasHost || !nameInput || !purposeSel) return;
+  if (!ideasHost || !nameInput || !purposeSel || !$("m5-next")) return;
 
-  // ---- state ----
   const cleanText = (v, max) => (typeof v === "string"
     ? v.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim().slice(0, max)
     : "");
 
-  function freshState() {
+  function el(tag, className, text) {
+    const e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  // ---- the learner's plan, kept in the engine's state (ctx.data) ----
+  function freshData() {
     return {
-      v: 1, step: 0, maxStep: 0, startedAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
       ideaId: "", ideaText: "", name: "", purpose: "", contents: [],
-      built: false, tried: false, completed: false, projectId: "", projectName: "", returnLabel: ""
+      built: false, tried: false, completed: false, projectId: "", projectName: "",
+      returnLabel: ""          // read by the Playground's "Back to Mission 05" bar
     };
   }
 
-  /** A saved state, checked and trimmed; null when it is missing or unusable. */
-  function readState() {
-    let d;
-    try { d = JSON.parse(localStorage.getItem(STATE_KEY)); } catch (e) { return null; }
-    if (!d || typeof d !== "object" || d.v !== 1 || isNaN(Date.parse(d.startedAt))) return null;
-    const s = freshState();
-    const step = Number.isInteger(d.step) ? Math.min(LAST_STEP, Math.max(0, d.step)) : 0;
-    s.maxStep = Number.isInteger(d.maxStep) ? Math.min(LAST_STEP, Math.max(step, d.maxStep)) : step;
-    s.step = step;
-    s.startedAt = new Date(Date.parse(d.startedAt)).toISOString();
+  /** Saved data, checked and trimmed. */
+  function cleanData(d) {
+    const s = freshData();
+    if (!d || typeof d !== "object") return s;
+    if (!isNaN(Date.parse(d.startedAt))) s.startedAt = new Date(Date.parse(d.startedAt)).toISOString();
     s.ideaId = IDEAS.some(i => i.id === d.ideaId) ? d.ideaId : "";
     s.ideaText = cleanText(d.ideaText, MAX_IDEA_CHARS);
     s.name = cleanText(d.name, MAX_NAME_CHARS);
@@ -181,37 +181,12 @@
     s.completed = d.completed === true;
     s.projectId = typeof d.projectId === "string" ? d.projectId.slice(0, 40) : "";
     s.projectName = cleanText(d.projectName, MAX_NAME_CHARS);
+    s.returnLabel = typeof d.returnLabel === "string" ? d.returnLabel.slice(0, 60) : "";
     return s;
   }
 
-  let state = readState() || freshState();
-
-  function saveState() {
-    state.returnLabel = `Step ${state.step + 1} of 6: ${STEPS[state.step].name}`;   // shown by the Playground's "Back to Mission 05" bar
-    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: the page still works */ }
-  }
-
-  // ---- completion record (localStorage, never overwritten, never Mission 01's key) ----
-  function readDone() {
-    try {
-      const d = JSON.parse(localStorage.getItem(DONE_KEY));
-      if (d && d.v === 1 && d.done === true) return d;
-    } catch (e) { /* missing, corrupt or unavailable: not complete */ }
-    return null;
-  }
-
-  /** { ok, existed }: ok is false when the browser would not save it. */
-  function writeDone(project) {
-    if (readDone()) return { ok: true, existed: true };
-    try {
-      localStorage.setItem(DONE_KEY, JSON.stringify({
-        v: 1, done: true, completedAt: new Date().toISOString(), projectId: project.id, projectName: project.name
-      }));
-      return { ok: true, existed: false };
-    } catch (e) {
-      return { ok: false, existed: false };
-    }
-  }
+  let ctx = null;                 // set by CurioMission.start below
+  const data = () => ctx.data;
 
   // ---- checking the learner's saved project ----
   function isStarterOnly(p) {
@@ -223,7 +198,7 @@
     const api = window.CurioProjects;
     if (!api || !api.isAvailable()) return { kind: "unavailable" };
     const list = api.list();   // newest first
-    const began = Date.parse(state.startedAt) || 0;
+    const began = Date.parse(data().startedAt) || 0;
     const mine = list.filter(p => Date.parse(p.createdAt) >= began);
     if (mine.length === 0) {
       if (list.length >= api.MAX_PROJECTS) return { kind: "full", count: list.length };
@@ -251,59 +226,38 @@
     }
   }
 
-  // ---- small helpers ----
-  function setPixel(expr, html) {
-    const speech = $("m5-pixel-speech");
-    const avatar = $("m5-pixel-avatar");
-    const tag = $("m5-pixel-tag");
-    if (speech && html) speech.innerHTML = html;
-    if (avatar) {
-      avatar.setAttribute("data-expression", expr);
-      avatar.setAttribute("aria-label", `Pixel Mascot (${expr})`);
-    }
-    if (tag) {
-      tag.textContent = expr.charAt(0).toUpperCase() + expr.slice(1);
-      tag.className = `pixel-expression-pill expr-pill-${expr}`;
-    }
-  }
-
-  function el(tag, className, text) {
-    const e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-  }
-
+  // ---- small helpers about the plan ----
   const nameOk = (name) => {
     const n = cleanText(name, 200);
     return n !== "" && Array.from(n).length <= MAX_NAME_CHARS;
   };
 
   const ideaLabel = () => {
-    const idea = IDEAS.find(i => i.id === state.ideaId);
+    const idea = IDEAS.find(i => i.id === data().ideaId);
     if (!idea) return "";
-    return idea.id === "own" ? state.ideaText : idea.label.replace(/^\S+\s/, "");
+    return idea.id === "own" ? data().ideaText : idea.label.replace(/^\S+\s/, "");
   };
 
-  const ideaOk = () => state.ideaId !== "" && (state.ideaId !== "own" || state.ideaText.length >= 2);
+  const ideaOk = () => data().ideaId !== "" && (data().ideaId !== "own" || data().ideaText.length >= 2);
 
-  const purposeLabel = () => { const p = PURPOSES.find(x => x.id === state.purpose); return p ? p.label : ""; };
+  const purposeLabel = () => { const p = PURPOSES.find(x => x.id === data().purpose); return p ? p.label : ""; };
 
   function suggestedName() {
-    const idea = IDEAS.find(i => i.id === state.ideaId);
+    const idea = IDEAS.find(i => i.id === data().ideaId);
     if (!idea) return "";
     if (idea.id !== "own") return idea.name;
-    return Array.from(state.ideaText.replace(/\b\w/g, c => c.toUpperCase())).slice(0, MAX_NAME_CHARS).join("").trim();
+    return Array.from(data().ideaText.replace(/\b\w/g, c => c.toUpperCase())).slice(0, MAX_NAME_CHARS).join("").trim();
   }
 
   function planCard(host) {
     host.textContent = "";
     host.appendChild(el("h3", "m5-plan-title", "Your plan"));
+    const d = data();
     const rows = [
       ["Idea", ideaLabel() || "—"],
-      ["Project name", state.name || "—"],
+      ["Project name", d.name || "—"],
       ["For", purposeLabel() || "—"],
-      ["On my page", state.contents.length ? CONTENTS.filter(c => state.contents.includes(c.id)).map(c => c.label).join(", ") : "—"]
+      ["On my page", d.contents.length ? CONTENTS.filter(c => d.contents.includes(c.id)).map(c => c.label).join(", ") : "—"]
     ];
     rows.forEach(r => {
       const p = el("p", "m5-plan-row");
@@ -313,80 +267,10 @@
     });
   }
 
-  // ---- gates: what must be true before Continue works ----
+  // ---- the Save step: look for the saved project ----
   let lastEval = null;
 
-  function gateText(step) {
-    switch (step) {
-      case 0: return ideaOk() ? "" : "Pick an idea first. If you choose “My own idea”, type it in the box.";
-      case 1: return nameOk(state.name) && state.purpose ? "" : "Give your project a name (up to 40 characters) and choose what your page is for.";
-      case 2: return state.built ? "" : "Tick the box once you've opened the Playground and started building.";
-      case 3: return state.tried ? "" : "Tick the box once you've run your code and looked at your preview.";
-      case 4: return lastEval && lastEval.kind === "ok" ? "" : (lastEval ? describe(lastEval).text : "Press “Check my saved project” first.");
-      default: return "";
-    }
-  }
-
-  let hintFlip = false;
-  function showHint(text) {
-    if (!hintEl) return;
-    if (!text) { hintEl.textContent = ""; hintEl.hidden = true; return; }
-    hintFlip = !hintFlip;
-    hintEl.textContent = text + (hintFlip ? " " : "");   // an invisible change lets a repeated message be announced again
-    hintEl.hidden = false;
-  }
-
-  // ---- showing the current step ----
-  function renderStep(moveFocus) {
-    const step = state.step;
-    panels.forEach((p, i) => p.classList.toggle("active", i === step));
-    pills.forEach((b, i) => {
-      b.classList.toggle("active", i === step);
-      b.classList.toggle("completed", i < step && i <= state.maxStep);
-      b.disabled = i > state.maxStep;
-      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
-    });
-    const pix = PIXEL[step];
-    setPixel(pix.expr, pix.html);
-
-    prevBtn.disabled = step === 0;
-    nextBtn.hidden = step === LAST_STEP;
-    nextBtn.textContent = STEPS[step].next;
-    showHint("");
-
-    if (step === 1 && !nameInput.value) {
-      const s = suggestedName();
-      if (s) { nameInput.value = s; state.name = cleanText(s, MAX_NAME_CHARS); }
-    }
-    if (step === 2) planCard($("m5-plan-card-build"));
-    if (step === 4) { planCard($("m5-plan-card-save")); refreshSave(false); }
-    if (step === 5) renderCelebrate();
-    refreshGate();
-    saveState();
-
-    if (moveFocus) {
-      const h = panels[step].querySelector(".stage-title, .celebrate-title");
-      if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
-      const card = document.querySelector(".mission-card");
-      const calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (card && card.scrollIntoView) card.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
-    }
-  }
-
-  function refreshGate() {
-    const locked = state.step < LAST_STEP && gateText(state.step) !== "";
-    if (locked) nextBtn.setAttribute("aria-disabled", "true"); else nextBtn.removeAttribute("aria-disabled");
-    nextBtn.classList.toggle("is-locked", locked);
-  }
-
-  function go(step, moveFocus) {
-    state.step = Math.max(0, Math.min(LAST_STEP, step));
-    if (state.step > state.maxStep) state.maxStep = state.step;
-    renderStep(moveFocus !== false);
-  }
-
-  // ---- step 5: look for the saved project ----
-  function refreshSave(announce) {
+  function refreshSave() {
     lastEval = evaluate();
     const d = describe(lastEval);
     if (saveStatus) {
@@ -394,63 +278,8 @@
       saveStatus.classList.toggle("is-good", d.good);
       saveStatus.classList.toggle("is-warn", !d.good);
     }
-    refreshGate();
+    if (ctx) ctx.refreshGate();
     return lastEval;
-  }
-
-  // ---- finishing ----
-  function finish() {
-    const ev = refreshSave(true);
-    if (ev.kind !== "ok") { showHint(gateText(4)); return; }
-    const w = writeDone(ev.project);
-    state.completed = true;
-    state.projectId = ev.project.id;
-    state.projectName = ev.project.name;
-    completeMessage = w.ok ? (w.existed ? "existed" : "saved") : "failed";
-    go(5);
-  }
-
-  let completeMessage = "";   // what happened when this page wrote the record ("" after a reload)
-
-  function renderCelebrate() {
-    // Never trust the screen alone: if the record is missing, make it now, and only with a real saved project.
-    let record = readDone();
-    if (!record && state.completed) {
-      const ev = evaluate();
-      if (ev.kind !== "ok") {
-        state.completed = false;   // nothing real to celebrate: back to the Save step
-        state.step = 4;
-        state.maxStep = Math.min(state.maxStep, 4);
-        renderStep(false);
-        return;
-      }
-      const w = writeDone(ev.project);
-      completeMessage = w.ok ? "saved" : "failed";
-      state.projectId = ev.project.id;
-      state.projectName = ev.project.name;
-      record = readDone();
-    }
-    $("m5-sum-project").textContent = state.projectName || (record && record.projectName) || "Your project";
-    $("m5-sum-idea").textContent = ideaLabel() || "Your own idea";
-
-    let text;
-    let good = true;
-    if (completeMessage === "failed" || !record) {
-      text = "You finished Mission 05! This browser wouldn't let me save that, so the mission may not show as complete later.";
-      good = false;
-    } else if (completeMessage === "existed") {
-      text = "✅ You finished Mission 05 again! Your first completion stays recorded.";
-    } else if (completeMessage === "saved") {
-      text = "✅ Saved! Mission 05 is recorded as complete on this device.";
-    } else {
-      text = "✅ Mission 05 is recorded as complete on this device.";
-    }
-    const note = $("m5-complete-note");
-    note.textContent = text;
-    note.classList.toggle("is-good", good);
-    note.classList.toggle("is-warn", !good);
-    const finish = $("m5-next-mission");   // the end of the adventure: see everything on the dashboard
-    if (finish) finish.hidden = !good;
   }
 
   // ---- building the choice lists ----
@@ -488,91 +317,148 @@
     contentsHost.appendChild(label);
   });
 
-  // put saved values back into the fields
+  /** Puts saved values back into the fields. */
   function fillFields() {
-    const radio = ideasHost.querySelector(`input[value="${state.ideaId}"]`);
+    const d = data();
+    const radio = ideasHost.querySelector(`input[value="${d.ideaId}"]`);
     if (radio) radio.checked = true;
-    ownIdea.value = state.ideaText;
-    ownIdea.disabled = state.ideaId !== "own";
-    nameInput.value = state.name;
-    purposeSel.value = state.purpose;
-    contentsHost.querySelectorAll("input").forEach(i => { i.checked = state.contents.includes(i.value); });
-    builtBox.checked = state.built;
-    triedBox.checked = state.tried;
+    ownIdea.value = d.ideaText;
+    ownIdea.disabled = d.ideaId !== "own";
+    nameInput.value = d.name;
+    purposeSel.value = d.purpose;
+    contentsHost.querySelectorAll("input").forEach(i => { i.checked = d.contents.includes(i.value); });
+    builtBox.checked = d.built;
+    triedBox.checked = d.tried;
   }
 
-  // ---- events ----
-  ideasHost.addEventListener("change", (e) => {
-    if (!e.target || e.target.name !== "m5-idea") return;
-    state.ideaId = e.target.value;
-    ownIdea.disabled = state.ideaId !== "own";
-    if (state.ideaId === "own") ownIdea.focus();
-    showHint("");
-    refreshGate();
-    saveState();
-  });
+  // ---- the engine's mission description ----
+  const MISSION = {
+    prefix: "m5",
+    name: "Mission 05",
+    stateKey: STATE_KEY,
+    doneKey: DONE_KEY,
+    panelSelector: ".stage-panel",
+    steps: STEPS,
+    pixel: PIXEL,
+    quests: [],
+    freshData,
+    cleanData,
 
-  ownIdea.addEventListener("input", () => {
-    state.ideaText = cleanText(ownIdea.value, MAX_IDEA_CHARS);
-    refreshGate();
-    saveState();
-  });
+    // What must be true before Continue works
+    gate(step) {
+      const d = data();
+      switch (step) {
+        case 0: return ideaOk() ? "" : "Pick an idea first. If you choose “My own idea”, type it in the box.";
+        case 1: return nameOk(d.name) && d.purpose ? "" : "Give your project a name (up to 40 characters) and choose what your page is for.";
+        case 2: return d.built ? "" : "Tick the box once you've opened the Playground and started building.";
+        case 3: return d.tried ? "" : "Tick the box once you've run your code and looked at your preview.";
+        case 4: return lastEval && lastEval.kind === "ok" ? "" : (lastEval ? describe(lastEval).text : "Press “Check my saved project” first.");
+        default: return "";
+      }
+    },
 
-  nameInput.addEventListener("input", () => {
-    state.name = cleanText(nameInput.value, MAX_NAME_CHARS);
-    nameInput.removeAttribute("aria-invalid");
-    refreshGate();
-    saveState();
-  });
+    // The mission counts only with a real project saved after this attempt began (checked again at that moment)
+    met() { return evaluate().kind === "ok"; },
+    recordExtra() {
+      const ev = evaluate();
+      return ev.kind === "ok" ? { projectId: ev.project.id, projectName: ev.project.name } : {};
+    },
+    // Never celebrate on the screen alone: without a real saved project the learner goes back to the Save step
+    canCelebrate() { return ctx.done() || evaluate().kind === "ok"; },
 
-  purposeSel.addEventListener("change", () => {
-    state.purpose = purposeSel.value;
-    refreshGate();
-    saveState();
-  });
+    beforeSave() {
+      const step = ctx.step;
+      data().returnLabel = `Step ${step + 1} of 6: ${STEPS[step].name}`;   // shown by the Playground's "Back to Mission 05" bar
+    },
 
-  contentsHost.addEventListener("change", () => {
-    state.contents = Array.from(contentsHost.querySelectorAll("input:checked")).map(i => i.value);
-    saveState();
-  });
+    // Pressing Continue on the Save step looks for the project first
+    beforeNext(step) {
+      if (step === 1 && !nameOk(data().name)) { nameInput.setAttribute("aria-invalid", "true"); }
+      if (step === 4) refreshSave();
+      return true;
+    },
 
-  builtBox.addEventListener("change", () => { state.built = builtBox.checked; showHint(""); refreshGate(); saveState(); });
-  triedBox.addEventListener("change", () => { state.tried = triedBox.checked; showHint(""); refreshGate(); saveState(); });
+    messages: {
+      saved: "✅ Saved! Mission 05 is recorded as complete on this device.",
+      already: "✅ Mission 05 is recorded as complete on this device.",
+      failed: "You finished Mission 05! This browser wouldn't let me save that, so the mission may not show as complete later."
+    },
 
-  nextBtn.addEventListener("click", () => {
-    const step = state.step;
-    if (step === 4) { finish(); return; }
-    const need = gateText(step);
-    if (need) {
-      showHint(need);
-      if (step === 1 && !nameOk(state.name)) { nameInput.setAttribute("aria-invalid", "true"); nameInput.focus(); }
-      return;
+    bannerText(record) {
+      return `🎉 You already completed this mission with “${record.projectName}”. You can make another project any time. Your first completion stays recorded.`;
+    },
+
+    init(c) {
+      ctx = c;
+      fillFields();
+
+      // ---- events ----
+      ideasHost.addEventListener("change", (e) => {
+        if (!e.target || e.target.name !== "m5-idea") return;
+        data().ideaId = e.target.value;
+        ownIdea.disabled = data().ideaId !== "own";
+        if (data().ideaId === "own") ownIdea.focus();
+        ctx.changed();
+      });
+
+      ownIdea.addEventListener("input", () => {
+        data().ideaText = cleanText(ownIdea.value, MAX_IDEA_CHARS);
+        ctx.changed();
+      });
+
+      nameInput.addEventListener("input", () => {
+        data().name = cleanText(nameInput.value, MAX_NAME_CHARS);
+        nameInput.removeAttribute("aria-invalid");
+        ctx.changed();
+      });
+
+      purposeSel.addEventListener("change", () => {
+        data().purpose = purposeSel.value;
+        ctx.changed();
+      });
+
+      contentsHost.addEventListener("change", () => {
+        data().contents = Array.from(contentsHost.querySelectorAll("input:checked")).map(i => i.value);
+        ctx.changed();
+      });
+
+      builtBox.addEventListener("change", () => { data().built = builtBox.checked; ctx.changed(); });
+      triedBox.addEventListener("change", () => { data().tried = triedBox.checked; ctx.changed(); });
+
+      if (checkBtn) checkBtn.addEventListener("click", () => { refreshSave(); ctx.showHint(""); });
+
+      // Coming back from the Playground (or another tab): look again, so the learner sees their project at once.
+      const recheck = () => { if (ctx.step === 4) refreshSave(); };
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") recheck(); });
+      window.addEventListener("focus", recheck);
+      window.addEventListener("storage", (e) => { if (e.key === null || (window.CurioProjects && e.key === window.CurioProjects.KEY)) recheck(); });
+    },
+
+    render(step) {
+      const d = data();
+      if (step === 1 && !nameInput.value) {
+        const s = suggestedName();
+        if (s) { nameInput.value = s; d.name = cleanText(s, MAX_NAME_CHARS); }
+      }
+      if (step === 2) planCard($("m5-plan-card-build"));
+      if (step === 4) { planCard($("m5-plan-card-save")); refreshSave(); }
+      if (step === 5) {
+        const ev = evaluate();
+        if (ev.kind === "ok") { d.completed = true; d.projectId = ev.project.id; d.projectName = ev.project.name; }
+        const record = readRecord();
+        $("m5-sum-project").textContent = d.projectName || (record && record.projectName) || "Your project";
+        $("m5-sum-idea").textContent = ideaLabel() || "Your own idea";
+      }
     }
-    go(step + 1);
-  });
+  };
 
-  prevBtn.addEventListener("click", () => { if (state.step > 0) go(state.step - 1); });
-
-  pills.forEach((b, i) => b.addEventListener("click", () => { if (i <= state.maxStep) go(i); }));
-
-  if (checkBtn) checkBtn.addEventListener("click", () => { refreshSave(true); showHint(""); });
-
-  // Coming back from the Playground (or another tab): look again, so the learner sees their project at once.
-  const recheck = () => { if (state.step === 4) refreshSave(false); };
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") recheck(); });
-  window.addEventListener("focus", recheck);
-  window.addEventListener("storage", (e) => { if (e.key === null || (window.CurioProjects && e.key === window.CurioProjects.KEY)) recheck(); });
-
-  // Leaving through the map ends this attempt (a new visit starts a fresh one). The completion record stays.
-  const leave = $("m5-leave");
-  if (leave) leave.addEventListener("click", () => { try { localStorage.removeItem(STATE_KEY); } catch (e) { /* nothing to remove */ } });
-
-  // ---- start ----
-  const before = readDone();
-  if (before && doneBanner) {
-    doneBanner.textContent = `🎉 You already completed this mission with “${before.projectName}”. You can make another project any time. Your first completion stays recorded.`;
-    doneBanner.hidden = false;
+  function readRecord() {
+    try {
+      const r = JSON.parse(localStorage.getItem(DONE_KEY));
+      return r && r.v === 1 && r.done === true ? r : null;
+    } catch (e) { return null; }
   }
-  fillFields();
-  renderStep(false);
+
+  // Started last, so every const above exists before the first step is painted
+  CurioMission.start(MISSION);
 })();

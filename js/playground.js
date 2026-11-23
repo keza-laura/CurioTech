@@ -2681,9 +2681,11 @@
     const bar = document.getElementById("pg-m5-return");
     const stepEl = document.getElementById("pg-m5-return-step");
     if (!bar) return;
+    // The mission engine keeps { v, step, maxStep, quests, data: { completed, returnLabel, ... } }
     const d = readMissionProgress();
-    if (!d || d.v !== 1 || d.completed === true || !Number.isInteger(d.step)) return;
-    if (stepEl) stepEl.textContent = typeof d.returnLabel === "string" ? d.returnLabel.slice(0, 60) : "";
+    const info = d && d.data && typeof d.data === "object" ? d.data : null;
+    if (!d || d.v !== 1 || !info || info.completed === true || !Number.isInteger(d.step)) return;
+    if (stepEl) stepEl.textContent = typeof info.returnLabel === "string" ? info.returnLabel.slice(0, 60) : "";
     bar.hidden = false;
   }
 
