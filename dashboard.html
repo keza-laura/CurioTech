@@ -25,7 +25,7 @@
         <a href="playground.html" class="nav-link">Playground</a>
         <a href="#my-progress" class="nav-link">My Progress</a>
         <a href="#portfolio" class="nav-link">Portfolio</a>
-        <a href="index.html" class="nav-logout-btn">Logout</a>
+        <a href="index.html" class="nav-home-btn">Home</a>
       </nav>
     </div>
   </header>
@@ -54,7 +54,6 @@
           
           <!-- Card 1: Total XP -->
           <article class="overview-card">
-            <span class="overview-icon" aria-hidden="true">✨</span>
             <span class="overview-label">Total XP</span>
             <span class="overview-value" id="dash-xp">0 XP</span>
             <span class="overview-note">Earn XP from missions and projects</span>
@@ -62,7 +61,6 @@
 
           <!-- Card 2: Current Level -->
           <article class="overview-card">
-            <span class="overview-icon" aria-hidden="true">🎯</span>
             <span class="overview-label">Current Level</span>
             <span class="overview-value" id="dash-level">Beginner</span>
             <span class="overview-note" id="dash-level-note">Starting level</span>
@@ -70,7 +68,6 @@
 
           <!-- Card 3: Missions Completed -->
           <article class="overview-card">
-            <span class="overview-icon" aria-hidden="true">📚</span>
             <span class="overview-label">Missions Completed</span>
             <span class="overview-value" id="dash-missions">0</span>
             <span class="overview-note" id="dash-missions-note">Ready to begin</span>
@@ -78,7 +75,6 @@
 
           <!-- Card 4: Achievements -->
           <article class="overview-card">
-            <span class="overview-icon" aria-hidden="true">🏆</span>
             <span class="overview-label">Achievements</span>
             <span class="overview-value" id="dash-badges">0</span>
             <span class="overview-note">Badges to unlock</span>
@@ -172,7 +168,7 @@
       <section class="dashboard-section" aria-labelledby="continue-learning-title">
         <h2 id="continue-learning-title" class="section-title" style="text-align: left; margin-bottom: 0.5rem;">Continue Learning</h2>
         <div class="empty-state-card">
-          <div class="empty-state-icon" aria-hidden="true">🚀</div>
+  
           <p class="empty-state-text" id="dash-next-text">
             Ready to start? Begin the Digital Adventure above, or jump into the Creator's Playground any time.
           </p>
@@ -191,7 +187,7 @@
 
           <!-- Badge 1: First Steps -->
           <article class="achievement-card" data-badge="first-steps">
-            <div class="achievement-icon" aria-hidden="true">🔒</div>
+            
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">First Steps</h3>
@@ -201,9 +197,19 @@
             </div>
           </article>
 
+          <!-- Badge: Structure Builder -->
+          <article class="achievement-card" data-badge="structure-builder">
+            <div class="achievement-info">
+              <div class="achievement-header">
+                <h3 class="achievement-title">Structure Builder</h3>
+                <span class="achievement-status">Locked</span>
+              </div>
+              <p class="achievement-desc">Complete Mission 02: Build the Structure.</p>
+            </div>
+          </article>
+
           <!-- Badge: City Stylist -->
           <article class="achievement-card" data-badge="city-stylist">
-            <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">City Stylist</h3>
@@ -213,9 +219,19 @@
             </div>
           </article>
 
+          <!-- Badge: Code Wizard -->
+          <article class="achievement-card" data-badge="code-wizard">
+            <div class="achievement-info">
+              <div class="achievement-header">
+                <h3 class="achievement-title">Code Wizard</h3>
+                <span class="achievement-status">Locked</span>
+              </div>
+              <p class="achievement-desc">Complete Mission 04: Bring It to Life.</p>
+            </div>
+          </article>
+
           <!-- Badge 2: Curious Mind -->
           <article class="achievement-card" data-badge="curious-mind">
-            <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">Curious Mind</h3>
@@ -227,7 +243,6 @@
 
           <!-- Badge 3: Young Creator -->
           <article class="achievement-card" data-badge="young-creator">
-            <div class="achievement-icon" aria-hidden="true">🔒</div>
             <div class="achievement-info">
               <div class="achievement-header">
                 <h3 class="achievement-title">Young Creator</h3>
@@ -272,7 +287,7 @@
           </div>
 
           <p class="demo-note-inline">
-            <em>Progress is saved in this browser on this device. Five missions make up the Adventure; three are playable so far.</em>
+            <em>Progress is saved in this browser on this device. Five missions make up the Adventure, and all five are playable.</em>
           </p>
         </div>
       </section>
@@ -285,7 +300,6 @@
         </div>
 
         <div class="portfolio-panel">
-          <div class="portfolio-icon" aria-hidden="true">🎨</div>
           <p class="portfolio-text" id="dash-portfolio-text">
             You have no saved projects yet. Build a page in the Creator's Playground and save it to see it here.
           </p>
@@ -300,7 +314,7 @@
   <!-- Site Footer -->
   <footer class="site-footer">
     <div class="container">
-      <p class="footer-text">CurioTech — Learn by doing.</p>
+      <p class="footer-text">CurioTech_ Learn by doing.</p>
     </div>
   </footer>
 

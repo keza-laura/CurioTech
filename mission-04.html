@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioTech: Mission 04 — Bring It to Life</title>
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <!-- Shared stylesheet across the CurioTech platform -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- Site Header & Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <a href="dashboard.html" class="brand" aria-label="CurioTech Dashboard">
+        <img src="assets/images/logo.png" alt="CurioTech logo" class="brand-logo">
+        <span class="brand-name">Curio<span>Tech</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Mission navigation">
+        <a href="adventure.html" class="nav-link">&larr; Adventure Map</a>
+        <a href="playground.html" class="nav-link">Creator's Playground</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="index.html" class="nav-home-btn">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Mission Workspace -->
+  <main class="dashboard-main">
+    <div class="container">
+
+      <!-- Mission Title & 6-Step Stepper -->
+      <section class="mission-header-bar" aria-label="Mission Header">
+        <div class="mission-title-box">
+          <span class="mission-dest-badge">📍 DESTINATION: JAVASCRIPT JUNGLE</span>
+          <h1 class="mission-main-title">Mission 04: Bring It to Life</h1>
+        </div>
+
+        <nav class="mission-stepper" aria-label="Mission Progress Steps">
+          <button type="button" class="step-pill active" data-step="0" aria-current="step"><span class="step-num">1</span> Discover</button>
+          <button type="button" class="step-pill" data-step="1" disabled><span class="step-num">2</span> Experiment</button>
+          <button type="button" class="step-pill" data-step="2" disabled><span class="step-num">3</span> Challenge</button>
+          <button type="button" class="step-pill" data-step="3" disabled><span class="step-num">4</span> Create</button>
+          <button type="button" class="step-pill" data-step="4" disabled><span class="step-num">5</span> Celebrate</button>
+        </nav>
+      </section>
+
+      <!-- Main Mission Card -->
+      <article class="mission-card" role="region" aria-label="Mission Content Area">
+        <p id="m4-done-banner" class="m5-done-banner" role="status" hidden></p>
+
+        <!-- Pixel Robot Companion Banner -->
+        <aside class="mission-pixel-banner" aria-label="Pixel Mascot Companion">
+          <div class="pixel-avatar-col" style="width: auto;">
+            <div id="m4-pixel-avatar" class="pixel-svg-avatar" data-expression="excited" style="width: 70px; height: 70px;" aria-label="Pixel Mascot (Expression: Excited)">
+              <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                <rect x="47" y="6" width="6" height="15" rx="3" fill="#A855F7" />
+                <rect x="7" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="85" y="44" width="8" height="20" rx="4" fill="#25202F" stroke="#A855F7" stroke-width="2" />
+                <rect x="14" y="20" width="72" height="68" rx="20" fill="#25202F" stroke="#A855F7" stroke-width="3" />
+                <path d="M 22 28 Q 50 24 78 28" stroke="rgba(216, 180, 254, 0.3)" stroke-width="2" stroke-linecap="round" fill="none" />
+                <rect x="22" y="32" width="56" height="44" rx="12" fill="#0B0B0F" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.5" />
+                <circle cx="50" cy="8" r="6" fill="#38BDF8" />
+                <circle cx="48" cy="6" r="2" fill="#FFFFFF" />
+
+                <g class="expr-happy">
+                  <circle cx="37" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="35" cy="46" r="1.5" fill="#FFFFFF" />
+                  <circle cx="63" cy="48" r="5" fill="#38BDF8" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 40 62 Q 50 70 60 62" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" fill="none" />
+                  <circle cx="30" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                  <circle cx="70" cy="56" r="2.5" fill="rgba(216, 180, 254, 0.4)" />
+                </g>
+
+                <g class="expr-thinking">
+                  <circle cx="37" cy="45" r="5.5" fill="#D8B4FE" />
+                  <circle cx="35" cy="43" r="1.5" fill="#FFFFFF" />
+                  <line x1="57" y1="50" x2="69" y2="50" stroke="#D8B4FE" stroke-width="3.5" stroke-linecap="round" />
+                  <ellipse cx="50" cy="63" rx="4.5" ry="3" fill="#D8B4FE" />
+                  <circle cx="64" cy="14" r="3" fill="#D8B4FE" />
+                  <circle cx="72" cy="7" r="4.5" fill="#D8B4FE" />
+                </g>
+
+                <g class="expr-encouraging">
+                  <path d="M 32 50 Q 37 43 42 50" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <circle cx="63" cy="48" r="5.5" fill="#FBBF24" />
+                  <circle cx="61" cy="46" r="1.5" fill="#FFFFFF" />
+                  <path d="M 42 62 Q 52 69 58 61" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                  <path d="M 38 6 Q 50 1 62 6" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" fill="none" />
+                </g>
+
+                <g class="expr-excited">
+                  <path d="M 32 51 L 37 44 L 42 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 58 51 L 63 44 L 68 51" stroke="#F472B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M 39 60 Q 50 73 61 60 Z" fill="#F472B6" stroke="#FFFFFF" stroke-width="1.5" />
+                  <path d="M 35 2 L 42 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M 65 2 L 58 7" stroke="#A855F7" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+              </svg>
+            </div>
+            <span id="m4-pixel-tag" class="pixel-expression-pill expr-pill-excited">Excited</span>
+          </div>
+
+          <div id="m4-pixel-speech" class="mission-pixel-speech" aria-live="polite">
+            <!-- Pixel's words are filled in by js/mission-04.js -->
+          </div>
+        </aside>
+
+        <!-- ================= STEP 1: DISCOVER ================= -->
+        <section id="m4-step-0" class="stage-panel active" aria-labelledby="m4-title-0">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STEP 1 OF 5</span>
+            <h2 id="m4-title-0" class="stage-title">Meet JavaScript, the brain</h2>
+            <p class="stage-description">JavaScript lets a page <strong>remember</strong> things and <strong>react</strong> to people. Three ideas are enough to start.</p>
+          </div>
+
+          <div class="m3-anatomy" aria-label="A small JavaScript program">
+<pre class="m3-code" aria-hidden="true"><span class="m3-sel">let score = 0;</span>
+
+zapButton.addEventListener(<span class="m3-prop">"click"</span>, function () {
+  <span class="m3-val">score = score + 1;</span>
+});</pre>
+            <ul class="m3-legend-list">
+              <li><span class="m3-chip m3-sel">Variable</span> <strong>let score = 0;</strong>: a named box that remembers a value.</li>
+              <li><span class="m3-chip m3-prop">Event</span> <strong>"click"</strong>: what to wait for. Here, a button press.</li>
+              <li><span class="m3-chip m3-val">Action</span> <strong>score = score + 1;</strong>: what to do each time it happens.</li>
+            </ul>
+            <p class="m5-help">Read it as: “Remember a score of 0. Every time the button is clicked, add 1 to the score.”</p>
+          </div>
+        </section>
+
+        <!-- ================= STEP 2: EXPERIMENT ================= -->
+        <section id="m4-step-1" class="stage-panel" aria-labelledby="m4-title-1">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STEP 2 OF 5</span>
+            <h2 id="m4-title-1" class="stage-title">The Zap lab</h2>
+            <p class="stage-description">Press <strong>Zap</strong> at least <strong>5 times</strong>. Then change the step size and zap again.</p>
+          </div>
+
+          <div class="m3-lab">
+            <div class="m3-stage m4-lab-stage" aria-label="The Zap counter">
+              <div class="m4-lab-box">
+                <p class="m4-score-label">Score</p>
+                <p id="m4-lab-score" class="m4-score" aria-live="polite">0</p>
+                <button type="button" id="m4-lab-zap" class="button">⚡ Zap!</button>
+              </div>
+            </div>
+
+            <div class="m3-controls">
+              <div class="m5-field">
+                <label for="m4-lab-step" class="m5-label">Step size: <code>score = score + ___</code></label>
+                <select id="m4-lab-step" class="m5-input">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <button type="button" id="m4-lab-reset" class="button button-small button-outline">↺ Reset the score</button>
+            </div>
+          </div>
+
+          <div class="m3-code-panel">
+            <p class="m3-code-title">The code behind it</p>
+            <pre id="m4-lab-code" class="m3-code" aria-live="polite"></pre>
+          </div>
+          <p id="m4-lab-count" class="m5-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- ================= STEP 3: CHALLENGE ================= -->
+        <section id="m4-step-2" class="stage-panel" aria-labelledby="m4-title-2">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STEP 3 OF 5</span>
+            <h2 id="m4-title-2" class="stage-title">Three code quests</h2>
+            <p class="stage-description">Answer all three to open the next step. You can try again as many times as you like.</p>
+          </div>
+          <div id="m4-quests"></div>
+          <p id="m4-quest-count" class="m5-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- ================= STEP 4: CREATE ================= -->
+        <section id="m4-step-3" class="stage-panel" aria-labelledby="m4-title-3">
+          <div class="stage-header">
+            <span class="stage-badge-tag">STEP 4 OF 5</span>
+            <h2 id="m4-title-3" class="stage-title">Build your own click game</h2>
+            <p class="stage-description">Set up the game, then <strong>play it until you win</strong>. Press <strong>Save my game</strong> when you love it.</p>
+          </div>
+
+          <div class="m3-lab">
+            <div class="m3-stage m4-lab-stage" aria-label="Your game">
+              <div class="m4-lab-box">
+                <p class="m4-score-label">Score</p>
+                <p id="m4-game-score" class="m4-score" aria-live="polite">0 / 20</p>
+                <div id="m4-game-bar" class="m4-bar" role="progressbar" aria-label="Progress to the goal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                  <div id="m4-game-fill" class="m4-bar-fill"></div>
+                </div>
+                <button type="button" id="m4-game-btn" class="button">Zap!</button>
+                <p id="m4-game-msg" class="m4-game-msg" role="status" aria-live="polite"></p>
+                <button type="button" id="m4-game-reset" class="button button-small button-outline">↺ Play again</button>
+              </div>
+            </div>
+
+            <div class="m3-controls">
+              <div class="m5-field">
+                <label for="m4-in-label" class="m5-label">Button words</label>
+                <input id="m4-in-label" class="m5-input" type="text" maxlength="20" autocomplete="off" value="Zap!">
+              </div>
+              <div class="m5-field">
+                <label for="m4-in-points" class="m5-label">Points per click <code>score + ___</code></label>
+                <select id="m4-in-points" class="m5-input">
+                  <option value="2">2</option>
+                  <option value="5" selected>5</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+              <div class="m5-field">
+                <label for="m4-in-goal" class="m5-label">Goal <code>const goal = ___</code></label>
+                <select id="m4-in-goal" class="m5-input">
+                  <option value="20" selected>20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+              <div class="m5-field">
+                <label for="m4-in-win" class="m5-label">Winning message</label>
+                <input id="m4-in-win" class="m5-input" type="text" maxlength="30" autocomplete="off" value="You win!">
+              </div>
+            </div>
+          </div>
+
+          <div class="m3-code-panel">
+            <p class="m3-code-title">The code behind your game</p>
+            <pre id="m4-game-code" class="m3-code" aria-live="polite"></pre>
+          </div>
+
+          <div class="m5-actions-row">
+            <button type="button" id="m4-game-save" class="button">💾 Save my game</button>
+          </div>
+          <p id="m4-game-status" class="m5-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- ================= STEP 5: CELEBRATE ================= -->
+        <section id="m4-step-4" class="stage-panel" aria-labelledby="m4-title-4">
+          <div class="celebrate-layout">
+            <span class="celebrate-trophy" aria-hidden="true">🌴</span>
+            <h2 id="m4-title-4" class="celebrate-title">You brought it to life!</h2>
+            <p class="m5-celebrate-lead">You used a variable, an event and an <code>if</code> to make a page react. That is real JavaScript!</p>
+
+            <p class="m3-code-title">Your game: <span id="m4-final-title"></span></p>
+            <pre id="m4-final-code" class="m3-code m4-final-code"></pre>
+
+            <div class="m5-summary" aria-label="What you did">
+              <p class="m5-summary-row"><span class="m5-summary-label">Zap lab</span> <span id="m4-sum-clicks"></span></p>
+              <p class="m5-summary-row"><span class="m5-summary-label">Code quests</span> <span id="m4-sum-quests"></span></p>
+            </div>
+
+            <p id="m4-complete-note" class="m5-status" role="status" aria-live="polite"></p>
+
+            <div class="m5-actions-row m5-center">
+              <a id="m4-next-mission" href="mission-05.html" class="button" hidden>Next: Mission 05, The Creator Mission &rarr;</a>
+              <a href="playground.html" class="button button-outline">Try JavaScript in the Playground 🛠️</a>
+              <a id="m4-leave" href="adventure.html" class="button button-outline">Return to Adventure Map 🧭</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Explains what is still needed to continue (filled by js/mission-kit.js) -->
+        <div class="inspect-hint-region" role="status" aria-live="polite" aria-atomic="true">
+          <p id="m4-hint" class="inspect-hint" hidden></p>
+        </div>
+
+        <!-- Mission Action Controls (Back & Continue) -->
+        <div class="mission-actions-bar">
+          <button type="button" id="m4-prev" class="button button-small button-outline" disabled>&larr; Back</button>
+          <button type="button" id="m4-next" class="button button-small" aria-describedby="m4-hint">Continue &rarr;</button>
+        </div>
+
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="brand-name">Curio<span>Tech</span></span>
+        <p class="footer-copy">CurioTech: The Digital Adventure &mdash; Empowering young minds in digital skills.</p>
+      </div>
+      <div class="footer-links">
+        <a href="adventure.html">Adventure Map</a>
+        <a href="playground.html">Creator's Playground</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Base Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/mission-kit.js"></script>
+  <script src="js/mission-04.js"></script>
+</body>
+
+</html>

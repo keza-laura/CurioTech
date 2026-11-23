@@ -24,7 +24,7 @@
       <nav class="site-nav" aria-label="Playground navigation">
         <a href="adventure.html" class="nav-link">&larr; Adventure Map</a>
         <a href="dashboard.html" class="nav-link">Dashboard</a>
-        <a href="index.html" class="nav-logout-btn">Logout</a>
+        <a href="index.html" class="nav-home-btn">Home</a>
       </nav>
     </div>
   </header>
@@ -181,7 +181,8 @@
             <div id="pg-project-confirm" class="pg-project-confirm" role="group" aria-labelledby="pg-project-confirm-text" hidden>
               <p id="pg-project-confirm-text" class="pg-project-confirm-text" tabindex="-1"></p>
               <div class="pg-project-actions">
-                <button type="button" id="pg-project-confirm-yes" class="button button-small pg-project-btn"></button>
+                <!-- The label is replaced by js/playground.js each time a question is asked -->
+                <button type="button" id="pg-project-confirm-yes" class="button button-small pg-project-btn">Yes, continue</button>
                 <button type="button" id="pg-project-confirm-no" class="button button-small button-outline pg-project-btn">Keep my work</button>
               </div>
             </div>
