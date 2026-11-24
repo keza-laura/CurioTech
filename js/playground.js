@@ -421,13 +421,21 @@
   }
 
   // ------------------------------------------------------------------------
-  // 5. Draft storage (sessionStorage only, always guarded)
+  // 5. Draft storage (always guarded)
+  //    Drafts live in localStorage so a learner who leaves and comes back finds their work.
+  //    Two one-shot markers stay in sessionStorage on purpose: the Mission 01 hand-off (must
+  //    import only once) and the run marker (a crashed run must not follow the learner into a new visit).
   // ------------------------------------------------------------------------
   let saveFailureNoted = false;
+  const SESSION_ONLY_KEYS = ["curiotech_blueprint_handoff", STORAGE_KEYS.runMarker];
+
+  function storeFor(key) {
+    return SESSION_ONLY_KEYS.indexOf(key) !== -1 ? sessionStorage : localStorage;
+  }
 
   function readDraft(key) {
     try {
-      const raw = sessionStorage.getItem(key);
+      const raw = storeFor(key).getItem(key);
       if (raw === null) return null;
       const data = JSON.parse(raw);
       return data && typeof data === "object" ? data : null;
@@ -437,12 +445,12 @@
   }
 
   function removeKey(key) {
-    try { sessionStorage.removeItem(key); } catch (e) { /* storage unavailable */ }
+    try { storeFor(key).removeItem(key); } catch (e) { /* storage unavailable */ }
   }
 
   function writeDraft(key, payload) {
     try {
-      sessionStorage.setItem(key, JSON.stringify(payload));
+      storeFor(key).setItem(key, JSON.stringify(payload));
     } catch (e) {
       if (!saveFailureNoted) {
         saveFailureNoted = true;
@@ -677,6 +685,26 @@
       jsEd.dirty = false;
     }
   }
+
+  // "Save progress" button: drafts already save as you type; this writes them right now
+  // and tells the learner so. Starter code is never written over a saved draft.
+  (function wireSaveProgress() {
+    const btn = document.getElementById("pg-save-progress-btn");
+    const status = document.getElementById("pg-save-progress-status");
+    if (!btn || !status) return;
+    btn.addEventListener("click", () => {
+      saveDirty();
+      if (htmlEd.edited) writeDraft(STORAGE_KEYS.html, { v: 1, html: htmlEd.ta.value });
+      if (cssEd.edited) writeDraft(STORAGE_KEYS.css, { v: 1, css: cssEd.ta.value, chips: chipState });
+      if (jsEd.edited) writeDraft(STORAGE_KEYS.js, { v: 1, js: jsEd.ta.value });
+      let ok = false;
+      try { ok = localStorage.getItem(STORAGE_KEYS.html) !== null || localStorage.getItem(STORAGE_KEYS.css) !== null || localStorage.getItem(STORAGE_KEYS.js) !== null; } catch (e) { ok = false; }
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      status.textContent = ok
+        ? `Progress saved at ${time}. Close the tab and come back any time: your code will be here.`
+        : "Nothing to save yet. Change some code first, or this browser is blocking saving (try Download my page).";
+    });
+  })();
 
   // render=false is used for JavaScript edits: typing JavaScript never touches the preview.
   function scheduleUpdate(immediate, render) {

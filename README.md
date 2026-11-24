@@ -225,9 +225,11 @@ All learner data stays in the learner's own browser. Nothing is sent anywhere.
 
 A completion record only counts when it reads `v: 1` and `done: true`. A missing, damaged or wrong record never shows a mission as complete and never unlocks the Creator's Lab.
 
+The Playground's working drafts (`curiotech_playground_html_draft`, `..._css_draft`, `..._js_draft`) and their baseline and open-project markers are also in `localStorage`, so they survive closing the tab.
+
 **Kept for the current tab only** (`sessionStorage`: cleared when the tab or session ends):
 
-* The Playground's working drafts (`curiotech_playground_html_draft`, `..._css_draft`, `..._js_draft`) and their run, baseline and open-project markers.
+* The Playground's run marker (`curiotech_playground_run_marker`).
 * The one-time Mission 01 blueprint hand-off to the Playground (`curiotech_blueprint_handoff`).
 
 Clearing the browser's site data erases saved projects and completion records. There is no backup or sync.
@@ -256,7 +258,7 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 * **No accounts:** CurioTech starts guests straight on the dashboard. There is no sign-in, so progress cannot follow a learner to another browser or device. The top-right button on each page is **Home** and returns to the landing page.
 * **One device only:** progress and projects live in one browser on one device. There is no cloud saving, sharing, or backend.
 * **All five missions are playable, and each one leads to the next.** The order is 01, 02, 03, 04, then 05. Each of Missions 02, 03 and 04 opens after the one before it, and Mission 05 is open to everyone but comes last. On the map, an **Up next** banner always points at the next mission. Every celebration screen has a **Next mission** button that appears once that mission is on record (Mission 05's leads to the dashboard). The mission pages do not block direct links: the map only controls what is offered.
-* **Playground drafts are per-tab:** the Playground's working drafts still live in `sessionStorage`. Saved projects are the permanent copy.
+* **Playground drafts survive leaving:** the working drafts are kept in `localStorage`, so closing the tab and coming back restores your code. A **Save progress** button saves right now and shows the time. Saved projects are still the permanent, named copies. Only the Mission 01 hand-off and the run marker stay per-tab.
 * **Playground limits:** 20,000 characters per editor, 10 saved projects, and a JavaScript output cap of 200 lines.
 
 ---
