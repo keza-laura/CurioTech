@@ -166,8 +166,8 @@
       const result = recordComplete();
       if (note) {
         const msgs = Object.assign({
-          saved: `✅ ${cfg.name} complete! It is saved on this device.`,
-          already: "✅ You completed this mission before, and that record stays safe.",
+          saved: `${cfg.name} complete! It is saved on this device.`,
+          already: "You completed this mission before, and that record stays safe.",
           failed: "Your browser would not let me save your progress, so the mission may not show as complete. You still did it!",
           notmet: "Almost! Go back and finish every step so the mission can count as complete."
         }, cfg.messages || {});
@@ -240,7 +240,7 @@
     function renderQuestCount() {
       if (!questCount) return;
       const n = state.quests.filter(Boolean).length;
-      questCount.textContent = n === quests.length ? `✅ All ${quests.length} quests solved!` : `${n} of ${quests.length} quests solved.`;
+      questCount.textContent = n === quests.length ? `All ${quests.length} quests solved!` : `${n} of ${quests.length} quests solved.`;
       questCount.classList.toggle("is-good", n === quests.length);
     }
 
@@ -263,13 +263,13 @@
       if (oi === q.answer) {
         state.quests[qi] = true;
         paintQuest(qi);
-        setPixel("excited", `<strong>Quest solved! 🎯</strong><br>${q.right}`);
+        setPixel("excited", `<strong>Quest solved!</strong><br>${q.right}`);
       } else {
         buttons[oi].classList.add("wrong");
         buttons[oi].disabled = true;
         fb.className = "challenge-feedback-box show wrong";
         fb.innerHTML = q.wrong;
-        setPixel("encouraging", `<strong>Good try! 💪</strong><br>${q.wrong}`);
+        setPixel("encouraging", `<strong>Good try!</strong><br>${q.wrong}`);
       }
       renderQuestCount();
       save();
@@ -347,7 +347,7 @@
     const before = readDone();
     if (before && banner) {
       banner.textContent = cfg.bannerText ? cfg.bannerText(before)
-        : "🎉 You already completed this mission. You can replay it any time. Your first completion stays recorded.";
+        : "You already completed this mission. You can replay it any time. Your first completion stays recorded.";
       banner.hidden = false;
     }
     buildQuests();

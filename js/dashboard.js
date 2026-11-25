@@ -65,7 +65,7 @@
     card.classList.toggle("is-unlocked", unlocked);
     var icon = card.querySelector(".achievement-icon");
     var status = card.querySelector(".achievement-status");
-    if (icon) icon.textContent = unlocked ? "🏅" : "🔒";
+    if (icon) icon.textContent = unlocked ? "✓" : "—";
     if (status) status.textContent = unlocked ? "Unlocked" : "Locked";
   }
 

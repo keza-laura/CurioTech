@@ -13,51 +13,51 @@ console.log("CurioTech Pixel Companion Engine initialized.");
 const PIXEL_MESSAGES = [
   {
     id: "welcome",
-    category: "👋 WELCOME TO THE ADVENTURE",
+    category: "WELCOME TO THE ADVENTURE",
     expression: "happy",
     expressionLabel: "Happy",
-    topicTitle: "👋 Welcome",
-    text: "<strong>BEEP-BOOP! Welcome to CurioTech: The Digital Adventure! 🤖</strong><br><br>I'm <strong>Pixel</strong>, your personal coding companion. Whether this is your very first time writing a line of code or you've dreamed of building cool websites before, I'm right here beside you to guide, encourage, and celebrate your discoveries every step of the way!"
+    topicTitle: "Welcome",
+    text: "<strong>BEEP-BOOP! Welcome to CurioTech: The Digital Adventure!</strong><br><br>I'm <strong>Pixel</strong>, your personal coding companion. Whether this is your very first time writing a line of code or you've dreamed of building cool websites before, I'm right here beside you to guide, encourage, and celebrate your discoveries every step of the way!"
   },
   {
     id: "destinations",
-    category: "🗺️ DESTINATIONS TOUR",
+    category: "DESTINATIONS TOUR",
     expression: "thinking",
     expressionLabel: "Thinking",
-    topicTitle: "🗺️ Destinations",
-    text: "<strong>Let me give you a quick tour of our digital world! 🧭</strong><br><br>Our adventure connects <strong>4 sequential biomes</strong>:<br>• <strong>HTML Island:</strong> Construct the foundational skeleton and bones of web pages.<br>• <strong>CSS City:</strong> Paint your pages with vibrant colors, fonts, and responsive layouts.<br>• <strong>JavaScript Jungle:</strong> Add brains, logic, and click reactions to your creations.<br>• <strong>Creator's Lab:</strong> The ultimate studio to build your own custom project! (HTML Island is open now. The Creator's Lab opens after Mission 01, and the Creator's Playground is open for free play any time.)"
+    topicTitle: "Destinations",
+    text: "<strong>Let me give you a quick tour of our digital world!</strong><br><br>Our adventure connects <strong>4 sequential biomes</strong>:<br>• <strong>HTML Island:</strong> Construct the foundational skeleton and bones of web pages.<br>• <strong>CSS City:</strong> Paint your pages with vibrant colors, fonts, and responsive layouts.<br>• <strong>JavaScript Jungle:</strong> Add brains, logic, and click reactions to your creations.<br>• <strong>Creator's Lab:</strong> The ultimate studio to build your own custom project! (HTML Island is open now. The Creator's Lab opens after Mission 01, and the Creator's Playground is open for free play any time.)"
   },
   {
     id: "mission-guide",
-    category: "💡 WHAT TO EXPECT FROM A MISSION",
+    category: "WHAT TO EXPECT FROM A MISSION",
     expression: "thinking",
     expressionLabel: "Thinking",
-    topicTitle: "💡 Missions Guide",
-    text: "<strong>Every mission is an active, hands-on quest! 🎯</strong><br><br>You won't just sit and read long walls of text. We learn by doing: <em>Discover → Explore → Experiment → Challenge → Create → Celebrate</em>! You'll solve interactive puzzles, experiment with live code, and complete short knowledge checks. There are no timers, so learn comfortably at your own pace."
+    topicTitle: "Missions Guide",
+    text: "<strong>Every mission is an active, hands-on quest!</strong><br><br>You won't just sit and read long walls of text. We learn by doing: <em>Discover → Explore → Experiment → Challenge → Create → Celebrate</em>! You'll solve interactive puzzles, experiment with live code, and complete short knowledge checks. There are no timers, so learn comfortably at your own pace."
   },
   {
     id: "encouragement",
-    category: "✨ PIXEL'S CODING WISDOM",
+    category: "PIXEL'S CODING WISDOM",
     expression: "encouraging",
     expressionLabel: "Encouraging",
-    topicTitle: "✨ Encouragement",
-    text: "<strong>Remember: Mistakes are how real engineers learn! 💡</strong><br><br>If something doesn't work on the first try, never feel discouraged. Even senior software engineers run into bugs every single day! You cannot break anything here. Treat every mistake like a friendly clue on a treasure hunt, and don't hesitate to experiment boldly."
+    topicTitle: "Encouragement",
+    text: "<strong>Remember: Mistakes are how real engineers learn!</strong><br><br>If something doesn't work on the first try, never feel discouraged. Even senior software engineers run into bugs every single day! You cannot break anything here. Treat every mistake like a friendly clue on a treasure hunt, and don't hesitate to experiment boldly."
   },
   {
     id: "navigation-hint",
-    category: "🔑 HELPFUL NAVIGATION HINT",
+    category: "HELPFUL NAVIGATION HINT",
     expression: "encouraging",
     expressionLabel: "Encouraging",
-    topicTitle: "🔑 Navigation Hint",
-    text: "<strong>Curious about what lies ahead on the map? 🏝️</strong><br><br>Try <strong>clicking on any destination card</strong> on the interactive map below (or highlight it using your Tab key and press Enter). A mission briefing drawer will slide open showing all quests and learning objectives. Destination 01 (HTML Island) is unlocked and waiting for you!"
+    topicTitle: "Navigation Hint",
+    text: "<strong>Curious about what lies ahead on the map?</strong><br><br>Try <strong>clicking on any destination card</strong> on the interactive map below (or highlight it using your Tab key and press Enter). A mission briefing drawer will slide open showing all quests and learning objectives. Destination 01 (HTML Island) is unlocked and waiting for you!"
   },
   {
     id: "celebration",
-    category: "🚀 READY FOR LIFTOFF!",
+    category: "READY FOR LIFTOFF!",
     expression: "excited",
     expressionLabel: "Excited",
-    topicTitle: "🚀 Let's Build!",
-    text: "<strong>BEEP-BEEP! You're officially all set! 🎉</strong><br><br>Stepping into technology is an exciting superpower, and you've already taken the first step today. Whenever you're ready, click on <strong>HTML Island</strong> to start your first mission. Want to experiment first? The <strong>Creator's Playground</strong> is open any time from the menu. If you ever need me, just tap the <em>Talk to Pixel</em> button. Let's make something amazing together!"
+    topicTitle: "Let's Build!",
+    text: "<strong>BEEP-BEEP! You're officially all set!</strong><br><br>Stepping into technology is an exciting superpower, and you've already taken the first step today. Whenever you're ready, click on <strong>HTML Island</strong> to start your first mission. Want to experiment first? The <strong>Creator's Playground</strong> is open any time from the menu. If you ever need me, just tap the <em>Talk to Pixel</em> button. Let's make something amazing together!"
   }
 ];
 
