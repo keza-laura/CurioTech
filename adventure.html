@@ -195,23 +195,23 @@
             <!-- Destination 01: HTML Island (Unlocked) -->
             <article class="dest-card dest-html" data-dest-id="html-island" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 01: HTML Island. Status: Active Quest. Click to inspect briefing.">
               <span class="dest-order-badge">DESTINATION 01</span>
-              <div class="dest-icon-container" aria-hidden="true">🏝️</div>
+              <div class="dest-icon-container" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
               <h3 class="dest-name">HTML Island</h3>
-              <div class="dest-mission-label">Mission 01 Mission 02</div>
+              <div class="dest-mission-label">Mission 01 &middot; Mission 02</div>
               <p class="dest-brief">
                 Start here! Find out how web pages work and what they are made of.
               </p>
               <div>
-                <span class="dest-status-pill dest-status-active"></span>Active Quest</span>
+                <span class="dest-status-pill dest-status-active">Active Quest</span>
                 <!-- Shown by js/adventure.js once Mission 01 is completed -->
-                <span id="html-island-done" class="dest-status-pill dest-status-done" hidden>✔ Mission 01 complete</span>
+                <span id="html-island-done" class="dest-status-pill dest-status-done" hidden>Mission 01 complete</span>
               </div>
             </article>
 
             <!-- Destination 02: CSS City (Locked) -->
             <article class="dest-card dest-css locked" data-dest-id="css-city" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 02: CSS City. Status: Locked. Click to inspect briefing.">
               <span class="dest-order-badge">DESTINATION 02</span>
-              <div class="dest-icon-container" aria-hidden="true">🏙️</div>
+              <div class="dest-icon-container" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
               <h3 class="dest-name">CSS City</h3>
               <div class="dest-mission-label">Mission 03</div>
               <p class="dest-brief">
@@ -225,7 +225,7 @@
             <!-- Destination 03: JavaScript Jungle (Locked) -->
             <article class="dest-card dest-js locked" data-dest-id="js-jungle" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 03: JavaScript Jungle. Status: Locked. Click to inspect briefing.">
               <span class="dest-order-badge">DESTINATION 03</span>
-              <div class="dest-icon-container" aria-hidden="true">🌴</div>
+              <div class="dest-icon-container" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg></div>
               <h3 class="dest-name">JavaScript Jungle</h3>
               <div class="dest-mission-label">Mission 04</div>
               <p class="dest-brief">
@@ -239,7 +239,7 @@
             <!-- Destination 04: Creator's Lab (Locked) -->
             <article class="dest-card dest-creator locked" data-dest-id="creator-lab" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Destination 04: Creator's Lab. Status: Locked. Click to inspect briefing.">
               <span class="dest-order-badge">DESTINATION 04</span>
-              <div class="dest-icon-container" aria-hidden="true">🧪</div>
+              <div class="dest-icon-container" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></div>
               <h3 class="dest-name">Creator's Lab</h3>
               <div class="dest-mission-label">Free experimenting</div>
               <p class="dest-brief">
@@ -250,17 +250,6 @@
               </div>
             </article>
 
-          </div>
-
-          <!-- Connecting Trail Legend -->
-          <div class="map-path-legend" aria-label="Adventure Progression Order">
-            <span class="path-step"> HTML Island</span>
-            
-            <span class="path-step"> CSS City</span>
-            
-            <span class="path-step"> JavaScript Jungle</span>
-           
-            <span class="path-step"> Creator's Lab</span>
           </div>
 
         </div>
@@ -377,7 +366,7 @@
       <button id="modal-close-btn" class="modal-close-btn" aria-label="Close dialog">✕</button>
 
       <div class="modal-header">
-        <div id="modal-icon" class="modal-icon" aria-hidden="true">🏝️</div>
+        <div id="modal-icon" class="modal-icon" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
         <div class="modal-title-box">
           <h3 id="modal-title">HTML Island</h3>
           <span id="modal-badge" class="dest-status-pill dest-status-active">Active Quest</span>
@@ -402,16 +391,8 @@
 
   <!-- Shared Footer -->
   <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-left">
-        <span class="brand-name">Curio<span>Tech</span></span>
-        <p class="footer-copy">CurioTech: The Digital Adventure, Empowering young minds in digital skills.</p>
-      </div>
-      <div class="footer-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="adventure.html">Adventure Map</a>
-        <a href="index.html">Home</a>
-      </div>
+    <div class="container">
+      <p class="footer-text">CurioTech &mdash; Learn by doing.</p>
     </div>
   </footer>
 

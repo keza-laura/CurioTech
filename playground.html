@@ -36,7 +36,7 @@
       <!-- Title & level indicator -->
       <section class="mission-header-bar" aria-label="Playground Header">
         <div class="mission-title-box">
-          <span class="mission-dest-badge">🛠️ FREE BUILD WORKSHOP</span>
+          <span class="mission-dest-badge">FREE BUILD WORKSHOP</span>
           <h1 class="mission-main-title">Creator's Playground</h1>
         </div>
 
@@ -110,7 +110,7 @@
           </div>
 
           <div id="pg-pixel-speech" class="mission-pixel-speech" aria-live="polite">
-            <strong>HTML builds the skeleton of a webpage. 🦴</strong><br>
+            <strong>HTML builds the skeleton of a webpage.</strong><br>
             Tags like <code>&lt;h1&gt;</code> (a big title) and <code>&lt;p&gt;</code> (a paragraph) tell the browser what each part is. Change the words in the code box, then look at the preview. It updates all by itself!
           </div>
         </aside>
@@ -125,13 +125,13 @@
 
         <!-- Phase 5, Stage 5.4: a way back to Mission 05 while that mission is in progress in this tab (see js/playground.js) -->
         <aside id="pg-m5-return" class="pg-m5-return" aria-label="Mission 05" hidden>
-          <span class="pg-m5-return-text"><strong>🎯 Mission 05 is waiting for you.</strong> <span id="pg-m5-return-step"></span></span>
+          <span class="pg-m5-return-text"><strong>Mission 05 is waiting for you.</strong> <span id="pg-m5-return-step"></span></span>
           <a href="mission-05.html" class="button button-small pg-m5-return-btn">← Back to Mission 05</a>
         </aside>
 
         <!-- Phase 4.5.6: shown only when a Mission 01 blueprint arrives and the learner already has their own HTML (see js/playground.js) -->
         <section id="pg-handoff" class="pg-handoff" aria-labelledby="pg-handoff-title" hidden>
-          <h3 id="pg-handoff-title" class="pg-handoff-title" tabindex="-1">🎨 Your Mission 01 blueprint is ready</h3>
+          <h3 id="pg-handoff-title" class="pg-handoff-title" tabindex="-1">Your Mission 01 blueprint is ready</h3>
           <p class="pg-handoff-text">You already have your own HTML in the workshop. Should I replace it with your blueprint? If you say no, your work stays exactly as it is.</p>
           <div class="pg-handoff-actions">
             <button type="button" id="pg-handoff-use" class="button button-small pg-handoff-btn">Use my blueprint (replaces my HTML)</button>
@@ -141,15 +141,16 @@
 
         <!-- Code / Preview toggle (shown on phones and small tablets only) -->
         <div class="pg-view-toggle" role="group" aria-label="Choose what to look at">
-          <button type="button" class="pg-view-btn" data-view="code" aria-pressed="true" aria-controls="pg-code-panel">✏️ Code</button>
-          <button type="button" class="pg-view-btn" data-view="preview" aria-pressed="false" aria-controls="pg-preview-panel">👀 Preview</button>
+          <button type="button" class="pg-view-btn" data-view="code" aria-pressed="true" aria-controls="pg-code-panel"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Code</button>
+          <button type="button" class="pg-view-btn" data-view="preview" aria-pressed="false" aria-controls="pg-preview-panel"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
         </div>
 
         <!-- Run bar: JavaScript runs only when Run Code is pressed (see js/playground.js) -->
         <div class="pg-run-bar" role="group" aria-label="Run your JavaScript">
-          <button type="button" id="pg-run-btn" class="button button-small pg-run-btn">▶ Run Code</button>
-          <button type="button" id="pg-stop-btn" class="button button-small button-outline pg-stop-btn" aria-disabled="true">■ Stop</button>
+          <button type="button" id="pg-run-btn" class="button button-small pg-run-btn"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg>Run Code</button>
+          <button type="button" id="pg-stop-btn" class="button button-small button-outline pg-stop-btn" aria-disabled="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="12" height="12" x="6" y="6" rx="2"/></svg>Stop</button>
           <p id="pg-run-status" class="pg-run-status" role="status" aria-live="polite">JavaScript only runs when you press Run Code.</p>
+      
           <button type="button" id="pg-save-progress-btn" class="button button-small pg-save-progress-btn">Save progress</button>
           <button type="button" id="pg-download-btn" class="button button-small button-outline pg-download-btn">⬇ Download my page</button>
         </div>
@@ -161,7 +162,7 @@
         <!-- Phase 5, Stage 5.2: save a named project, open it again later, update it (see js/playground.js, section 9e) -->
         <details id="pg-projects" class="pg-projects" open>
           <summary class="pg-projects-summary">
-            <span class="pg-projects-title">💾 My Projects</span>
+            <span class="pg-projects-title">My Projects</span>
             <span id="pg-projects-hint" class="pg-projects-hint">Save your work, then open it again any time</span>
           </summary>
           <div class="pg-projects-body">
@@ -170,7 +171,7 @@
             <div class="pg-project-row">
               <label for="pg-project-name" class="pg-project-label">Project name</label>
               <input id="pg-project-name" class="pg-project-input" type="text" maxlength="40" autocomplete="off" placeholder="My first page" aria-describedby="pg-project-help">
-              <button type="button" id="pg-project-save" class="button button-small pg-project-btn">💾 Save Project</button>
+              <button type="button" id="pg-project-save" class="button button-small pg-project-btn"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save Project</button>
               <button type="button" id="pg-project-update" class="button button-small pg-project-btn" hidden>↻ Update Project</button>
             </div>
             <p id="pg-project-help" class="pg-project-help">Saves your HTML, CSS and JavaScript together. You can keep up to 10 projects.</p>
@@ -204,10 +205,10 @@
               <details id="pg-mission-details" class="pg-mission-details" open>
                 <summary class="pg-mission-summary">
                   <span class="pg-mission-line">
-                    <span id="pg-mission-title" class="pg-mission-title">🎯 Level 1: Remix</span>
+                    <span id="pg-mission-title" class="pg-mission-title">Level 1: Remix</span>
                     <span id="pg-mission-count" class="pg-mission-count">0 of 3 done</span>
                   </span>
-                  <span id="pg-mission-next" class="pg-mission-next">👉 Next: Change the big title</span>
+                  <span id="pg-mission-next" class="pg-mission-next">Next: Change the big title</span>
                 </summary>
                 <p id="pg-mission-intro" class="pg-mission-intro"></p>
                 <ul id="pg-mission-goals" class="pg-mission-goals"></ul>
@@ -215,7 +216,7 @@
                 <!-- Hints for the next goal, one at a time (see js/playground.js) -->
                 <p id="pg-mission-hint" class="pg-mission-hint" role="status" aria-live="polite" hidden></p>
                 <div class="pg-mission-actions">
-                  <button type="button" id="pg-mission-hint-btn" class="button button-small button-outline pg-mission-btn" hidden>💡 Need a hint?</button>
+                  <button type="button" id="pg-mission-hint-btn" class="button button-small button-outline pg-mission-btn" hidden><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>Need a hint?</button>
                   <button type="button" id="pg-mission-continue" class="button button-small pg-mission-btn" hidden>Continue →</button>
                   <button type="button" id="pg-mission-skip" class="button button-small button-outline pg-mission-btn">Skip to Free Canvas</button>
                   <button type="button" id="pg-mission-back" class="button button-small button-outline pg-mission-btn" hidden>Back to guided levels</button>
@@ -224,7 +225,7 @@
             </section>
 
             <div class="pg-panel-head">
-              <h3 id="pg-code-title" class="pg-panel-title">✏️ Code Workshop</h3>
+              <h3 id="pg-code-title" class="pg-panel-title">Code Workshop</h3>
               <div class="pg-file-tabs" role="tablist" aria-label="Your code files">
                 <button type="button" role="tab" id="pg-tab-html" class="pg-file-tab is-current" aria-selected="true" aria-controls="pg-html-pane" tabindex="0">HTML</button>
                 <button type="button" role="tab" id="pg-tab-css" class="pg-file-tab" aria-selected="false" aria-controls="pg-css-pane" tabindex="-1">CSS</button>
@@ -268,7 +269,7 @@
               </div>
 
               <section class="pg-chips" aria-labelledby="pg-chips-title">
-                <h4 id="pg-chips-title" class="pg-chips-title">🎨 Styling chips</h4>
+                <h4 id="pg-chips-title" class="pg-chips-title">Styling chips</h4>
                 <p class="pg-chips-intro">Tap a chip and I'll write the CSS for you. Tap it again to take it away. You'll see the new lines appear in your CSS box.</p>
                 <div id="pg-chip-groups" class="pg-chip-groups"></div>
               </section>
@@ -295,7 +296,7 @@
           <!-- Preview panel: sandboxed live preview (see js/playground.js) -->
           <section id="pg-preview-panel" class="pg-panel pg-preview-panel" aria-labelledby="pg-preview-title">
             <div class="pg-panel-head">
-              <h3 id="pg-preview-title" class="pg-panel-title">👀 Live Preview</h3>
+              <h3 id="pg-preview-title" class="pg-panel-title">Live Preview</h3>
             </div>
 
             <div class="pg-browser">
@@ -305,7 +306,7 @@
               </div>
               <div id="pg-browser-screen" class="pg-browser-screen">
                 <div id="pg-preview-empty" class="pg-preview-empty" hidden>
-                  <p class="pg-empty-title">🌐 Your page is empty</p>
+                  <p class="pg-empty-title">Your page is empty</p>
                   <p class="pg-empty-text">Type some HTML, like <code>&lt;h1&gt;Hello!&lt;/h1&gt;</code>, or press Reset HTML to bring back the starter code.</p>
                 </div>
                 <!-- The sandboxed preview <iframe> is created here by js/playground.js (sandbox="allow-scripts", never allow-same-origin). -->
@@ -315,7 +316,7 @@
             <!-- Console output (below the preview) -->
             <section class="pg-output" aria-labelledby="pg-output-title">
               <div class="pg-output-head">
-                <h4 id="pg-output-title" class="pg-output-title">🖥️ Output</h4>
+                <h4 id="pg-output-title" class="pg-output-title">Output</h4>
                 <button type="button" id="pg-output-clear" class="button button-small button-outline pg-output-clear">Clear</button>
               </div>
               <div id="pg-output-log" class="pg-output-log" role="log" aria-live="off" aria-label="Console output from your JavaScript" tabindex="0">
@@ -332,16 +333,8 @@
 
   <!-- Shared Footer -->
   <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-left">
-        <span class="brand-name">Curio<span>Tech</span></span>
-        <p class="footer-copy">CurioTech: The Digital Adventure &mdash; Empowering young minds in digital skills.</p>
-      </div>
-      <div class="footer-links">
-        <a href="adventure.html">Adventure Map</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="index.html">Home</a>
-      </div>
+    <div class="container">
+      <p class="footer-text">CurioTech &mdash; Learn by doing.</p>
     </div>
   </footer>
 

@@ -88,11 +88,11 @@
       { next: "" }
     ],
     pixel: [
-      { expr: "excited", html: "<strong>Welcome to CSS City! 🏙️</strong><br>HTML is the skeleton of a page. CSS is the paint, the neon lights and the style. Let's learn how a CSS rule is built." },
-      { expr: "thinking", html: "<strong>Time to experiment! 🧪</strong><br>Change the tower and watch the CSS appear below it. Try at least 3 different settings." },
-      { expr: "encouraging", html: "<strong>Three style quests ⚔️</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
-      { expr: "happy", html: "<strong>Design time! 🎨</strong><br>Make a neon sign for CSS City. Type your words, style them, then press Save my design." },
-      { expr: "excited", html: "<strong>You did it! 🎉</strong><br>You are a CSS City architect now. Try your new skills in the Creator's Playground." }
+      { expr: "excited", html: "<strong>Welcome to CSS City!</strong><br>HTML is the skeleton of a page. CSS is the paint, the neon lights and the style. Let's learn how a CSS rule is built." },
+      { expr: "thinking", html: "<strong>Time to experiment!</strong><br>Change the tower and watch the CSS appear below it. Try at least 3 different settings." },
+      { expr: "encouraging", html: "<strong>Three style quests</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
+      { expr: "happy", html: "<strong>Design time!</strong><br>Make a neon sign for CSS City. Type your words, style them, then press Save my design." },
+      { expr: "excited", html: "<strong>You did it!</strong><br>You are a CSS City architect now. Try your new skills in the Creator's Playground." }
     ],
     quests: QUESTS,
 
@@ -199,7 +199,7 @@
     const n = d.props.length;
     const out = $("m3-tower-count");
     out.textContent = n >= PROPS_NEEDED
-      ? `✅ You changed ${n} different settings. Nice work!`
+      ? `You changed ${n} different settings. Nice work!`
       : `You have changed ${n} of ${PROPS_NEEDED} different settings.`;
     out.classList.toggle("is-good", n >= PROPS_NEEDED);
   }
@@ -209,27 +209,27 @@
       ctx.data.tower.color = value;
       addProp(ctx, "background-color");
       paintTower(ctx);
-      ctx.changed("happy", "<strong>Look at that! ✨</strong><br>Nice colour! That's <code>background-color</code>: the paint on the wall.");
+      ctx.changed("happy", "<strong>Look at that!</strong><br>Nice colour! That's <code>background-color</code>: the paint on the wall.");
     });
     $("m3-radius").addEventListener("input", () => {
       const r = ctx.clampInt(Number($("m3-radius").value), 0, 40, 0);
       ctx.data.tower.radius = r;
       if (r > 0) addProp(ctx, "border-radius");
       paintTower(ctx);
-      ctx.changed("happy", r > 0 ? "<strong>Look at that! ✨</strong><br>Rounder! <code>border-radius</code> softens the corners." : "");
+      ctx.changed("happy", r > 0 ? "<strong>Look at that!</strong><br>Rounder! <code>border-radius</code> softens the corners." : "");
     });
     $("m3-height").addEventListener("change", () => {
       const h = $("m3-height").value;
       ctx.data.tower.height = HEIGHTS.includes(h) ? h : "";
       if (ctx.data.tower.height) addProp(ctx, "height");
       paintTower(ctx);
-      ctx.changed("happy", ctx.data.tower.height ? "<strong>Look at that! ✨</strong><br><code>height</code> decides how tall the tower stands." : "");
+      ctx.changed("happy", ctx.data.tower.height ? "<strong>Look at that!</strong><br><code>height</code> decides how tall the tower stands." : "");
     });
     $("m3-glow").addEventListener("change", () => {
       ctx.data.tower.glow = $("m3-glow").checked;
       if (ctx.data.tower.glow) addProp(ctx, "box-shadow");
       paintTower(ctx);
-      ctx.changed("happy", ctx.data.tower.glow ? "<strong>Look at that! ✨</strong><br>Glow on! <code>box-shadow</code> draws a soft shadow, and a bright colour makes it look like neon." : "");
+      ctx.changed("happy", ctx.data.tower.glow ? "<strong>Look at that!</strong><br>Glow on! <code>box-shadow</code> draws a soft shadow, and a bright colour makes it look like neon." : "");
     });
   }
 
@@ -267,7 +267,7 @@
 
     const st = $("m3-sign-status");
     if (ctx.data.savedSign && sameSign(ctx.data.savedSign, s)) {
-      st.textContent = "✅ Saved! Your design is ready.";
+      st.textContent = "Saved! Your design is ready.";
       st.className = "m5-status is-good";
     } else if (ctx.data.savedSign) {
       st.textContent = "You changed your sign. Press Save my design to keep the new look.";
@@ -317,7 +317,7 @@
       }
       ctx.data.savedSign = Object.assign({}, ctx.data.sign);
       paintSign(ctx);
-      ctx.changed("excited", "<strong>Your sign is saved! 🌟</strong><br>It looks great. Press <strong>Finish the mission</strong> when you're ready.");
+      ctx.changed("excited", "<strong>Your sign is saved!</strong><br>It looks great. Press <strong>Finish the mission</strong> when you're ready.");
       ctx.showHint("");
     });
   }

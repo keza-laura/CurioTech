@@ -89,9 +89,9 @@
     "",
     "<h2>Things I like</h2>",
     "<ul>",
-    "  <li>🤖 Robots</li>",
-    "  <li>🎨 Drawing</li>",
-    "  <li>🚀 Space</li>",
+    "  <li>Robots</li>",
+    "  <li>Drawing</li>",
+    "  <li>Space</li>",
     "</ul>",
     "",
     "<!-- Buttons come alive with JavaScript later! -->",
@@ -123,14 +123,14 @@
     "// JavaScript makes your page DO things!",
     "// Press the Run Code button to try it. console.log() prints into the Output box.",
     "",
-    'console.log("Hello from my JavaScript! 🎉");',
+    'console.log("Hello from my JavaScript!");',
     "",
     'const title = document.querySelector("h1");',
     'const button = document.querySelector("button");',
     "",
     "if (title && button) {",
     '  button.addEventListener("click", function () {',
-    '    title.textContent = "You clicked the button! 🎈";',
+    '    title.textContent = "You clicked the button!";',
     '    console.log("The button was clicked");',
     "  });",
     "}",
@@ -154,15 +154,15 @@
 
   const PIXEL_HTML_INTRO = {
     expr: "thinking",
-    html: "<strong>HTML builds the skeleton of a webpage. 🦴</strong><br>Tags like <code>&lt;h1&gt;</code> (a big title) and <code>&lt;p&gt;</code> (a paragraph) tell the browser what each part is. Change the words in the code box, then look at the preview. It updates all by itself!"
+    html: "<strong>HTML builds the skeleton of a webpage.</strong><br>Tags like <code>&lt;h1&gt;</code> (a big title) and <code>&lt;p&gt;</code> (a paragraph) tell the browser what each part is. Change the words in the code box, then look at the preview. It updates all by itself!"
   };
   const PIXEL_JS_INTRO = {
     expr: "excited",
-    html: "<strong>JavaScript makes your page DO things! ⚡</strong><br>Press <strong>Run Code</strong> to try it. <code>console.log()</code> prints messages into the Output box. If something goes wrong, I'll help you read the error!"
+    html: "<strong>JavaScript makes your page DO things!</strong><br>Press <strong>Run Code</strong> to try it. <code>console.log()</code> prints messages into the Output box. If something goes wrong, I'll help you read the error!"
   };
   const PIXEL_CSS_INTRO = {
     expr: "excited",
-    html: "<strong>HTML builds your page. CSS makes it beautiful! 🎨</strong><br>Write CSS rules yourself, or tap a <strong>styling chip</strong> to try one. Chips write the CSS for you, so you can see how it works!"
+    html: "<strong>HTML builds your page. CSS makes it beautiful!</strong><br>Write CSS rules yourself, or tap a <strong>styling chip</strong> to try one. Chips write the CSS for you, so you can see how it works!"
   };
 
   // ------------------------------------------------------------------------
@@ -661,7 +661,7 @@
       unmountFrame();
       emptyState.hidden = false;
       if (!wasEmpty) {
-        setPixel("encouraging", "<strong>An empty page! 📭</strong><br>That's okay. Type <code>&lt;h1&gt;Hello!&lt;/h1&gt;</code> in the HTML tab to make a title, or press Reset HTML for the starter code.");
+        setPixel("encouraging", "<strong>An empty page!</strong><br>That's okay. Type <code>&lt;h1&gt;Hello!&lt;/h1&gt;</code> in the HTML tab to make a title, or press Reset HTML for the starter code.");
       }
       wasEmpty = true;
     } else {
@@ -727,10 +727,10 @@
     resetId: "pg-html-reset", noteId: "pg-html-note", resetLabel: "↺ Reset HTML to Starter",
     starter: STARTER_HTML,
     onChange: (immediate) => scheduleUpdate(immediate, true),
-    onFirstEdit: () => setPixel("excited", "<strong>You just changed a real webpage! 🎉</strong><br>Try deleting a line, or add your own <code>&lt;p&gt;</code> with a sentence inside."),
+    onFirstEdit: () => setPixel("excited", "<strong>You just changed a real webpage!</strong><br>Try deleting a line, or add your own <code>&lt;p&gt;</code> with a sentence inside."),
     onReset: () => {
       resetHtmlBaseline();   // goals are measured against the starter again
-      setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter HTML is back. Change a few words and see what happens!");
+      setPixel("happy", "<strong>Fresh start!</strong><br>The starter HTML is back. Change a few words and see what happens!");
     }
   });
 
@@ -739,12 +739,12 @@
     resetId: "pg-css-reset", noteId: "pg-css-note", resetLabel: "↺ Reset CSS to Starter",
     starter: STARTER_CSS,
     onChange: (immediate) => { syncChipsWithText(); scheduleUpdate(immediate, true); },
-    onFirstEdit: () => setPixel("excited", "<strong>Your CSS is working! 🎨</strong><br>Try changing a colour code or a number and watch the preview."),
+    onFirstEdit: () => setPixel("excited", "<strong>Your CSS is working!</strong><br>Try changing a colour code or a number and watch the preview."),
     onReset: () => {
       chipState = {};
       syncChipUI();
       resetCssBaseline();   // goals are measured against the starter CSS again
-      setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter CSS is back. Your HTML wasn't touched.");
+      setPixel("happy", "<strong>Fresh start!</strong><br>The starter CSS is back. Your HTML wasn't touched.");
     }
   });
 
@@ -753,8 +753,8 @@
     resetId: "pg-js-reset", noteId: "pg-js-note", resetLabel: "↺ Reset JavaScript to Starter",
     starter: STARTER_JS,
     onChange: (immediate) => scheduleUpdate(immediate, false),
-    onFirstEdit: () => setPixel("excited", "<strong>Nice, you're writing JavaScript! ⚡</strong><br>Press <strong>Run Code</strong> to see it work. It never runs while you type."),
-    onReset: () => setPixel("happy", "<strong>Fresh start! ✨</strong><br>The starter JavaScript is back. Your HTML and CSS weren't touched.")
+    onFirstEdit: () => setPixel("excited", "<strong>Nice, you're writing JavaScript!</strong><br>Press <strong>Run Code</strong> to see it work. It never runs while you type."),
+    onReset: () => setPixel("happy", "<strong>Fresh start!</strong><br>The starter JavaScript is back. Your HTML and CSS weren't touched.")
   });
 
   // ------------------------------------------------------------------------
@@ -904,8 +904,8 @@
     endRun();
     recoverPreview();
     addLine("error", `Your code didn't finish within ${WATCHDOG_MS / 1000} seconds, so I stopped it.`, false);
-    setStatus("⏱️ Stopped: your code didn't finish in 3 seconds. The preview is showing your page without JavaScript.");
-    setPixel("encouraging", "<strong>Whoa, that took too long! ⏱️</strong><br>This usually means a loop that never ends, like <code>while (true)</code>, or a loop whose counter never changes. It can also happen if code tries to open another web page, which isn't allowed here. Check your code, then press Run Code again. Your code is safe.");
+    setStatus("Stopped: your code didn't finish in 3 seconds. The preview is showing your page without JavaScript.");
+    setPixel("encouraging", "<strong>Whoa, that took too long!</strong><br>This usually means a loop that never ends, like <code>while (true)</code>, or a loop whose counter never changes. It can also happen if code tries to open another web page, which isn't allowed here. Check your code, then press Run Code again. Your code is safe.");
   }
 
   function stopRun() {
@@ -984,10 +984,10 @@
       run.loadMs = Math.round(performance.now() - run.startedAt);
       watchRunForGoals();
       if (run.hadError) {
-        setStatus("⚠️ Your code stopped with an error. Check the Output box for what happened.");
+        setStatus("Your code stopped with an error. Check the Output box for what happened.");
       } else {
         // Not "ran without errors" yet: a timer may still throw. The observation window decides.
-        setStatus(`⏳ Your code started. Watching for errors for ${RUN_SETTLE_MS / 1000} seconds...`);
+        setStatus(`Your code started. Watching for errors for ${RUN_SETTLE_MS / 1000} seconds...`);
       }
     } else if (d.k === "out") {
       if (typeof d.s !== "string" || !OUT_LEVELS[d.c]) return;
@@ -999,17 +999,17 @@
       run.problem = true;   // an execution error means this run can never earn a run goal
       addProgramLine("error", d.m + line);
       if (run.state === "finished") {
-        setStatus("⚠️ Your code hit an error after it finished starting. Check the Output box for what happened.");
+        setStatus("Your code hit an error after it finished starting. Check the Output box for what happened.");
       }
       if (!run.hadError) {
         run.hadError = true;
-        setPixel("encouraging", `<strong>JavaScript hit a snag! 🔧</strong><br>${explainError(d.m)}<br><span class="pg-pixel-original">The original message: <code>${escapeHtml(String(d.m).slice(0, 300))}</code>${escapeHtml(line)}</span>`);
+        setPixel("encouraging", `<strong>JavaScript hit a snag!</strong><br>${explainError(d.m)}<br><span class="pg-pixel-original">The original message: <code>${escapeHtml(String(d.m).slice(0, 300))}</code>${escapeHtml(line)}</span>`);
       }
     } else if (d.k === "csp") {
       if (typeof d.d !== "string" || typeof d.u !== "string") return;
       run.problem = true;   // code that tried something the playground blocks is not a clean run
       if (run.state === "finished" && !run.confirmed) {
-        setStatus("⚠️ Your code tried something the playground blocks. Check the Output box for what happened.");
+        setStatus("Your code tried something the playground blocks. Check the Output box for what happened.");
       }
       const why = /^script/.test(d.d)
         ? "The playground only runs your own JavaScript, so extra scripts are blocked."
@@ -1292,7 +1292,7 @@
     }
     if (!chipPixelShown) {
       chipPixelShown = true;
-      setPixel("excited", "<strong>You styled your page! 🎨</strong><br>That chip wrote real CSS. Look at the lines between <code>chips:start</code> and <code>chips:end</code> in your CSS box.");
+      setPixel("excited", "<strong>You styled your page!</strong><br>That chip wrote real CSS. Look at the lines between <code>chips:start</code> and <code>chips:end</code> in your CSS box.");
     }
     if (!removing) awardGoals(["style-chip"]);   // a real action: switching a chip on
   }
@@ -1367,11 +1367,11 @@
   const PROGRESS_KEY = "curiotech_playground_progress";
   const FREE_CANVAS = 4;
   const RUN_SETTLE_MS = 2000;   // a run must stay error-free this long after it finished loading
-  const STARTER_LOG_LINES = ["Hello from my JavaScript! 🎉", "The button was clicked"];
+  const STARTER_LOG_LINES = ["Hello from my JavaScript!", "The button was clicked"];
 
   const LEVELS = [
     {
-      id: 1, name: "Remix", icon: "✏️", badge: "LEVEL 1 OF 4 • REMIX",
+      id: 1, name: "Remix", badge: "LEVEL 1 OF 4 • REMIX",
       desc: "Make a few small changes to the page in the HTML tab. Any order is fine, and you can't break anything.",
       intro: "Change the page a little. Use the HTML tab. Any order is fine!",
       goals: [
@@ -1379,33 +1379,33 @@
         { id: "remix-paragraph", text: "Change the paragraph words", where: "HTML tab: the <p> line" },
         { id: "remix-add", text: "Add something new", where: "HTML tab: like another <p> or a list item" }
       ],
-      pixelIntro: "<strong>Level 1: Remix ✏️</strong><br>Make a few small changes in the HTML tab: change the title, change the paragraph, and add something new.",
-      pixelDone: "<strong>Level 1 complete! 🎉</strong><br>You remixed a real webpage. Press <strong>Continue</strong> in the mission card to meet Level 2: Style."
+      pixelIntro: "<strong>Level 1: Remix</strong><br>Make a few small changes in the HTML tab: change the title, change the paragraph, and add something new.",
+      pixelDone: "<strong>Level 1 complete!</strong><br>You remixed a real webpage. Press <strong>Continue</strong> in the mission card to meet Level 2: Style."
     },
     {
-      id: 2, name: "Style", icon: "🎨", badge: "LEVEL 2 OF 4 • STYLE",
+      id: 2, name: "Style", badge: "LEVEL 2 OF 4 • STYLE",
       desc: "Make your page beautiful with CSS. Tap a styling chip, or write your own rules in the CSS tab.",
       intro: "Make it beautiful! Try a styling chip, or write your own CSS.",
       goals: [
         { id: "style-chip", text: "Tap a styling chip", where: "CSS tab: the Styling chips box" },
         { id: "style-own", text: "Write your own CSS", where: "CSS tab: change a colour or add a rule" }
       ],
-      pixelIntro: "<strong>Level 2: Style 🎨</strong><br>HTML builds your page, CSS makes it beautiful! Tap a styling chip, then try writing a rule of your own in the CSS tab.",
-      pixelDone: "<strong>Level 2 complete! 🎉</strong><br>Your page has style! Press <strong>Continue</strong> to meet Level 3: Bring it to life."
+      pixelIntro: "<strong>Level 2: Style</strong><br>HTML builds your page, CSS makes it beautiful! Tap a styling chip, then try writing a rule of your own in the CSS tab.",
+      pixelDone: "<strong>Level 2 complete!</strong><br>Your page has style! Press <strong>Continue</strong> to meet Level 3: Bring it to life."
     },
     {
-      id: 3, name: "Bring it to life", icon: "⚡", badge: "LEVEL 3 OF 4 • BRING IT TO LIFE",
+      id: 3, name: "Bring it to life", badge: "LEVEL 3 OF 4 • BRING IT TO LIFE",
       desc: "Make your page do things with JavaScript. Write code in the JS tab, then press Run Code.",
       intro: "Make your page DO things! Use the JS tab, then press Run Code.",
       goals: [
         { id: "live-run", text: "Run your code with no errors", where: "JS tab, then press Run Code" },
         { id: "live-message", text: "Print your own message", where: "JS tab: use console.log(\"...\") and run it" }
       ],
-      pixelIntro: "<strong>Level 3: Bring it to life ⚡</strong><br>Press <strong>Run Code</strong> in the JS tab, then change the message in <code>console.log()</code> and run it again.",
-      pixelDone: "<strong>Level 3 complete! 🎉</strong><br>Your JavaScript works! Press <strong>Continue</strong> to open Free Canvas."
+      pixelIntro: "<strong>Level 3: Bring it to life</strong><br>Press <strong>Run Code</strong> in the JS tab, then change the message in <code>console.log()</code> and run it again.",
+      pixelDone: "<strong>Level 3 complete!</strong><br>Your JavaScript works! Press <strong>Continue</strong> to open Free Canvas."
     },
     {
-      id: 4, name: "Free Canvas", icon: "🌟", badge: "LEVEL 4 OF 4 • FREE CANVAS",
+      id: 4, name: "Free Canvas", badge: "LEVEL 4 OF 4 • FREE CANVAS",
       desc: "No goals and no rules. Build anything you like with HTML, CSS and JavaScript.",
       intro: "No goals, no rules. Create anything you like! Need ideas?",
       goals: [],
@@ -1414,7 +1414,7 @@
         "Make the button change a colour or a word when you click it",
         "Count how many times the button was clicked"
       ],
-      pixelIntro: "<strong>Welcome to Free Canvas! 🌟</strong><br>No goals and no rules from here. Build whatever you like, and ask for the guided levels again any time.",
+      pixelIntro: "<strong>Welcome to Free Canvas!</strong><br>No goals and no rules from here. Build whatever you like, and ask for the guided levels again any time.",
       pixelDone: ""
     }
   ];
@@ -1434,7 +1434,7 @@
     "remix-add": [
       "You can add a new line of HTML anywhere inside the page.",
       "Add another <p>...</p> under the first one, or a new <li>...</li> inside the list.",
-      "For example, add this line inside the list: <li>🎸 Music</li>"
+      "For example, add this line inside the list: <li>Music</li>"
     ],
     "style-chip": [
       "Open the CSS tab and look for the Styling chips box under the editor.",
@@ -1614,8 +1614,8 @@
       hintBox.textContent = "";
     }
     hintBtn.hidden = false;
-    hintBtn.textContent = hintState.shown === 0 ? "💡 Need a hint?"
-      : hintState.shown < hints.length ? "💡 Another hint" : "💡 Start the hints again";
+    hintBtn.textContent = hintState.shown === 0 ? "Need a hint?"
+      : hintState.shown < hints.length ? "Another hint" : "Start the hints again";
   }
 
   function showNextHint() {
@@ -1624,9 +1624,9 @@
     if (!hints) return;
     hintState.shown = hintState.shown >= hints.length ? 1 : hintState.shown + 1;
     const text = hints[hintState.shown - 1];
-    hintBox.textContent = `💡 Hint ${hintState.shown} of ${hints.length}: ${text}`;
+    hintBox.textContent = `Hint ${hintState.shown} of ${hints.length}: ${text}`;
     hintBox.hidden = false;
-    setPixel("thinking", `<strong>Here's a hint 💡</strong><br>${escapeHtml(text)}`);
+    setPixel("thinking", `<strong>Here's a hint</strong><br>${escapeHtml(text)}`);
     syncHints(found.goal);
   }
 
@@ -1662,16 +1662,16 @@
 
     // mission card
     missionEl.classList.toggle("is-complete", complete);
-    missionTitle.textContent = free ? `${lv.icon} Free Canvas` : `${lv.icon} Level ${lv.id}: ${lv.name}`;
+    missionTitle.textContent = free ? "Free Canvas" : `Level ${lv.id}: ${lv.name}`;
     if (free) {
       missionCount.textContent = "No goals";
-      missionNext.textContent = "✨ Create anything you like!";
+      missionNext.textContent = "Create anything you like!";
     } else if (complete) {
-      missionCount.textContent = "All done! ✅";
-      missionNext.textContent = lv.id === 3 ? "🎉 Level complete! Open Free Canvas below." : "🎉 Level complete! Continue to the next level below.";
+      missionCount.textContent = "All done!";
+      missionNext.textContent = lv.id === 3 ? "Level complete! Open Free Canvas below." : "Level complete! Continue to the next level below.";
     } else {
       missionCount.textContent = `${goalsDoneIn(lv)} of ${lv.goals.length} done`;
-      missionNext.textContent = "👉 Next: " + nextGoalIn(lv).text;
+      missionNext.textContent = "Next: " + nextGoalIn(lv).text;
     }
     missionIntro.textContent = lv.intro;
 
@@ -1683,7 +1683,7 @@
         const mark = document.createElement("span");
         mark.className = "pg-goal-mark";
         mark.setAttribute("aria-hidden", "true");
-        mark.textContent = "✨";
+        mark.textContent = "•";
         const text = document.createElement("span");
         text.className = "pg-goal-text";
         text.textContent = idea;
@@ -1755,7 +1755,7 @@
     } else {
       const names = fresh.map(id => lcFirst(GOAL_BY_ID[id].goal.text));
       const inCurrent = fresh.some(id => GOAL_BY_ID[id].level.id === cur.id);
-      let msg = "<strong>Goal complete! ✅</strong><br>" + escapeHtml(names.join(" and ")) + ".";
+      let msg = "<strong>Goal complete!</strong><br>" + escapeHtml(names.join(" and ")) + ".";
       if (inCurrent && cur.goals.length) {
         msg += ` ${goalsDoneIn(cur)} of ${cur.goals.length} done in Level ${cur.id}.`;
         const nx = nextGoalIn(cur);
@@ -1797,11 +1797,11 @@
 
   /** Only now is it fair to say the run was clean. */
   function showRunConfirmed() {
-    setStatus(`✅ No errors in the first ${RUN_SETTLE_MS / 1000} seconds (it started in ${run.loadMs} ms). Press Stop, or edit your HTML or CSS, to go back to the plain preview.`);
+    setStatus(`No errors in the first ${RUN_SETTLE_MS / 1000} seconds (it started in ${run.loadMs} ms). Press Stop, or edit your HTML or CSS, to go back to the plain preview.`);
     if (outputLines === 0) addLine("info", "Your code ran. It didn't print anything. Try console.log(\"hi\") to print a message here.", false);
     if (!firstSuccessShown) {
       firstSuccessShown = true;
-      setPixel("excited", "<strong>It ran! 🎉</strong><br>Try clicking things in the preview, and use <code>console.log()</code> to peek inside your code.");
+      setPixel("excited", "<strong>It ran!</strong><br>Try clicking things in the preview, and use <code>console.log()</code> to peek inside your code.");
     }
   }
 
@@ -1837,7 +1837,7 @@
     progress.level = FREE_CANVAS;
     progress.skipped = true;
     saveProgress();
-    afterLevelChange("<strong>Straight to Free Canvas! 🌟</strong><br>Your code is exactly as you left it. Build anything you like, and use <strong>Back to guided levels</strong> if you want the goals again.");
+    afterLevelChange("<strong>Straight to Free Canvas!</strong><br>Your code is exactly as you left it. Build anything you like, and use <strong>Back to guided levels</strong> if you want the goals again.");
   });
 
   missionBack.addEventListener("click", () => {
@@ -1954,14 +1954,14 @@
     hideHandoffBanner();
     finishHandoff();
     htmlEd.showNote("Your Mission 01 blueprint was loaded.", 6000);
-    setPixel("excited", "<strong>Your Mission 01 blueprint is here! 🎨</strong><br>This is the page you planned, now written as real HTML. Change the title, change the story words, or add something new to remix it!");
+    setPixel("excited", "<strong>Your Mission 01 blueprint is here!</strong><br>This is the page you planned, now written as real HTML. Change the title, change the story words, or add something new to remix it!");
   }
 
   function keepOwnWork() {
     hideHandoffBanner();
     finishHandoff();
     htmlEd.showNote("Kept your own HTML. Nothing was replaced.", 6000);
-    setPixel("happy", "<strong>No problem! 🛡️</strong><br>Your own HTML is exactly as you left it. You can still build your blueprint page in Mission 01 again any time.");
+    setPixel("happy", "<strong>No problem!</strong><br>Your own HTML is exactly as you left it. You can still build your blueprint page in Mission 01 again any time.");
   }
 
   function initHandoff() {
@@ -1972,7 +1972,7 @@
     const bp = readBlueprint();
     if (!bp) {
       finishHandoff();
-      setPixel("encouraging", "<strong>I couldn't find your blueprint. 🔍</strong><br>It may have been saved in a different tab. You can finish Mission 01 first, or just start playing here. Everything in the workshop still works!");
+      setPixel("encouraging", "<strong>I couldn't find your blueprint.</strong><br>It may have been saved in a different tab. You can finish Mission 01 first, or just start playing here. Everything in the workshop still works!");
       return;
     }
 
@@ -1980,7 +1980,7 @@
     const current = htmlEd.ta.value;
     if (current === html) {   // already exactly this page
       finishHandoff();
-      setPixel("happy", "<strong>Your blueprint is already here! 🎨</strong><br>Change the title, change the story words, or add something new.");
+      setPixel("happy", "<strong>Your blueprint is already here!</strong><br>Change the title, change the story words, or add something new.");
       return;
     }
 
@@ -1994,7 +1994,7 @@
     if (!handoffEl || !handoffUse || !handoffKeep) { finishHandoff(); return; }   // no banner available: keep their work
     pendingBlueprintHtml = html;
     handoffEl.hidden = false;
-    setPixel("thinking", "<strong>Your Mission 01 blueprint is waiting! 🎨</strong><br>You already have your own HTML here, so I won't replace it unless you say so. Choose in the box above the editor.");
+    setPixel("thinking", "<strong>Your Mission 01 blueprint is waiting!</strong><br>You already have your own HTML here, so I won't replace it unless you say so. Choose in the box above the editor.");
     if (handoffTitle) handoffTitle.focus();
   }
 
@@ -2085,7 +2085,7 @@
       return;
     }
     if (deliverHtmlFile(doc, DOWNLOAD_FILENAME)) {
-      setDownloadStatus(`✅ Your page was sent to your downloads as ${DOWNLOAD_FILENAME}. Open that file to see it on its own!`);
+      setDownloadStatus(`Your page was sent to your downloads as ${DOWNLOAD_FILENAME}. Open that file to see it on its own!`);
     } else {
       setDownloadStatus("Sorry, this browser wouldn't let me make the download. Your code is still safe in the workshop.");
     }
@@ -2240,11 +2240,19 @@
     return projList.querySelector(`button[data-id="${id}"][data-action="${action}"]`);
   }
 
+  const ROW_ICONS = {
+    open: '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>',
+    rename: '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+    download: '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
+    delete: '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+  };  // fixed SVG strings (trusted, never learner text)
+
   function actionButton(p, action, label, outline) {
     const b = makeEl("button", "button button-small pg-project-btn" + (outline === false ? "" : " button-outline"), label);
     b.type = "button";
     b.setAttribute("data-action", action);
     b.setAttribute("data-id", p.id);
+    if (ROW_ICONS[action]) b.insertAdjacentHTML("afterbegin", ROW_ICONS[action]);
     return b;
   }
 
@@ -2271,7 +2279,7 @@
         input.setAttribute("aria-label", `New name for ${p.name}`);
         input.setAttribute("data-id", p.id);
         box.appendChild(input);
-        const save = actionButton(p, "rename-save", "✔ Save name", false);
+        const save = actionButton(p, "rename-save", "Save name", false);
         save.setAttribute("aria-label", `Save the new name for ${p.name}`);
         const cancel = actionButton(p, "rename-cancel", "Cancel");
         cancel.setAttribute("aria-label", `Cancel renaming ${p.name}`);
@@ -2301,13 +2309,13 @@
       const acts = makeEl("div", "pg-proj-actions");
       acts.setAttribute("role", "group");
       acts.setAttribute("aria-label", `Actions for ${p.name}`);
-      const open = actionButton(p, "open", "📂 Open");
+      const open = actionButton(p, "open", "Open");
       open.setAttribute("aria-label", `Open project ${p.name}`);
-      const rename = actionButton(p, "rename", "✏️ Rename");
+      const rename = actionButton(p, "rename", "Rename");
       rename.setAttribute("aria-label", `Rename project ${p.name}`);
-      const dl = actionButton(p, "download", "⬇ Download");
+      const dl = actionButton(p, "download", "Download");
       dl.setAttribute("aria-label", `Download project ${p.name}`);
-      const del = actionButton(p, "delete", "🗑️ Delete");
+      const del = actionButton(p, "delete", "Delete");
       del.setAttribute("aria-label", `Delete project ${p.name}`);
       [open, rename, dl, del].forEach(b => acts.appendChild(b));
       row.appendChild(acts);
@@ -2334,13 +2342,13 @@
     const dirty = openProject && openSnap && !sameText(editorsNow(), openSnap);
     if (openProject) {
       projCurrent.textContent = `Open project: “${openProject.name}”` + (dirty ? " — you have changes that aren't saved yet." : " — all changes saved.");
-      projSave.textContent = "💾 Save as New Project";
+      projSave.textContent = "Save as New Project";
       projUpdate.hidden = false;
       projUpdate.textContent = "↻ Update Project";
       if (projHint) projHint.textContent = `Open: ${openProject.name}` + (dirty ? " (unsaved changes)" : "");
     } else {
       projCurrent.textContent = "This work isn't saved as a project yet.";
-      projSave.textContent = "💾 Save Project";
+      projSave.textContent = "Save Project";
       projUpdate.hidden = true;
       if (projHint) projHint.textContent = "Save your work, then open it again any time";
     }
@@ -2404,8 +2412,8 @@
     projName.value = p.name;
     projName.removeAttribute("aria-invalid");
     drawProjects();
-    projSay(`📂 Opened “${p.name}”. Your changes only go into the project when you press Update Project.`, false);
-    setPixel("happy", `<strong>Project opened! 📂</strong><br>“${escapeHtml(p.name)}” is back in your editors. Change anything you like, then press <strong>Update Project</strong> to keep it.`);
+    projSay(`Opened “${p.name}”. Your changes only go into the project when you press Update Project.`, false);
+    setPixel("happy", `<strong>Project opened!</strong><br>“${escapeHtml(p.name)}” is back in your editors. Change anything you like, then press <strong>Update Project</strong> to keep it.`);
     selectTab("html", false);
   }
 
@@ -2470,7 +2478,7 @@
       openStamp = r.project.updatedAt;   // our own rename must not look like a change made in another tab
     }
     endRename(true);
-    projSay(`✅ Renamed to “${r.project.name}”.`, false);
+    projSay(`Renamed to “${r.project.name}”.`, false);
   }
 
   // ---- download one saved project ----
@@ -2490,7 +2498,7 @@
     if (doc === null) { projSay(`“${p.name}” is empty, so there is nothing to download.`, true); return; }
     const filename = projectFilename(p.name);
     if (deliverHtmlFile(doc, filename)) {
-      projSay(`✅ “${p.name}” was sent to your downloads as ${filename}.`, false);
+      projSay(`“${p.name}” was sent to your downloads as ${filename}.`, false);
     } else {
       projSay("Sorry, this browser wouldn't let me make the download. Your project is still saved here.", true);
     }
@@ -2520,7 +2528,7 @@
     if (wasOpen) projForget();   // only the link is cleared: the code boxes are left exactly as they are
     if (renamingId === id) renamingId = null;
     drawProjects();
-    projSay(`🗑️ Deleted “${saved.name}”.` + (wasOpen ? " It was the open project, so your code boxes are no longer linked to a saved project. Your work in them was not changed." : ""), false);
+    projSay(`Deleted “${saved.name}”.` + (wasOpen ? " It was the open project, so your code boxes are no longer linked to a saved project. Your work in them was not changed." : ""), false);
     projListTitle.focus();
   }
 
@@ -2547,8 +2555,8 @@
     projName.value = r.project.name;
     projName.removeAttribute("aria-invalid");
     drawProjects();
-    projSay(`✅ Saved “${r.project.name}”. You can open it again from the list any time.`, false);
-    setPixel("excited", `<strong>Project saved! 💾</strong><br>“${escapeHtml(r.project.name)}” is safe, even if you close the browser. You can keep building and press <strong>Update Project</strong> when you want to save changes.`);
+    projSay(`Saved “${r.project.name}”. You can open it again from the list any time.`, false);
+    setPixel("excited", `<strong>Project saved!</strong><br>“${escapeHtml(r.project.name)}” is safe, even if you close the browser. You can keep building and press <strong>Update Project</strong> when you want to save changes.`);
   }
 
   // ---- update the open project ----
@@ -2590,7 +2598,7 @@
         projRemember(r.project);
         projName.value = r.project.name;
         drawProjects();
-        projSay(`✅ Updated “${r.project.name}”.`, false);
+        projSay(`Updated “${r.project.name}”.`, false);
         projUpdate.focus();
       },
       projUpdate
@@ -2750,7 +2758,7 @@
   if (jsRestored !== null && jsRestored !== STARTER_JS) jsEd.edited = true;
 
   if (restoredSomething) {
-    setPixel("happy", "<strong>Welcome back! 👋</strong><br>I kept your code safe. Keep building!");
+    setPixel("happy", "<strong>Welcome back!</strong><br>I kept your code safe. Keep building!");
   } else {
     setPixel(PIXEL_HTML_INTRO.expr, PIXEL_HTML_INTRO.html);
   }
@@ -2828,7 +2836,7 @@
   function showHtmlTip() {
     if (!htmlCheckEl || !htmlEd) return;
     const tip = htmlTip(htmlEd.ta.value);
-    htmlCheckEl.textContent = tip ? "💡 Tip: " + tip : "";
+    htmlCheckEl.textContent = tip ? "Tip: " + tip : "";
   }
   if (htmlCheckEl && htmlEd) {
     // Wait until the learner pauses typing, so a half-written tag doesn't flash a tip
