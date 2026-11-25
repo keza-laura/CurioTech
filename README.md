@@ -1,5 +1,7 @@
 # CurioTech
 
+**Live site:** https://curiotech-rose.vercel.app/ &nbsp;|&nbsp; **Repository:** https://github.com/keza-laura/CurioTech &nbsp;|&nbsp; **Author:** Keza Laura
+
 CurioTech is an accessible, beginner-friendly digital-skills learning platform designed for young people (roughly ages 7 to 18). Learners explore web development through short hands-on missions with **Pixel**, a friendly robot companion, and then build and keep their own small webpages in the **Creator's Playground**.
 
 ---
@@ -121,6 +123,7 @@ A six-step guided project: **Choose your idea**, **Make a tiny plan**, **Build i
 
 * Reads the mission completion records and saved projects (read-only) to show XP, level, missions completed, badges and progress bars.
 * A **next-step button** at the top of the page (repeated under Continue Learning) always points at the next sensible thing: Mission 01, then Mission 05, then the Playground.
+* A **Clear my data** button erases everything CurioTech saved in this browser (it asks first). A note beside it says nothing is stored anywhere else.
 * The **Portfolio** shows each saved project as a card with a small picture, its name, the date and an **Open in Playground** button (`playground.html?project=<id>`). The picture is a sandboxed frame with no scripts and a Content Security Policy, so a learner's page cannot run code or load anything from the internet there.
 
 ### My Projects (inside the Playground)
@@ -131,6 +134,40 @@ A six-step guided project: **Choose your idea**, **Make a tiny plan**, **Build i
 * The list shows each project (newest first) with **Open**, **Rename**, **Download** and **Delete**.
 * Opening a project asks first if there is unsaved work. Deleting asks first. The panel tells the learner when the open project has unsaved changes.
 * If the browser blocks storage, the Playground keeps working and says saving is unavailable, and suggests downloading instead.
+
+---
+
+## 3b. What the SRS Asked For, and What This Prototype Covers
+
+CurioTech was specified in a Software Requirements Specification (SRS). This repository is a **front-end prototype**: it delivers the learning experience and leaves out everything that needs a server.
+
+| SRS area | Status | Notes |
+| --- | --- | --- |
+| Guided learning pathway (Discover, Challenge, Experiment, Build, Create) | Built | Five missions plus the Creator's Playground. |
+| Interactive exercises and quests with feedback | Built | Missions 01 to 04 have quests with hints; the Playground gives hints and friendly error help. |
+| Project building and portfolio (FR9) | Built | Up to 10 saved projects, shown on the dashboard. |
+| Progress, XP, levels and badges (FR7.1, 7.2, 7.4) | Built | Computed from saved completion records. |
+| Saving progress between visits | Built (per browser) | Stored in the learner's browser; see [Browser Storage](#7-browser-storage). |
+| Courses beyond HTML, CSS and JavaScript (FR3) | Partial | Only the web-development pathway exists. |
+| Registration, sign-in and password reset (FR1, FR2) | Not built | A **Start as Guest** button replaces accounts. |
+| Streaks (FR7.3) and notifications (FR8) | Not built | Planned. |
+| Admin tools (FR10) and the server and database | Not built | Out of scope for a static prototype. |
+
+---
+
+## 3c. How the Repository Was Built (Git Workflow)
+
+* Work was done on short-lived branches (for example `feat/save-progress`, `UI`, `docs/readme-setup`) and brought into `main` with pull requests.
+* Commit messages follow a simple `type: description` style (`feat:`, `fix:`, `refactor:`, `style:`, `docs:`).
+* `main` is deployed automatically to Vercel, so the live site always matches `main`.
+
+---
+
+## 3d. Known Issues
+
+* Saved data is per browser and per device. Clearing site data, or switching browser or device, starts the learner from the beginning (the dashboard has a **Clear my data** button for doing this on purpose).
+* Opening the project as a `file://` page and as `http://localhost` uses separate storage.
+* There are no automated tests; use the [manual checklist](#8-how-to-check-it-works-manual-checklist).
 
 ---
 
@@ -147,7 +184,8 @@ Plain, standard web technologies with no frameworks, build tools or server code:
 ## 5. Project Folder Structure
 
 ```text
-CurioTech-1/
+CurioTech/
+├── .gitignore          # Files Git should not track
 ├── index.html          # Public landing page
 ├── login.html          # Guest start page (no accounts)
 ├── dashboard.html      # Learner dashboard (home base)
@@ -160,9 +198,11 @@ CurioTech-1/
 ├── playground.html     # Creator's Playground and My Projects
 ├── README.md
 ├── css/
-│   └── styles.css      # Shared stylesheet for every page
+│   ├── styles.css      # Shared stylesheet for every page
+│   └── home.css        # Styles for the landing page only
 ├── js/
 │   ├── main.js         # Shared script (no behaviour of its own yet)
+│   ├── home.js         # Landing page behaviour
 │   ├── dashboard.js    # Dashboard: live XP, level, badges, progress and portfolio from saved data
 │   ├── adventure.js    # Adventure Map: destination briefings, Lab unlock, Mission 05 status
 │   ├── pixel.js        # Pixel the robot companion on the Adventure Map
@@ -193,7 +233,18 @@ CurioTech-1/
 
 No build step is needed, and there is nothing to install.
 
-**Simplest way:** open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, press **Start as Guest**, and explore from the dashboard.
+**Live version:** https://curiotech-rose.vercel.app/ (deployed on Vercel from this repository).
+
+**Run it on your own computer:**
+
+1. Clone the repository and open the folder:
+
+   ```bash
+   git clone https://github.com/keza-laura/CurioTech.git
+   cd CurioTech
+   ```
+
+2. Open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, press **Start as Guest**, and explore from the dashboard.
 
 **Optional:** you can also serve the folder with any static web server and open its address in a browser. Pick whichever server you already have; the project does not need or include one. Browsers can treat saved data for a `file://` page and for a `http://localhost` page as separate, so use the same way of opening it each time if you want your saved projects to be there next time.
 
@@ -271,7 +322,15 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 * **Phase 4: The Digital Adventure**: the Adventure Map, Pixel the robot companion and Mission 01, with its completion record.
 * **Phase 5: Creator's Project Builder**: the Creator's Playground (editors, live preview, Run, four guided levels, download), saved projects (My Projects), Mission 05, and the Adventure Map and dashboard connections, including the Creator's Lab unlock.
 
+* **Phase 6: More missions**: Missions 02, 03 and 04 for HTML Island, CSS City and JavaScript Jungle, all on the shared mission engine (`js/mission-kit.js`).
+* **Phase 7: Polish and deployment**: About section on the landing page, emojis replaced by SVG icons, restyled footer and buttons, and deployment to Vercel.
+
 ### Planned (not built yet)
 
-* **Phase 6**: more achievements, sharing and certificates (the "Projects Created" figure, the Young Creator badge and a portfolio of saved projects already work).
-* More missions for CSS City and JavaScript Jungle.
+These come from the project's Software Requirements Specification and are outside this front-end prototype:
+
+* **User accounts:** registration, sign-in and password reset (FR1, FR2), so progress can follow a learner between devices.
+* **More courses** beyond HTML, CSS and JavaScript (FR3).
+* **Streaks and notifications:** a daily streak counter and achievement alerts (FR7.3, FR8).
+* **Admin tools** for managing learners and content (FR10), and the server and database that these need.
+* Sharing and certificates.
