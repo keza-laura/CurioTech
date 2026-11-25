@@ -33,15 +33,33 @@
           
           <div class="login-header">
             <h1 class="login-title">Welcome to CurioTech</h1>
-            <p class="login-subtitle">No sign-up needed. Jump in and start learning.</p>
+            <p class="login-subtitle">Sign in to continue your learning journey.</p>
           </div>
 
-          <!-- Guest entry: there are no accounts, so there is nothing to sign in to -->
-          <a href="dashboard.html" id="guest-start" class="button button-full">Start as Guest &rarr;</a>
+          <!-- Simulated sign-in form (front-end only: there is no server or account database) -->
+          <form id="login-form" class="login-form" novalidate>
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="learner@example.com" required autocomplete="email">
+            </div>
 
-          <!-- Honest notice about where progress lives -->
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" id="password" name="password" class="form-input" placeholder="Enter demo password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="button button-full">Sign In</button>
+          </form>
+
+          <!-- Feedback message displayed by JavaScript -->
+          <div id="login-feedback" class="login-feedback" role="alert" aria-live="polite"></div>
+
+          <!-- Guest entry for anyone who just wants to look around -->
+          <p class="login-alt">Just exploring? <a href="dashboard.html" id="guest-start" class="link-back">Start as Guest &rarr;</a></p>
+
+          <!-- Honest notice about what this sign-in is and where progress lives -->
           <div class="demo-note">
-            <strong>How saving works:</strong> CurioTech has no accounts yet. Your progress and projects are saved in this browser on this device only. Clearing your browser data, or using a different browser or device, starts you from the beginning. Nothing is sent anywhere.
+            <strong>Prototype Demo Notice:</strong> This sign-in is a local simulation. It does not connect to a server or create real accounts, and your email and password are never saved or sent anywhere. Your progress and projects are saved in this browser on this device only, so clearing your browser data, or using another browser or device, starts you from the beginning.
           </div>
 
           <p class="login-nav-back">
@@ -60,6 +78,7 @@
     </div>
   </footer>
 
+  <script src="js/main.js"></script>
 </body>
 
 </html>
