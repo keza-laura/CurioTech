@@ -68,11 +68,11 @@
       { next: "" }
     ],
     pixel: [
-      { expr: "excited", html: "<strong>Welcome to JavaScript Jungle! 🌴</strong><br>HTML is the structure and CSS is the style. <strong>JavaScript</strong> makes a page react when someone clicks, taps or types." },
-      { expr: "thinking", html: "<strong>Zap lab! ⚡</strong><br>Press the button 5 times, and change the step size at least once. Watch the code on the right of the score." },
-      { expr: "encouraging", html: "<strong>Three code quests ⚔️</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
-      { expr: "happy", html: "<strong>Build a click game! 🎮</strong><br>Set it up, then play it until you win. Press Save my game when you love it." },
-      { expr: "excited", html: "<strong>You did it! 🎉</strong><br>You made a page that reacts. Try more JavaScript in the Creator's Playground!" }
+      { expr: "excited", html: "<strong>Welcome to JavaScript Jungle!</strong><br>HTML is the structure and CSS is the style. <strong>JavaScript</strong> makes a page react when someone clicks, taps or types." },
+      { expr: "thinking", html: "<strong>Zap lab!</strong><br>Press the button 5 times, and change the step size at least once. Watch the code on the right of the score." },
+      { expr: "encouraging", html: "<strong>Three code quests</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
+      { expr: "happy", html: "<strong>Build a click game!</strong><br>Set it up, then play it until you win. Press Save my game when you love it." },
+      { expr: "excited", html: "<strong>You did it!</strong><br>You made a page that reacts. Try more JavaScript in the Creator's Playground!" }
     ],
     quests: QUESTS,
 
@@ -163,7 +163,7 @@
     const out = $("m4-lab-count");
     const ok = left === 0 && d.changedStep;
     out.textContent = ok
-      ? `✅ ${d.clicks} zaps and a new step size. Nice work!`
+      ? `${d.clicks} zaps and a new step size. Nice work!`
       : `${Math.min(d.clicks, CLICKS_NEEDED)} of ${CLICKS_NEEDED} zaps${d.changedStep ? "" : ", and the step size is still unchanged"}.`;
     out.classList.toggle("is-good", ok);
   }
@@ -175,7 +175,7 @@
       d.clicks += 1;
       paintLab(ctx);
       ctx.changed(d.clicks === CLICKS_NEEDED ? "excited" : "happy",
-        `<strong>Zap! ⚡</strong><br>The click event ran your code: <code>score = score + ${d.step}</code>. The score is now ${d.score}.`);
+        `<strong>Zap!</strong><br>The click event ran your code: <code>score = score + ${d.step}</code>. The score is now ${d.score}.`);
     });
     $("m4-lab-step").addEventListener("change", () => {
       const v = Number($("m4-lab-step").value);
@@ -183,7 +183,7 @@
       ctx.data.step = STEP_SIZES.includes(v) ? v : 1;
       if (ctx.data.step !== before) ctx.data.changedStep = true;
       paintLab(ctx);
-      ctx.changed("thinking", `<strong>You edited the code! ✏️</strong><br>Now each zap adds ${ctx.data.step}. Press Zap to see it.`);
+      ctx.changed("thinking", `<strong>You edited the code!</strong><br>Now each zap adds ${ctx.data.step}. Press Zap to see it.`);
     });
     $("m4-lab-reset").addEventListener("click", () => {
       ctx.data.score = 0;
@@ -229,7 +229,7 @@
 
     const st = $("m4-game-status");
     const same = ctx.data.saved && JSON.stringify(ctx.data.saved) === JSON.stringify(g);
-    if (same) { st.textContent = "✅ Saved! Your game is ready."; st.className = "m5-status is-good"; }
+    if (same) { st.textContent = "Saved! Your game is ready."; st.className = "m5-status is-good"; }
     else if (ctx.data.saved) { st.textContent = "You changed your game. Win it again, then press Save my game to keep the new version."; st.className = "m5-status is-warn"; }
     else { st.textContent = ""; st.className = "m5-status"; }
   }
@@ -248,7 +248,7 @@
       if (gameScore >= g.goal && !ctx.data.won) {
         ctx.data.won = true;
         paintGame(ctx);
-        ctx.changed("excited", `<strong>${"You won! 🏆"}</strong><br>The score reached the goal, so your <code>if</code> ran. Press <strong>Save my game</strong>.`);
+        ctx.changed("excited", `<strong>${"You won!"}</strong><br>The score reached the goal, so your <code>if</code> ran. Press <strong>Save my game</strong>.`);
         return;
       }
       paintGame(ctx);
@@ -284,7 +284,7 @@
       }
       ctx.data.saved = Object.assign({}, ctx.data.game);
       paintGame(ctx);
-      ctx.changed("excited", "<strong>Your game is saved! 🌟</strong><br>You wrote a variable, an event and an <code>if</code>. Press <strong>Finish the mission</strong> when you're ready.");
+      ctx.changed("excited", "<strong>Your game is saved!</strong><br>You wrote a variable, an event and an <code>if</code>. Press <strong>Finish the mission</strong> when you're ready.");
       ctx.showHint("");
     });
   }

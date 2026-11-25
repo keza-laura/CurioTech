@@ -14,42 +14,42 @@ const MISSION_STAGES = [
     num: "01",
     name: "Discover",
     pixelExpr: "thinking",
-    pixelText: "<strong>BEEP-BOOP! Ever wonder how a website comes to life? 🤖</strong><br>When you visit your favorite game or video site, you see titles, pictures, and buttons. But what are they made of? Let's begin by discovering what's behind the screen!"
+    pixelText: "<strong>BEEP-BOOP! Ever wonder how a website comes to life?</strong><br>When you visit your favorite game or video site, you see titles, pictures, and buttons. But what are they made of? Let's begin by discovering what's behind the screen!"
   },
   {
     id: "explore",
     num: "02",
     name: "Explore",
     pixelExpr: "thinking",
-    pixelText: "<strong>A webpage is like a digital document! 📄</strong><br>Just like a book has chapters and photos, a webpage is built from 5 visible building blocks: Headings, Paragraphs, Images, Buttons, and Navigation. Let's inspect each one!"
+    pixelText: "<strong>A webpage is like a digital document!</strong><br>Just like a book has chapters and photos, a webpage is built from 5 visible building blocks: Headings, Paragraphs, Images, Buttons, and Navigation. Let's inspect each one!"
   },
   {
     id: "experiment",
     num: "03",
     name: "Experiment",
     pixelExpr: "encouraging",
-    pixelText: "<strong>Time for some hands-on scanning! 🔍</strong><br>Click on the different parts of the illustrated webpage below. Discover what each element does to unlock your challenge."
+    pixelText: "<strong>Time for some hands-on scanning!</strong><br>Click on the different parts of the illustrated webpage below. Discover what each element does to unlock your challenge."
   },
   {
     id: "challenge",
     num: "04",
     name: "Challenge",
     pixelExpr: "encouraging",
-    pixelText: "<strong>Three Quick Quests! 🎯</strong><br>Show me what you've learned: match an element, hunt down a bug, then build a page. Don't worry—you can try as many times as you like, and I'll give you hints if you get stuck!"
+    pixelText: "<strong>Three Quick Quests!</strong><br>Show me what you've learned: match an element, hunt down a bug, then build a page. Don't worry—you can try as many times as you like, and I'll give you hints if you get stuck!"
   },
   {
     id: "create",
     num: "05",
     name: "Create",
     pixelExpr: "excited",
-    pixelText: "<strong>Welcome to the Webpage Blueprint Studio! 🎨</strong><br>Now you are the digital architect! Choose your title, story, graphic, and button to design your very own webpage blueprint."
+    pixelText: "<strong>Welcome to the Webpage Blueprint Studio!</strong><br>Now you are the digital architect! Choose your title, story, graphic, and button to design your very own webpage blueprint."
   },
   {
     id: "celebrate",
     num: "06",
     name: "Celebrate",
     pixelExpr: "excited",
-    pixelText: "<strong>BEEP-BEEP-HOORAY! You completed Mission 01! 🎉</strong><br>You now understand what a webpage is and the 5 foundational blocks that build the entire World Wide Web. High five!"
+    pixelText: "<strong>BEEP-BEEP-HOORAY! You completed Mission 01!</strong><br>You now understand what a webpage is and the 5 foundational blocks that build the entire World Wide Web. High five!"
   }
 ];
 
@@ -103,10 +103,10 @@ let isBlueprintCreated = false;
 const ACTIVITIES_STORAGE_KEY = "curiotech_mission_01_progress";
 const CHALLENGE_COUNT = 3;
 const BUILDER_BLOCKS = {
-  nav: { icon: "🧭", tag: "<nav>", label: "Navigation menu" },
-  heading: { icon: "🏷️", tag: "<h1>", label: "Main heading" },
-  image: { icon: "🖼️", tag: "<img>", label: "Picture" },
-  paragraph: { icon: "📄", tag: "<p>", label: "Story paragraph" }
+  nav: { icon: "NAV", tag: "<nav>", label: "Navigation menu" },
+  heading: { icon: "H1", tag: "<h1>", label: "Main heading" },
+  image: { icon: "IMG", tag: "<img>", label: "Picture" },
+  paragraph: { icon: "P", tag: "<p>", label: "Story paragraph" }
 };
 const BUILDER_START_ORDER = ["paragraph", "nav", "image", "heading"];
 const BUILDER_SOLUTION_ORDER = ["nav", "heading", "image", "paragraph"];
@@ -130,7 +130,7 @@ let activityState = {
 let blueprintState = {
   title: "The Robot Sanctuary",
   tagline: "A safe haven where friendly companion robots learn digital skills.",
-  graphic: "🤖 Robot Workshop",
+  graphic: "Robot Workshop",
   button: "Enter Sanctuary →"
 };
 
@@ -267,7 +267,7 @@ function initMission() {
         btnNext.classList.add("pulse-glow");
       }
       if (pixelSpeechEl) {
-        pixelSpeechEl.innerHTML = `<strong>Great curiosity! 🌟</strong> You've inspected <strong>${inspectedElements.size}</strong> elements! You're ready to test your knowledge in the Challenge, or inspect the rest!`;
+        pixelSpeechEl.innerHTML = `<strong>Great curiosity!</strong> You've inspected <strong>${inspectedElements.size}</strong> elements! You're ready to test your knowledge in the Challenge, or inspect the rest!`;
       }
     }
     refreshContinueLock();
@@ -334,26 +334,26 @@ function initMission() {
   const SOLVED_COPY = [
     {
       fb: "The <code>&lt;h1&gt;</code> element is specifically used for the most important heading on a page. It gives search engines, screen readers, and readers a clear title.",
-      pixel: "<strong>Spot on! 🎯</strong> Headings give a page its big title. Ready for the next quest? Tap <em>Next quest</em>!"
+      pixel: "<strong>Spot on!</strong> Headings give a page its big title. Ready for the next quest? Tap <em>Next quest</em>!"
     },
     {
       fb: "The paragraph opened with <code>&lt;p&gt;</code> but never closed with <code>&lt;/p&gt;</code>. Most tags work in pairs: an opening tag and a closing tag. Line 2 is fixed now!",
-      pixel: "<strong>Bug squashed! 🐛</strong> Great detective work. One quest left: tap <em>Next quest</em>!"
+      pixel: "<strong>Bug squashed!</strong> Great detective work. One quest left: tap <em>Next quest</em>!"
     },
     {
       fb: "A menu on top, the big title next, then the picture and story. That's how many real webpages are laid out!",
-      pixel: "<strong>BEEP-BEEP! All three quests complete! 🎉</strong> You're ready to design your own page. Tap Continue to Create!"
+      pixel: "<strong>BEEP-BEEP! All three quests complete!</strong> You're ready to design your own page. Tap Continue to Create!"
     }
   ];
   const NEXT_QUEST_PIXEL = [
     null,
-    "<strong>Quest 2: Tag Detective! 🕵️</strong> One line of this code has a sneaky mistake. Tap the line you think is wrong!",
-    "<strong>Quest 3: Build the Page! 🧱</strong> Use the up and down buttons to put the blocks in order. Think about a real website!"
+    "<strong>Quest 2: Tag Detective!</strong> One line of this code has a sneaky mistake. Tap the line you think is wrong!",
+    "<strong>Quest 3: Build the Page!</strong> Use the up and down buttons to put the blocks in order. Think about a real website!"
   ];
   const DETECTIVE_WRONG = {
-    "1": "<strong>Good guess, but not this one! 🤔</strong> This heading opens with <code>&lt;h1&gt;</code> and closes with <code>&lt;/h1&gt;</code>. It's complete! Check the other lines.",
-    "3": "<strong>Nice try! 🤔</strong> <code>&lt;img&gt;</code> is a special tag that doesn't need a closing tag, so this line is fine. Check the other lines.",
-    "4": "<strong>Close, but not quite! 🤔</strong> This button opens with <code>&lt;button&gt;</code> and closes with <code>&lt;/button&gt;</code>. They match, so it's fine!"
+    "1": "<strong>Good guess, but not this one!</strong> This heading opens with <code>&lt;h1&gt;</code> and closes with <code>&lt;/h1&gt;</code>. It's complete! Check the other lines.",
+    "3": "<strong>Nice try!</strong> <code>&lt;img&gt;</code> is a special tag that doesn't need a closing tag, so this line is fine. Check the other lines.",
+    "4": "<strong>Close, but not quite!</strong> This button opens with <code>&lt;button&gt;</code> and closes with <code>&lt;/button&gt;</code>. They match, so it's fine!"
   };
 
   /**
@@ -402,11 +402,11 @@ function initMission() {
 
   function missPixel(misses) {
     if (misses >= 3) {
-      setPixel("encouraging", "<strong>Feeling stuck? That's totally okay! 🤝</strong> Tap <em>Show me the answer</em> if you'd like me to help. There's no shame in it!");
+      setPixel("encouraging", "<strong>Feeling stuck? That's totally okay!</strong> Tap <em>Show me the answer</em> if you'd like me to help. There's no shame in it!");
     } else if (misses === 2) {
-      setPixel("encouraging", "<strong>Here's a hint! 💡</strong> Read the hint in the box below. You're closer than you think!");
+      setPixel("encouraging", "<strong>Here's a hint!</strong> Read the hint in the box below. You're closer than you think!");
     } else {
-      setPixel("encouraging", "<strong>No worries at all! 💡</strong> Mistakes are just friendly clues. Take another look and try again!");
+      setPixel("encouraging", "<strong>No worries at all!</strong> Mistakes are just friendly clues. Take another look and try again!");
     }
   }
 
@@ -442,7 +442,7 @@ function initMission() {
   function paintChallenge(i, quiet) {
     const st = activityState.challenges[i];
     if (st.solved) {
-      const lead = st.revealed ? "<strong>💡 Here's the answer!</strong> " : "<strong>🎉 Exactly right!</strong> ";
+      const lead = st.revealed ? "<strong>Here's the answer!</strong> " : "<strong>Exactly right!</strong> ";
       showFeedback(i, "correct", lead + SOLVED_COPY[i].fb, quiet);
       if (i === 0) {
         challengeOptionBtns.forEach(b => {
@@ -480,7 +480,7 @@ function initMission() {
     updateChallengeChips();
 
     if (revealed) {
-      setPixel("encouraging", "<strong>Now you know the secret! 🌟</strong> Asking for help is a super-skill, and you'll remember this next time.");
+      setPixel("encouraging", "<strong>Now you know the secret!</strong> Asking for help is a super-skill, and you'll remember this next time.");
     } else {
       setPixel("excited", SOLVED_COPY[i].pixel);
     }
@@ -520,9 +520,9 @@ function initMission() {
       } else {
         btn.classList.add("wrong");
         const misses = recordMiss(0);
-        let html = "<strong>Not quite, but good try! 🤔</strong> Remember: a paragraph <code>&lt;p&gt;</code> is for body text, an image <code>&lt;img&gt;</code> is for graphics, and <code>&lt;nav&gt;</code> is for menus. Which element represents a title or heading?";
+        let html = "<strong>Not quite, but good try!</strong> Remember: a paragraph <code>&lt;p&gt;</code> is for body text, an image <code>&lt;img&gt;</code> is for graphics, and <code>&lt;nav&gt;</code> is for menus. Which element represents a title or heading?";
         if (misses >= 2) {
-          html += "<br><br>💡 <strong>Hint:</strong> The tag we want starts with the letter <code>h</code>, for <em>heading</em>.";
+          html += "<br><br><strong>Hint:</strong> The tag we want starts with the letter <code>h</code>, for <em>heading</em>.";
         }
         showFeedback(0, "wrong", html);
         missPixel(misses);
@@ -542,9 +542,9 @@ function initMission() {
       } else {
         line.classList.add("wrong");
         const misses = recordMiss(1);
-        let html = DETECTIVE_WRONG[line.getAttribute("data-line")] || "<strong>Not this one! 🤔</strong> Try another line.";
+        let html = DETECTIVE_WRONG[line.getAttribute("data-line")] || "<strong>Not this one!</strong> Try another line.";
         if (misses >= 2) {
-          html += "<br><br>💡 <strong>Hint:</strong> Look for a tag that was <em>opened</em> but never <em>closed</em>.";
+          html += "<br><br><strong>Hint:</strong> Look for a tag that was <em>opened</em> but never <em>closed</em>.";
         }
         showFeedback(1, "wrong", html);
         missPixel(misses);
@@ -601,7 +601,7 @@ function initMission() {
 
     if (btnBuilderCheck) {
       btnBuilderCheck.disabled = st.solved;
-      btnBuilderCheck.textContent = st.solved ? "✓ Page built!" : "Check my page ✔";
+      btnBuilderCheck.textContent = st.solved ? "✓ Page built!" : "Check my page";
     }
 
     if (focusKey) {
@@ -639,12 +639,12 @@ function initMission() {
         const misses = recordMiss(2);
         let html;
         if (order[0] !== "nav") {
-          html = "<strong>Almost there! 🤔</strong> Visitors expect the <code>&lt;nav&gt;</code> menu at the very <em>top</em> of a page, so they can travel anywhere quickly.";
+          html = "<strong>Almost there!</strong> Visitors expect the <code>&lt;nav&gt;</code> menu at the very <em>top</em> of a page, so they can travel anywhere quickly.";
         } else {
-          html = "<strong>Good start, the menu is on top! 🧭</strong> Now, what should come right after it? The big title, the <code>&lt;h1&gt;</code> heading, tells visitors what the page is about.";
+          html = "<strong>Good start, the menu is on top!</strong> Now, what should come right after it? The big title, the <code>&lt;h1&gt;</code> heading, tells visitors what the page is about.";
         }
         if (misses >= 2) {
-          html += "<br><br>💡 <strong>Hint:</strong> Picture a real website. What do you see first at the very top, and what comes right below it? The picture and story can go in either order.";
+          html += "<br><br><strong>Hint:</strong> Picture a real website. What do you see first at the very top, and what comes right below it? The picture and story can go in either order.";
         }
         showFeedback(2, "wrong", html);
         missPixel(misses);
@@ -709,7 +709,7 @@ function initMission() {
         img.className = "tinker-preview-img";
         img.setAttribute("role", "img");
         img.setAttribute("aria-label", "A friendly robot picture");
-        img.textContent = "🤖";
+        img.textContent = "Robot picture";
         tinkerPreview.appendChild(img);
       }
     }
@@ -732,7 +732,7 @@ function initMission() {
     t.changes++;
     if (tinkerNote && noteHtml) tinkerNote.innerHTML = noteHtml;
     if (t.changes === 1) {
-      setPixel("excited", "<strong>You just edited real HTML! 🛠️</strong> That's exactly what web developers do. Keep tinkering, or move on when you're ready.");
+      setPixel("excited", "<strong>You just edited real HTML!</strong> That's exactly what web developers do. Keep tinkering, or move on when you're ready.");
     }
     renderTinker();
     saveProgress();
@@ -868,7 +868,7 @@ function initMission() {
       if (btnNext) {
         btnNext.disabled = false;
       }
-      setPixel("excited", "<strong>BEEP-BOOP! Fantastic design! 🎨</strong> Your webpage blueprint is planned and ready. Let's move to the celebration stage!");
+      setPixel("excited", "<strong>BEEP-BOOP! Fantastic design!</strong> Your webpage blueprint is planned and ready. Let's move to the celebration stage!");
       saveProgress();
     });
   }
@@ -882,28 +882,28 @@ function initMission() {
     const list = document.getElementById("celebrate-recap-list");
     if (!list) return;
     const lines = [];
-    lines.push(`🔍 You inspected ${inspectedElements.size} of 5 page elements.`);
+    lines.push(`You inspected ${inspectedElements.size} of 5 page elements.`);
 
     const changes = activityState.tinker.changes;
     lines.push(changes > 0
-      ? `🔧 You tinkered with real HTML ${changes} time${changes === 1 ? "" : "s"} in the Tag Tinkerer.`
-      : "🔧 The Tag Tinkerer is always there if you want to experiment some more!");
+      ? `You tinkered with real HTML ${changes} time${changes === 1 ? "" : "s"} in the Tag Tinkerer.`
+      : "The Tag Tinkerer is always there if you want to experiment some more!");
 
     activityState.challenges.forEach((c, i) => {
       const name = CHALLENGE_NAMES[i];
       if (!c.solved) {
-        lines.push(`🧩 ${name}: still waiting for you. Pop back any time!`);
+        lines.push(`${name}: still waiting for you. Pop back any time!`);
       } else if (c.revealed) {
-        lines.push(`🧩 ${name}: Pixel helped you out, and now you know the answer too!`);
+        lines.push(`${name}: Pixel helped you out, and now you know the answer too!`);
       } else if (c.attempts <= 1) {
-        lines.push(`🧩 ${name}: solved on your first try. Wow!`);
+        lines.push(`${name}: solved on your first try. Wow!`);
       } else {
-        lines.push(`🧩 ${name}: solved after ${c.attempts} tries. Persistence is a coding superpower!`);
+        lines.push(`${name}: solved after ${c.attempts} tries. Persistence is a coding superpower!`);
       }
     });
 
     if (isBlueprintCreated) {
-      lines.push(`🎨 You designed a page called "${blueprintState.title}".`);
+      lines.push(`You designed a page called "${blueprintState.title}".`);
     }
 
     list.replaceChildren();
@@ -925,7 +925,7 @@ function initMission() {
   if (btnOpenPlayground) {
     btnOpenPlayground.addEventListener("click", () => {
       if (!isBlueprintCreated) {
-        setPixel("encouraging", "<strong>Almost there! 🎨</strong> Save your blueprint in the Create stage first, then I can send it to the Playground.");
+        setPixel("encouraging", "<strong>Almost there!</strong> Save your blueprint in the Create stage first, then I can send it to the Playground.");
         return;
       }
       let saved = true;
@@ -1068,8 +1068,8 @@ function initMission() {
       return inspectedElements.size >= INSPECT_REQUIRED && allChallengesSolved() && isBlueprintCreated;
     },
     messages: {
-      saved: "✅ Saved! Your Adventure Map now shows Mission 01 as complete.",
-      already: "✅ Saved! Your Adventure Map now shows Mission 01 as complete.",
+      saved: "Saved! Your Adventure Map now shows Mission 01 as complete.",
+      already: "Saved! Your Adventure Map now shows Mission 01 as complete.",
       failed: "You finished Mission 01! This browser wouldn't let me save it, so the Adventure Map may not show it as complete."
     },
 

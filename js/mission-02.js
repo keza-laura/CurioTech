@@ -68,11 +68,11 @@
       { next: "" }
     ],
     pixel: [
-      { expr: "excited", html: "<strong>Welcome back to HTML Island! 🏝️</strong><br>Every webpage is built from <em>elements</em>. Let's learn how to build the structure of a page." },
-      { expr: "thinking", html: "<strong>Which tag fits? 🏷️</strong><br>Each piece of text is waiting for a tag. Pick tags for at least 3 pieces and watch the page change." },
-      { expr: "encouraging", html: "<strong>Three structure quests ⚔️</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
-      { expr: "happy", html: "<strong>Build your skeleton! 🦴</strong><br>Fill in the boxes and watch a full HTML page appear. Press Save my page when you like it." },
-      { expr: "excited", html: "<strong>You did it! 🎉</strong><br>You can build the structure of a real webpage. Try it in the Creator's Playground!" }
+      { expr: "excited", html: "<strong>Welcome back to HTML Island!</strong><br>Every webpage is built from <em>elements</em>. Let's learn how to build the structure of a page." },
+      { expr: "thinking", html: "<strong>Which tag fits?</strong><br>Each piece of text is waiting for a tag. Pick tags for at least 3 pieces and watch the page change." },
+      { expr: "encouraging", html: "<strong>Three structure quests</strong><br>A wrong answer is just a clue. Read the hint and try again!" },
+      { expr: "happy", html: "<strong>Build your skeleton!</strong><br>Fill in the boxes and watch a full HTML page appear. Press Save my page when you like it." },
+      { expr: "excited", html: "<strong>You did it!</strong><br>You can build the structure of a real webpage. Try it in the Creator's Playground!" }
     ],
     quests: QUESTS,
 
@@ -178,7 +178,7 @@
     $("m2-code").textContent = taggedCode(ctx);
     const n = ctx.data.tags.filter(t => t !== "div").length;
     const out = $("m2-tag-count");
-    out.textContent = n >= TAGGED_NEEDED ? `✅ You tagged ${n} pieces. Nice work!` : `You have tagged ${n} of ${TAGGED_NEEDED} pieces.`;
+    out.textContent = n >= TAGGED_NEEDED ? `You tagged ${n} pieces. Nice work!` : `You have tagged ${n} of ${TAGGED_NEEDED} pieces.`;
     out.classList.toggle("is-good", n >= TAGGED_NEEDED);
   }
 
@@ -201,8 +201,8 @@
         ctx.data.tags[i] = tag;
         paintExperiment(ctx);
         if (tag === "div") ctx.changed("thinking", "<strong>Back to plain text.</strong><br>Without a tag the browser doesn't know what this text is.");
-        else if (tag === pc.best) ctx.changed("excited", `<strong>That fits! ✨</strong><br>${pc.why}`);
-        else ctx.changed("encouraging", `<strong>Interesting choice! 🤔</strong><br>It works, but another tag fits better. Hint: ${pc.why}`);
+        else if (tag === pc.best) ctx.changed("excited", `<strong>That fits!</strong><br>${pc.why}`);
+        else ctx.changed("encouraging", `<strong>Interesting choice!</strong><br>It works, but another tag fits better. Hint: ${pc.why}`);
       });
       row.append(label, select);
       box.appendChild(row);
@@ -239,7 +239,7 @@
     target.textContent = "";
     const tab = document.createElement("div");
     tab.className = "m2-tabtitle";
-    tab.textContent = "🌐 " + (pg.title || "Untitled");
+    tab.textContent = "" + (pg.title || "Untitled");
     const h = document.createElement("h1");
     h.textContent = pg.head;
     const para = document.createElement("p");
@@ -264,7 +264,7 @@
     $("m2-page-code").textContent = pageCode(pg);
     const st = $("m2-page-status");
     if (ctx.data.saved && samePage(ctx.data.saved, pg)) {
-      st.textContent = "✅ Saved! Your page is ready.";
+      st.textContent = "Saved! Your page is ready.";
       st.className = "m5-status is-good";
     } else if (ctx.data.saved) {
       st.textContent = "You changed your page. Press Save my page to keep the new version.";
@@ -297,7 +297,7 @@
       }
       ctx.data.saved = Object.assign({}, pg);
       paintCreate(ctx);
-      ctx.changed("excited", "<strong>Your page is saved! 🌟</strong><br>That is a real HTML skeleton. Press <strong>Finish the mission</strong> when you're ready.");
+      ctx.changed("excited", "<strong>Your page is saved!</strong><br>That is a real HTML skeleton. Press <strong>Finish the mission</strong> when you're ready.");
       ctx.showHint("");
     });
   }

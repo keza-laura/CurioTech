@@ -42,9 +42,9 @@
     "",
     "<h2>Things I like</h2>",
     "<ul>",
-    "  <li>🤖 Robots</li>",
-    "  <li>🎨 Drawing</li>",
-    "  <li>🚀 Space</li>",
+    "  <li>Robots</li>",
+    "  <li>Drawing</li>",
+    "  <li>Space</li>",
     "</ul>",
     "",
     "<!-- Buttons come alive with JavaScript later! -->",
@@ -76,14 +76,14 @@
     "// JavaScript makes your page DO things!",
     "// Press the Run Code button to try it. console.log() prints into the Output box.",
     "",
-    'console.log("Hello from my JavaScript! 🎉");',
+    'console.log("Hello from my JavaScript!");',
     "",
     'const title = document.querySelector("h1");',
     'const button = document.querySelector("button");',
     "",
     "if (title && button) {",
     '  button.addEventListener("click", function () {',
-    '    title.textContent = "You clicked the button! 🎈";',
+    '    title.textContent = "You clicked the button!";',
     '    console.log("The button was clicked");',
     "  });",
     "}",
@@ -96,16 +96,16 @@
     { name: "Plan", next: "Continue to Build →" },
     { name: "Build", next: "Continue to Experiment →" },
     { name: "Experiment", next: "Continue to Save →" },
-    { name: "Save", next: "Finish the mission 🎉" },
+    { name: "Save", next: "Finish the mission" },
     { name: "Celebrate", next: "" }
   ];
 
   const IDEAS = [
-    { id: "animal", label: "🐱 My favourite animal", name: "My Favourite Animal" },
-    { id: "game", label: "🎮 My favourite game", name: "My Favourite Game" },
-    { id: "food", label: "🍕 My favourite food", name: "My Favourite Food" },
-    { id: "me", label: "🌟 A page all about me", name: "All About Me" },
-    { id: "own", label: "✏️ My own idea", name: "" }
+    { id: "animal", label: "My favourite animal", name: "My Favourite Animal" },
+    { id: "game", label: "My favourite game", name: "My Favourite Game" },
+    { id: "food", label: "My favourite food", name: "My Favourite Food" },
+    { id: "me", label: "A page all about me", name: "All About Me" },
+    { id: "own", label: "My own idea", name: "" }
   ];
 
   const PURPOSES = [
@@ -124,12 +124,12 @@
   ];
 
   const PIXEL = [
-    { expr: "thinking", html: "<strong>Time to be a creator! 🛠️</strong><br>Pick an idea you'd enjoy. Small is good, and you can always add more later." },
+    { expr: "thinking", html: "<strong>Time to be a creator!</strong><br>Pick an idea you'd enjoy. Small is good, and you can always add more later." },
     { expr: "encouraging", html: "<strong>A tiny plan helps a lot.</strong><br>Give your project a name and decide what it's for. You'll use this name when you save." },
-    { expr: "excited", html: "<strong>Let's build! 🧱</strong><br>Open the Playground and make the starter page your own. Start with the big title." },
-    { expr: "happy", html: "<strong>Experiment time! 🔬</strong><br>Run your code, look at the preview, and try one change at a time. Mistakes are just clues." },
-    { expr: "encouraging", html: "<strong>Save it so it stays yours! 💾</strong><br>Press <strong>Save Project</strong> in the Playground, then come back and check." },
-    { expr: "excited", html: "<strong>BEEP-BEEP-HOORAY! 🎉</strong><br>You made something of your own. I'm so proud of you!" }
+    { expr: "excited", html: "<strong>Let's build!</strong><br>Open the Playground and make the starter page your own. Start with the big title." },
+    { expr: "happy", html: "<strong>Experiment time!</strong><br>Run your code, look at the preview, and try one change at a time. Mistakes are just clues." },
+    { expr: "encouraging", html: "<strong>Save it so it stays yours!</strong><br>Press <strong>Save Project</strong> in the Playground, then come back and check." },
+    { expr: "excited", html: "<strong>BEEP-BEEP-HOORAY!</strong><br>You made something of your own. I'm so proud of you!" }
   ];
 
   // ---- page elements ----
@@ -212,7 +212,7 @@
   function describe(ev) {
     switch (ev.kind) {
       case "ok":
-        return { good: true, text: `✅ Found it! “${ev.project.name}” is saved. You can finish the mission.` };
+        return { good: true, text: `Found it! “${ev.project.name}” is saved. You can finish the mission.` };
       case "starter":
         return { good: false, text: `I found “${ev.project.name}”, but it's still the starter page. Change it to make it yours, press Update Project in the Playground, then check again.` };
       case "old":
@@ -222,7 +222,7 @@
       case "unavailable":
         return { good: false, text: "This browser isn't letting CurioTech save projects, so I can't check. Mission 05 needs a saved project. Try a normal (not private) browser window." };
       default:
-        return { good: false, text: "I don't see a saved project yet. In the Playground, open 💾 My Projects, type a name and press Save Project. Then come back and check." };
+        return { good: false, text: "I don't see a saved project yet. In the Playground, open My Projects, type a name and press Save Project. Then come back and check." };
     }
   }
 
@@ -379,13 +379,13 @@
     },
 
     messages: {
-      saved: "✅ Saved! Mission 05 is recorded as complete on this device.",
-      already: "✅ Mission 05 is recorded as complete on this device.",
+      saved: "Saved! Mission 05 is recorded as complete on this device.",
+      already: "Mission 05 is recorded as complete on this device.",
       failed: "You finished Mission 05! This browser wouldn't let me save that, so the mission may not show as complete later."
     },
 
     bannerText(record) {
-      return `🎉 You already completed this mission with “${record.projectName}”. You can make another project any time. Your first completion stays recorded.`;
+      return `You already completed this mission with “${record.projectName}”. You can make another project any time. Your first completion stays recorded.`;
     },
 
     init(c) {
