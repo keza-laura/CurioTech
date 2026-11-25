@@ -5264,3 +5264,11 @@ button .svg-icon {
   margin: 0;
   flex: 1 1 18rem;
 }
+
+/* Login: guest link under the sign-in form */
+.login-alt {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-lavender);
+}

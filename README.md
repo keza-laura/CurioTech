@@ -36,7 +36,7 @@ CurioTech is a **front-end only prototype**. There is no server, no database and
 ```
 
 1. **Landing page** (`index.html`): introduces CurioTech and the learning journey.
-2. **Guest start** (`login.html`): there are no accounts, so one button, **Start as Guest**, goes straight to the dashboard. The page explains that progress is saved in this browser only.
+2. **Sign-in page** (`login.html`): a simulated sign-in form (an email in a valid format and any password lets you through to the dashboard) and a **Start as Guest** link. There are no real accounts: nothing is checked, stored or sent, and the page says so. It also explains that progress is saved in this browser only.
 3. **Dashboard** (`dashboard.html`): the home base. From here learners enter the Adventure, open the Playground, or jump to Mission 05.
 4. **Adventure Map** (`adventure.html`): four destinations (HTML Island, CSS City, JavaScript Jungle and the Creator's Lab), Pixel's tips, and a Mission Log listing five missions.
    * **HTML Island** and **Mission 01** are open.
@@ -149,7 +149,7 @@ CurioTech was specified in a Software Requirements Specification (SRS). This rep
 | Progress, XP, levels and badges (FR7.1, 7.2, 7.4) | Built | Computed from saved completion records. |
 | Saving progress between visits | Built (per browser) | Stored in the learner's browser; see [Browser Storage](#7-browser-storage). |
 | Courses beyond HTML, CSS and JavaScript (FR3) | Partial | Only the web-development pathway exists. |
-| Registration, sign-in and password reset (FR1, FR2) | Not built | A **Start as Guest** button replaces accounts. |
+| Registration, sign-in and password reset (FR1, FR2) | Not built | A simulated sign-in form and a **Start as Guest** link stand in for accounts; no real account is created. |
 | Streaks (FR7.3) and notifications (FR8) | Not built | Planned. |
 | Admin tools (FR10) and the server and database | Not built | Out of scope for a static prototype. |
 
@@ -244,7 +244,7 @@ No build step is needed, and there is nothing to install.
    cd CurioTech
    ```
 
-2. Open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, press **Start as Guest**, and explore from the dashboard.
+2. Open **`index.html`** by double-clicking it (or dragging it into a browser), click **Get Started**, sign in with any email address and password (or press **Start as Guest**), and explore from the dashboard.
 
 **Optional:** you can also serve the folder with any static web server and open its address in a browser. Pick whichever server you already have; the project does not need or include one. Browsers can treat saved data for a `file://` page and for a `http://localhost` page as separate, so use the same way of opening it each time if you want your saved projects to be there next time.
 
@@ -291,7 +291,7 @@ Clearing the browser's site data erases saved projects and completion records. T
 
 There are no automated tests in this project. Check it by hand:
 
-1. **Journey:** open `index.html`, press **Start as Guest**, then from the dashboard press **Enter Adventure**.
+1. **Journey:** open `index.html`, sign in with any email and password (or press **Start as Guest**), then from the dashboard press **Enter Adventure**.
 2. **Lab locked:** on a fresh browser the Creator's Lab shows as locked, Mission 05 shows "Ready to Explore", and the Lab's briefing offers the Playground and Mission 05 links.
 3. **Mission 01:** work through all six stages (the Continue button waits until you have inspected 3 elements). On the celebration screen you should see "Saved!". Back on the map, Mission 01 shows **Completed** and the Creator's Lab shows **Unlocked**.
 4. **Playground:** open it from the Lab. Edit the code, press **Run Code**, save a project, then **Open**, **Rename**, **Download** and **Delete** it. Refresh the page and confirm your project is still listed.
@@ -306,7 +306,7 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 
 ## 9. Current Limitations and Unfinished Areas
 
-* **No accounts:** CurioTech starts guests straight on the dashboard. There is no sign-in, so progress cannot follow a learner to another browser or device. The top-right button on each page is **Home** and returns to the landing page.
+* **No accounts:** CurioTech starts guests straight on the dashboard. The sign-in form is only a simulation, so progress cannot follow a learner to another browser or device. The top-right button on each page is **Log Out**: it returns to the sign-in page. It does not erase anything, so saved progress is still there on the next sign-in (use **Clear my data** on the dashboard to erase it).
 * **One device only:** progress and projects live in one browser on one device. There is no cloud saving, sharing, or backend.
 * **All five missions are playable, and each one leads to the next.** The order is 01, 02, 03, 04, then 05. Each of Missions 02, 03 and 04 opens after the one before it, and Mission 05 is open to everyone but comes last. On the map, an **Up next** banner always points at the next mission. Every celebration screen has a **Next mission** button that appears once that mission is on record (Mission 05's leads to the dashboard). The mission pages do not block direct links: the map only controls what is offered.
 * **Playground drafts survive leaving:** the working drafts are kept in `localStorage`, so closing the tab and coming back restores your code. A **Save progress** button saves right now and shows the time. Saved projects are still the permanent, named copies. Only the Mission 01 hand-off and the run marker stay per-tab.
@@ -319,7 +319,7 @@ To check the JavaScript syntax from a terminal (requires Node.js): `node --check
 ### Completed
 
 * **Phase 1: Landing page**: semantic, responsive landing page with the brand colours.
-* **Phase 2: Login page**: a front-end sign-in form (replaced by the guest start in the prototype hardening pass).
+* **Phase 2: Login page**: a front-end simulated sign-in form, with a guest link added alongside it.
 * **Phase 3: Learner dashboard**: dashboard layout, course cards and a distinct Home button.
 * **Phase 4: The Digital Adventure**: the Adventure Map, Pixel the robot companion and Mission 01, with its completion record.
 * **Phase 5: Creator's Project Builder**: the Creator's Playground (editors, live preview, Run, four guided levels, download), saved projects (My Projects), Mission 05, and the Adventure Map and dashboard connections, including the Creator's Lab unlock.
