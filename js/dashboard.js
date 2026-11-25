@@ -208,7 +208,23 @@
     renderPortfolio(projects);
   }
 
-  document.addEventListener("DOMContentLoaded", render);
+  // Lets a learner erase everything CurioTech has saved in this browser (after asking first)
+  function wireClearData() {
+    var btn = byId("dash-clear-data");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      if (!window.confirm("Erase all your progress and saved projects from this browser? This cannot be undone.")) return;
+      [window.localStorage, window.sessionStorage].forEach(function (store) {
+        try {
+          Object.keys(store).forEach(function (k) { if (k.indexOf("curiotech_") === 0) store.removeItem(k); });
+        } catch (e) { /* storage unavailable: nothing to clear */ }
+      });
+      setText("dash-clear-status", "Done. Your data was erased from this browser.");
+      render();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () { render(); wireClearData(); });
   // Coming back with the Back button can show a cached page: refresh the numbers
   window.addEventListener("pageshow", function (event) { if (event.persisted) render(); });
 })();
