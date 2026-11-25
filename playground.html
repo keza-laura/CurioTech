@@ -150,8 +150,11 @@
           <button type="button" id="pg-run-btn" class="button button-small pg-run-btn"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg>Run Code</button>
           <button type="button" id="pg-stop-btn" class="button button-small button-outline pg-stop-btn" aria-disabled="true"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="12" height="12" x="6" y="6" rx="2"/></svg>Stop</button>
           <p id="pg-run-status" class="pg-run-status" role="status" aria-live="polite">JavaScript only runs when you press Run Code.</p>
-          <button type="button" id="pg-download-btn" class="button button-small button-outline pg-download-btn"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Download my page</button>
+      
+          <button type="button" id="pg-save-progress-btn" class="button button-small pg-save-progress-btn">Save progress</button>
+          <button type="button" id="pg-download-btn" class="button button-small button-outline pg-download-btn">⬇ Download my page</button>
         </div>
+        <p id="pg-save-progress-status" class="pg-download-status" role="status" aria-live="polite">Your code saves as you type. Press Save progress to be sure.</p>
         <!-- Phase 4.5.6: what the download is (see js/playground.js, section 9d) -->
         <p id="pg-download-note" class="pg-download-note">Downloading saves your HTML, CSS and JavaScript as one file, <code>my-curiotech-page.html</code>. Your JavaScript runs normally when you open that file outside the Playground, because the Playground's safety box only protects you in here.</p>
         <p id="pg-download-status" class="pg-download-status" role="status" aria-live="polite"></p>
